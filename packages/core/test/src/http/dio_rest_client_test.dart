@@ -1,0 +1,77 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:tabloide_core/src/http/dio_rest_client.dart';
+
+class _DioMock extends Mock implements Dio {}
+
+Response<Object?> _resposta(int status, Object? dados) =>
+    Response(requestOptions: RequestOptions(), statusCode: status, data: dados);
+
+void main() {
+  group('Funcionalidade: RestClient sobre o Dio', () {
+    group('Cenário: Dado um DioRestClient com Dio mockado', () {
+      late _DioMock dio;
+      late DioRestClient cliente;
+      setUp(() {
+        dio = _DioMock();
+        cliente = DioRestClient(baseUrl: 'http://api', dio: dio);
+      });
+
+      test('Quando faço GET com query, então repasso a query e converto status e dados', () async {
+        when(() => dio.get<Object?>('/itens', queryParameters: {'pagina': 1}))
+            .thenAnswer((_) async => _resposta(200, {'total': 0}));
+
+        final resposta = await cliente.get('/itens', query: {'pagina': 1});
+
+        expect(resposta.status, 200);
+        expect(resposta.dados, {'total': 0});
+      });
+
+      test('Quando faço POST, então repasso o corpo', () async {
+        when(() => dio.post<Object?>('/itens', data: {'nome': 'a'}))
+            .thenAnswer((_) async => _resposta(201, null));
+
+        final resposta = await cliente.post('/itens', corpo: {'nome': 'a'});
+
+        expect(resposta.status, 201);
+        verify(() => dio.post<Object?>('/itens', data: {'nome': 'a'}))
+            .called(1);
+      });
+
+      test('Quando faço PATCH, PUT e DELETE, então cada um chama o método certo do Dio', () async {
+        when(() => dio.patch<Object?>('/a', data: 1))
+            .thenAnswer((_) async => _resposta(200, null));
+        when(() => dio.put<Object?>('/a', data: 2))
+            .thenAnswer((_) async => _resposta(200, null));
+        when(() => dio.delete<Object?>('/a'))
+            .thenAnswer((_) async => _resposta(204, null));
+
+        await cliente.patch('/a', corpo: 1);
+        await cliente.put('/a', corpo: 2);
+        final excluido = await cliente.delete('/a');
+
+        expect(excluido.status, 204);
+        verify(() => dio.patch<Object?>('/a', data: 1)).called(1);
+        verify(() => dio.put<Object?>('/a', data: 2)).called(1);
+      });
+
+      test('Quando o Dio responde sem status, então o status vira 0', () async {
+        when(
+          () => dio.get<Object?>('/a'),
+        ).thenAnswer((_) async => Response(requestOptions: RequestOptions()));
+
+        expect((await cliente.get('/a')).status, 0);
+      });
+    });
+
+    group('Cenário: Dado um DioRestClient sem Dio injetado (VM de teste)', () {
+      test(
+        'Quando crio o cliente, então ele usa a fábrica nativa sem erro',
+        () {
+          expect(() => DioRestClient(baseUrl: 'http://api'), returnsNormally);
+        },
+      );
+    });
+  });
+}

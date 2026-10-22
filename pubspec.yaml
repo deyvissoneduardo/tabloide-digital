@@ -1,0 +1,47 @@
+name: tabloide_front
+description: Painel do lojista do Tabloide Digital (white-label, app e web).
+publish_to: none
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.0
+
+workspace:
+  - packages/core
+  - packages/brands
+  - packages/app
+  - packages/web
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  provider: ^6.1.0
+  tabloide_core:
+  tabloide_brands:
+  tabloide_app:
+  tabloide_web:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  melos: ^7.0.0
+
+flutter:
+  uses-material-design: true
+
+melos:
+  # `dart run melos exec` dispensa o `dart pub global activate melos`.
+  scripts:
+    analyze:
+      run: dart run melos exec -c 1 -- flutter analyze
+    test:
+      run: dart run melos exec -c 1 --dir-exists=test -- flutter test --exclude-tags browser
+    test:golden:
+      run: dart run melos exec -c 1 --dir-exists=test -- flutter test --tags golden
+    golden:atualizar:
+      run: dart run melos exec -c 1 --dir-exists=test -- flutter test --tags golden --update-goldens
+    test:browser:
+      run: dart run melos exec --scope=tabloide_core -- flutter test --platform chrome test/browser
