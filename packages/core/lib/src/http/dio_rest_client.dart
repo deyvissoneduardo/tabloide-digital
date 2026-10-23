@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tabloide_core/src/http/dio_factory.dart';
+import 'package:tabloide_core/src/http/log_api_interceptor.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 
 /// [RestClient] sobre o Dio da plataforma (`DioForNative` ou `DioForBrowser`).
@@ -8,8 +10,13 @@ import 'package:tabloide_core/src/http/rest_client.dart';
 /// o repository ler o corpo de erro da API.
 final class DioRestClient implements RestClient {
   /// Cria o cliente; [dio] existe para os testes injetarem um mock.
+  ///
+  /// Em debug, as chamadas aparecem no console (ver [LogApiInterceptor]).
   DioRestClient({required String baseUrl, Dio? dio})
-    : _dio = dio ?? criarDio(BaseOptions(baseUrl: baseUrl));
+    : _dio =
+          dio ??
+          (criarDio(BaseOptions(baseUrl: baseUrl))
+            ..interceptors.addAll([if (kDebugMode) LogApiInterceptor()]));
 
   final Dio _dio;
 
