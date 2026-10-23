@@ -9,7 +9,7 @@ import '../helpers/montar.dart';
 void main() {
   group('Funcionalidade: raiz do painel web', () {
     testWidgets(
-      'Cenário: Dado a marca "Padaria Central", quando a web abre, então o título da aba e o tema (só claro) vêm da marca e a home aparece',
+      'Cenário: Dado a marca "Padaria Central", quando a web abre, então o título da aba e o tema (só claro) vêm da marca e o login aparece',
       (tester) async {
         const marca = MarcaFake(
           nome: 'Padaria Central',
@@ -20,7 +20,7 @@ void main() {
           MultiProvider(
             providers: [
               Provider<BrandConfig>.value(value: marca),
-              ChangeNotifierProvider(create: (_) => controllerDeTeste()),
+              ChangeNotifierProvider(create: (_) => loginControllerDeTeste()),
             ],
             child: const PainelWeb(),
           ),
@@ -31,7 +31,7 @@ void main() {
         expect(app.theme?.colorScheme.primary, marca.corPrimaria);
         expect(app.darkTheme, isNull);
         expect(app.themeMode, ThemeMode.light);
-        expect(find.byType(HomeScreen), findsOneWidget);
+        expect(find.byType(LoginScreen), findsOneWidget);
       },
     );
   });
