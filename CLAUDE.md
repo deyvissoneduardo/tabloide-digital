@@ -22,12 +22,13 @@ Painel do lojista do Tabloide Digital (filiais, panfletos, produtos), white-labe
 4. **"Funciona" só com evidência.** Ao afirmar que algo funciona, mostre o output do comando/teste. Não rodou → diga "não rodei".
 5. **Ações destrutivas exigem confirmação prévia.** Migração de schema, delete em massa, mudança de CI/auth → confirme antes de executar.
 
-Mudança que toca 2+ pacotes ou um contrato do core (`BrandConfig`, `RestClient`, `*Service`, `*Repository`) → mostre o plano (arquivos/pacotes afetados) e espere OK.
+Mudança que toca 2+ pacotes ou um contrato do core (`BrandConfig`, `RestClient`, `Falha`, `*Repository`) → mostre o plano (arquivos/pacotes afetados) e espere OK.
 
 ## Arquitetura
 - Dependências permitidas: `core` → nenhum pacote do workspace; `brands`, `app`, `web` → só `core`. Verificado por `packages/core/test/arquitetura/dependencias_test.dart`.
 - Camadas: `RestClient` → `*Repository` → `*Service` (por plataforma) → `*Controller`. Ordem de registro em `providersCore` (`packages/core/lib/src/di/providers_core.dart`).
-- Contrato do service e controller ficam no core; implementações em `HomeServiceApp`/`HomeServiceWeb` registradas em `providersApp()`/`providersWeb()`.
+- Core guarda `requests/`, `responses/` e `*Repository` (contrato + implementação). Service, controller (e estado) e screen ficam em cada plataforma (`packages/{app,web}/lib/src/features/<feature>/`), registrados em `providersApp()`/`providersWeb()`. Ex.: login (`AuthServiceApp`/`AuthServiceWeb` + `LoginController`). A home (`HomeController`/`HomeService` no core) é anterior a esta regra.
+- Validação de formulário fica fora do core: `validatorless` em `app`/`web`; máscaras (telefone, CNPJ…) com `brasil_fields`.
 - Repositories e services NÃO lançam exceção: retornam `Either<Falha, T>`, envolvendo a chamada em `tentar(...)`. Trate `Falha` (sealed) com `switch` exaustivo.
 - Código por plataforma via import condicional (`if (dart.library.io)` / `if (dart.library.js_interop)`, ver `lib/bootstrap/bootstrap.dart`). NÃO use `kIsWeb` nem `dart:html`.
 
@@ -39,8 +40,8 @@ Mudança que toca 2+ pacotes ou um contrato do core (`BrandConfig`, `RestClient`
 - Fakes para outros pacotes saem de `package:tabloide_core/testing.dart` e só são importados em `test/`.
 
 ## Onde coisas novas vão
-- Regra/estado comum a app e web → `packages/core/lib/src/features/<feature>/` e exporte em `tabloide_core.dart`. NÃO duplique controller/regra em `app` e `web`.
-- Tela/widget de plataforma → `packages/{app,web}/lib/src/features/<feature>/`.
+- Request/response/repository → `packages/core/lib/src/{requests,responses}/` e `packages/core/lib/src/features/<feature>/repositories/`, exportados em `tabloide_core.dart`.
+- Service/controller/tela de plataforma → `packages/{app,web}/lib/src/features/<feature>/` (um em cada plataforma).
 - Marca nova → classe `BrandConfig` em `packages/brands/lib/src/<marca>/`, asset em `packages/brands/assets/<marca>/` (declarar no pubspec), registro em `registrar_marcas.dart`, config em `config/marcas/<marca>.json`.
 - Diferença entre marcas vira campo no `BrandConfig`. NÃO faça `if`/`switch` por id de marca.
 
@@ -55,7 +56,7 @@ Fonte canônica: `docs/specs/design-system.md`. Leia antes de criar ou alterar q
 - Tema: `theme: AppTheme.claro(marca)` + `themeMode: ThemeMode.light`. NÃO use `darkTheme:` nem `ThemeMode.dark/system`.
 - Feedback: lista carregando → `EsqueletoLista`/`Esqueleto` (não spinner de tela); ação → spinner dentro do botão desabilitado; falha → `EstadoFalha`; vazio → `EstadoVazio`; exclusão → `confirmarExclusao`; retorno → `mostrarAviso`; erro de validação → no próprio campo.
 - Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
-- Padrão visual repetido em 2+ telas → widget em `packages/core/lib/src/widgets/` com teste + golden, e registro no `design-system.md`. Token novo → `packages/core/lib/src/theme/` + doc + regra no teste.
+- A mesma tela em `app` e `web` (ex.: `LoginScreen`) é implementada em cada plataforma, mesmo parecida: isso NÃO conta como padrão repetido. Padrão visual repetido entre telas/features diferentes → widget em `packages/core/lib/src/widgets/` com teste + golden, e registro no `design-system.md` (sem validação de formulário, que fica na plataforma). Token novo → `packages/core/lib/src/theme/` + doc + regra no teste.
 
 ## Testing & Quality Bar
 "Feito" = `dart run melos run analyze` limpo + `dart run melos run test` e `flutter test` (raiz) verdes. Mudou tela → regenere goldens e versione só `goldens/ci/`.

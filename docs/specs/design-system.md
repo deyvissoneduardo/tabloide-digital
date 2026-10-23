@@ -1,6 +1,6 @@
 # Design System — Tabloide Digital (painel do lojista)
 
-> Gerado por `agent-spec-design-system-bootstrap` em 23/10/2026 (modo BOOTSTRAP). Atualize via a mesma skill (enriquecimento) ou via promoções da `agent-spec-generate-design`.
+> Gerado por `agent-spec-design-system-bootstrap` em 23/10/2026 (modo BOOTSTRAP); atualizado em 23/10/2026 com a tela de login e a regra de telas por plataforma. Atualize via a mesma skill (enriquecimento) ou via promoções da `agent-spec-generate-design`.
 > Fonte canônica da identidade visual do painel. **Todo pacote, tela, page, screen e widget de `packages/app`, `packages/web` e `lib/` segue este documento**; as regras verificáveis estão em `packages/core/test/arquitetura/design_system_test.dart` e quebram o `melos run test`.
 
 ## 1. Identificação
@@ -9,7 +9,7 @@
 - **Frente(s)**: ambas — app (Android/iOS) e web, com o mesmo painel. **Mobile first**: o layout base é o do celular; telas largas só acrescentam.
 - **Stack de UI**: Flutter (Dart `^3.13.0`), Material 3 (`useMaterial3: true`).
 - **Biblioteca de UI base**: widgets Material puros, estilizados só pelo `ThemeData` (`AppTheme.claro`). Não há kit de componentes próprio; o core só oferece os padrões de feedback que o Material não tem (seção 5).
-- **Fontes desta consolidação**: codebase (`packages/core/lib/src/theme/`, `packages/core/lib/src/widgets/`, telas `home`); docs `Tabloide Digital — Regras de Front-end (MVP).md` e `Regras de Negócio e Requisitos Não Funcionais (MVP).md`; questionário com o usuário em 23/10/2026. Sem Figma.
+- **Fontes desta consolidação**: codebase (`packages/core/lib/src/theme/`, `packages/core/lib/src/widgets/`, telas `home` e `login`); docs `Tabloide Digital — Regras de Front-end (MVP).md` e `Regras de Negócio e Requisitos Não Funcionais (MVP).md`; questionário com o usuário em 23/10/2026. Sem Figma.
 
 ---
 
@@ -102,7 +102,7 @@ Classes de tamanho do Material 3, em `AppLayout` + `ClasseTamanho` (`app_layout.
 
 - Formulários (filial, panfleto, produto, cadastro, login) ficam limitados a `AppLayout.larguraMaximaFormulario` (600) em qualquer classe.
 - Obter a classe: `ClasseTamanho.de(context)`. Proibido comparar largura com número solto (`largura < 600`) e usar `MediaQuery.of(context).size`.
-- Referência implementada: `packages/web/lib/src/features/home/home_screen.dart`.
+- Referências implementadas: `packages/web/lib/src/features/home/home_screen.dart` (navegação por classe) e `packages/web/lib/src/features/login/login_screen.dart` (formulário: no compacto ocupa a tela; a partir do médio fica num `Card` centralizado com padding `lg`).
 
 ### 3.2 Classes de tamanho e adaptação (mobile)
 
@@ -154,7 +154,7 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | `confirmarExclusao(...)` | `packages/core/lib/src/widgets/feedback.dart` | — | toda exclusão (RN12, RN20) |
 | `mostrarAviso(...)` | `packages/core/lib/src/widgets/feedback.dart` | `TipoAviso.sucesso` / `erro` | retorno de salvar/excluir |
 
-> **Contrato de reuso**: padrão visual que se repete em 2+ telas vai para `packages/core/lib/src/widgets/` (com teste de widget + golden) e entra nesta tabela; não se duplica em `app` e `web`. Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
+> **Contrato de reuso**: cada plataforma implementa as próprias telas, com service, controller e validação em `packages/{app,web}/lib/src/features/<feature>/`. A mesma tela em `app` e `web` (ex.: `LoginScreen`) é escrita nos dois pacotes, mesmo parecida, e isso não conta como repetição. Padrão visual que se repete entre telas ou features **diferentes** vai para `packages/core/lib/src/widgets/` (com teste de widget + golden) e entra nesta tabela; esse widget não carrega validação de formulário nem estado de tela. Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
 
 ---
 
@@ -165,8 +165,8 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | Loading de lista/card | skeleton estático no formato do conteúdo (sem animação, para goldens estáveis); nunca spinner de tela inteira | `EsqueletoLista` / `Esqueleto` | [usuário] |
 | Loading de ação | spinner dentro do botão que disparou (`CircularProgressIndicator` no `child`), botão com `onPressed: null` até terminar, sem duplo envio | `FilledButton` | [usuário] |
 | Erro ao carregar | ícone na cor de erro, mensagem da `Falha` e botão "Tentar de novo" | `EstadoFalha` | [derivado] `resumo_inicio.dart` |
-| Erro de validação | no próprio campo (`validator`/`errorText`), nunca em SnackBar; texto diz o que fazer ("Precisa ser maior que o promocional") | `TextFormField` | [usuário] |
-| Erro de envio (back-end recusou) | SnackBar vermelho com a mensagem da `Falha` | `mostrarAviso(tipo: TipoAviso.erro)` | [usuário] |
+| Erro de validação | no próprio campo (`validator`/`errorText`), nunca em SnackBar; texto diz o que fazer ("Precisa ser maior que o promocional"). Validadores com `validatorless` e máscaras (telefone, CNPJ…) com `brasil_fields`, só em `app`/`web` (nunca no core) | `TextFormField` | [usuário] |
+| Erro de envio (back-end recusou) | SnackBar vermelho com a mensagem da `Falha`; quando a API manda o erro (`FalhaApi`), a mensagem é a da própria API (ex.: "E-mail ou senha incorretos.") | `mostrarAviso(tipo: TipoAviso.erro)` | [usuário] |
 | Vazio | ícone na primária, título do que falta, orientação e ação principal ("Cadastrar filial") | `EstadoVazio` | [usuário] |
 | Sucesso | SnackBar curto ("Produto salvo"); salvar já publica (RN40), então não existe "rascunho salvo" | `mostrarAviso()` | [usuário] |
 | Ação destrutiva | `AlertDialog` com título em pergunta, impacto descrito e botão vermelho que repete a ação ("Excluir filial"), mais "Cancelar". Nunca "desfazer" no lugar de confirmar | `confirmarExclusao` | [usuário] RN12/RN20 |
@@ -182,7 +182,8 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | RN40 | botão principal diz "Publicar"/"Salvar" (salvar = publicar); sem "Salvar rascunho" |
 | RN16 / RN17 | conflito de período e "defina a data limite do atual" aparecem como erro no campo de data, com a orientação |
 | RN37 / RN43 | e-mail ou categoria repetidos → erro no próprio campo |
-| RN36 | tela de login com texto de apoio "Esqueceu a senha? Fale com o suporte", sem link de recuperação |
+| RN36 | tela de login com texto de apoio "Esqueceu a senha? Fale com o suporte.", sem link de recuperação |
+| Login | marca (`MarcaLogo` em `AppIcones.destaque` + `MarcaNome`), título "Entre no painel", campos E-mail (teclado de e-mail, autofill) e Senha (botão mostrar/ocultar, "Entrar" no teclado envia), `FilledButton` "Entrar" com spinner enquanto envia e campos desabilitados; largura máx. `larguraMaximaFormulario` |
 | Status "desativado" | banner fixo no topo com `AppCores.alerta` ("Conta desativada: somente consulta") e ações de criar/editar/excluir desabilitadas (não escondidas) |
 | RN12 / RN20 | textos de confirmação: filial → "Panfleto, categorias e produtos desta filial também serão excluídos."; categoria com vencidos → "Os produtos vencidos desta categoria também serão excluídos." |
 | RNF05 | imagem: tipo e tamanho conferidos antes do envio, com erro no campo |
@@ -231,4 +232,5 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | 4 · Tema | só claro, escuro removido | manter sem usar; escuro como débito; seguir o SO | [usuário] |
 | 5 · Feedback — loading | skeleton em lista, spinner em ação | spinner centralizado; barra linear; skeleton em tudo | [usuário] |
 | 5 · Feedback — ações | dialog para confirmar, SnackBar para retorno, erro no campo | bottom sheet; dialog + banner; desfazer | [usuário] |
+| Reuso entre plataformas | cada plataforma tem as próprias telas (mesmo parecidas); core só guarda widgets de padrões entre features diferentes | formulário compartilhado no core; widget de formulário sem validação no core | [usuário] 23/10/2026 |
 | Garantia | teste de conformidade + CLAUDE.md + goldens | só documentação; `custom_lint`; teste + golden por componente | [usuário] |
