@@ -40,3 +40,22 @@ final class FalhaInesperada extends Falha {
   @override
   int get hashCode => Object.hash(FalhaInesperada, causa);
 }
+
+/// A API recusou o pedido com um erro conhecido (ex.: 401, 429).
+///
+/// [mensagem] vem da própria API, já em linguagem do lojista.
+final class FalhaApi extends Falha {
+  /// Cria a falha com o [codigo] e a [mensagem] devolvidos pela API.
+  const FalhaApi({required this.codigo, required String mensagem})
+    : super(mensagem);
+
+  /// Código do erro na API (ex.: `CREDENCIAIS_INVALIDAS`).
+  final String codigo;
+
+  @override
+  bool operator ==(Object other) =>
+      other is FalhaApi && other.codigo == codigo && other.mensagem == mensagem;
+
+  @override
+  int get hashCode => Object.hash(FalhaApi, codigo, mensagem);
+}

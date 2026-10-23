@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tabloide_core/src/http/dio_rest_client.dart';
+import 'package:tabloide_core/src/http/rest_client.dart';
 
 class _DioMock extends Mock implements Dio {}
 
@@ -55,6 +56,61 @@ void main() {
         verify(() => dio.patch<Object?>('/a', data: 1)).called(1);
         verify(() => dio.put<Object?>('/a', data: 2)).called(1);
       });
+
+      test('Quando a API responde 401, então devolvo a resposta com o corpo de erro em vez de lançar', () async {
+        when(() => dio.post<Object?>('/auth/login', data: any(named: 'data')))
+            .thenAnswer(
+              (_) async => throw DioException.badResponse(
+                statusCode: 401,
+                requestOptions: RequestOptions(),
+                response: _resposta(401, {
+                  'erro': {'codigo': 'CREDENCIAIS_INVALIDAS'},
+                }),
+              ),
+            );
+
+        final resposta = await cliente.post('/auth/login', corpo: {});
+
+        expect(resposta.status, 401);
+        expect(resposta.dados, {
+          'erro': {'codigo': 'CREDENCIAIS_INVALIDAS'},
+        });
+      });
+
+      for (final tipo in [
+        DioExceptionType.connectionError,
+        DioExceptionType.connectionTimeout,
+        DioExceptionType.sendTimeout,
+        DioExceptionType.receiveTimeout,
+      ]) {
+        test(
+          'Quando o Dio falha com ${tipo.name}, então lanço ErroSemConexao',
+          () {
+            when(() => dio.get<Object?>('/a')).thenAnswer(
+              (_) async => throw DioException(
+                requestOptions: RequestOptions(),
+                type: tipo,
+              ),
+            );
+
+            expect(cliente.get('/a'), throwsA(isA<ErroSemConexao>()));
+          },
+        );
+      }
+
+      test(
+        'Quando o Dio falha por outro motivo, então a exceção original segue',
+        () {
+          when(() => dio.get<Object?>('/a')).thenAnswer(
+            (_) async => throw DioException(
+              requestOptions: RequestOptions(),
+              type: DioExceptionType.cancel,
+            ),
+          );
+
+          expect(cliente.get('/a'), throwsA(isA<DioException>()));
+        },
+      );
 
       test('Quando o Dio responde sem status, então o status vira 0', () async {
         when(

@@ -1,4 +1,7 @@
 /// Cliente HTTP do painel, independente da biblioteca usada por baixo.
+///
+/// Toda resposta do servidor, inclusive 4xx/5xx, volta como [RestResposta];
+/// quando o servidor não é alcançado, o método lança [ErroSemConexao].
 abstract interface class RestClient {
   /// GET em [caminho], relativo à URL base.
   Future<RestResposta> get(String caminho, {Map<String, dynamic>? query});
@@ -26,4 +29,15 @@ final class RestResposta {
 
   /// Corpo decodificado (JSON vira `Map`/`List`).
   final Object? dados;
+}
+
+/// O servidor não foi alcançado (sem rede, DNS ou tempo esgotado).
+///
+/// `tentar` converte este erro em `FalhaSemConexao`.
+final class ErroSemConexao implements Exception {
+  /// Cria o erro.
+  const ErroSemConexao();
+
+  @override
+  String toString() => 'ErroSemConexao';
 }

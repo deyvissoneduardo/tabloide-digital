@@ -3,6 +3,9 @@ import 'package:tabloide_core/src/http/dio_factory.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 
 /// [RestClient] sobre o Dio da plataforma (`DioForNative` ou `DioForBrowser`).
+///
+/// O Dio lança exceção em 4xx/5xx; aqui ela volta a ser [RestResposta], para
+/// o repository ler o corpo de erro da API.
 final class DioRestClient implements RestClient {
   /// Cria o cliente; [dio] existe para os testes injetarem um mock.
   DioRestClient({required String baseUrl, Dio? dio})
@@ -31,7 +34,25 @@ final class DioRestClient implements RestClient {
       _converter(_dio.delete<Object?>(caminho));
 
   Future<RestResposta> _converter(Future<Response<Object?>> chamada) async {
-    final resposta = await chamada;
-    return RestResposta(status: resposta.statusCode ?? 0, dados: resposta.data);
+    try {
+      return _resposta(await chamada);
+    } on DioException catch (erro) {
+      if (erro.response case final resposta?
+          when erro.type == DioExceptionType.badResponse) {
+        return _resposta(resposta);
+      }
+      if (_semConexao.contains(erro.type)) throw const ErroSemConexao();
+      rethrow;
+    }
   }
+
+  RestResposta _resposta(Response<Object?> resposta) =>
+      RestResposta(status: resposta.statusCode ?? 0, dados: resposta.data);
+
+  static const _semConexao = {
+    DioExceptionType.connectionError,
+    DioExceptionType.connectionTimeout,
+    DioExceptionType.sendTimeout,
+    DioExceptionType.receiveTimeout,
+  };
 }

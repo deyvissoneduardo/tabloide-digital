@@ -19,5 +19,13 @@ void main() {
         reason: 'a causa é para log, não para a tela',
       );
     });
+
+    test('Cenário: Dado uma ação sem conexão com o servidor, quando executo com tentar, então recebo FalhaSemConexao', () async {
+      final resultado = await tentar<int>(
+        () async => throw const ErroSemConexao(),
+      );
+
+      expect(resultado, const Failure<Falha, int>(FalhaSemConexao()));
+    });
   });
 }
