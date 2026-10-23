@@ -14,7 +14,7 @@ class PainelWeb extends StatelessWidget {
       title: marca.nome,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.claro(marca),
-      darkTheme: AppTheme.escuro(marca),
+      themeMode: ThemeMode.light,
       home: const HomeScreen(),
     );
   }

@@ -54,29 +54,23 @@ void main() {
       columns: 2,
       children: [
         for (final id in registry.ids)
-          for (final brilho in Brightness.values)
-            GoldenTestScenario(
-              name: '$id, ${brilho.name}',
-              constraints: const BoxConstraints.tightFor(
-                width: 320,
-                height: 140,
-              ),
-              child: Provider<BrandConfig>.value(
-                value: registry.resolver(id),
-                child: Builder(
-                  builder: (context) {
-                    final marca = context.read<BrandConfig>();
-                    return MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      theme: brilho == Brightness.light
-                          ? AppTheme.claro(marca)
-                          : AppTheme.escuro(marca),
-                      home: const Scaffold(body: _Amostra()),
-                    );
-                  },
-                ),
+          GoldenTestScenario(
+            name: id,
+            constraints: const BoxConstraints.tightFor(width: 320, height: 140),
+            child: Provider<BrandConfig>.value(
+              value: registry.resolver(id),
+              child: Builder(
+                builder: (context) {
+                  final marca = context.read<BrandConfig>();
+                  return MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    theme: AppTheme.claro(marca),
+                    home: const Scaffold(body: _Amostra()),
+                  );
+                },
               ),
             ),
+          ),
       ],
     ),
   );

@@ -106,17 +106,6 @@ void main() {
     }
   });
 
-  group('Funcionalidade: white-label sem cor fixa nas telas', () {
-    for (final pasta in ['packages/app', 'packages/web']) {
-      test(
-        'Cenário: Dado o $pasta, então nenhuma tela usa Color(0x...) literal',
-        () {
-          expect(_arquivosCom(pasta, RegExp(r'Color\(0x')), isEmpty);
-        },
-      );
-    }
-  });
-
   group('Funcionalidade: camadas de repository e service', () {
     for (final pasta in ['packages/app', 'packages/web']) {
       test(

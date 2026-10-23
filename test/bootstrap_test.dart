@@ -12,6 +12,9 @@ void main() {
         const marca = MarcaFake(nome: 'Marca Bootstrap');
 
         await tester.pumpWidget(bootstrap(marca: marca, baseUrl: 'http://api'));
+        // O skeleton é estático: sem animação, o pumpAndSettle não espera o
+        // atraso do repository fake sozinho.
+        await tester.pump(const Duration(seconds: 1));
         await tester.pumpAndSettle();
 
         expect(find.byType(PainelApp), findsOneWidget);

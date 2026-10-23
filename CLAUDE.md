@@ -45,9 +45,17 @@ Mudança que toca 2+ pacotes ou um contrato do core (`BrandConfig`, `RestClient`
 - Diferença entre marcas vira campo no `BrandConfig`. NÃO faça `if`/`switch` por id de marca.
 
 ## UI / Design System
-- Cores: `Theme.of(context).colorScheme` (derivado da marca) ou `AppCores` (status/neutros). NÃO use `Color(0x…)` em telas.
+Fonte canônica: `docs/specs/design-system.md`. Leia antes de criar ou alterar qualquer tela/widget. Mobile first, **só tema claro**, Material 3 puro estilizado por `AppTheme.claro`. As regras abaixo são verificadas por `packages/core/test/arquitetura/design_system_test.dart` (varre `packages/app/lib`, `packages/web/lib` e `lib/`).
+- Cores: `Theme.of(context).colorScheme` (derivado da marca) ou `AppCores` (status). NÃO use `Color(0x…)`, `Color.fromARGB` nem `Colors.*` (só `Colors.transparent`).
 - Espaços: `AppEspacamentos` (xs 4, sm 8, md 16, lg 24, xl 32). NÃO use números soltos em `EdgeInsets`/`SizedBox`.
+- Raios: `AppRaios` (sm 8, md 12, lg 16, pílula). Ícones: `AppIcones` (20/24/48). NÃO use números em `BorderRadius.circular`, `elevation:`, `size:`.
+- Texto: só `Theme.of(context).textTheme.*` (+ `copyWith(color:)`). NÃO use `TextStyle(`, `fontSize:`, `fontFamily:`.
+- Widgets Material sem `style:` próprio: o visual vem do tema. Ação principal = `FilledButton` (1 por tela).
+- Layout: `ClasseTamanho.de(context)` (compacto < 600, médio < 840, expandido) e `AppLayout` (larguras máximas). NÃO compare largura com número nem use `MediaQuery.of(context).size`.
+- Tema: `theme: AppTheme.claro(marca)` + `themeMode: ThemeMode.light`. NÃO use `darkTheme:` nem `ThemeMode.dark/system`.
+- Feedback: lista carregando → `EsqueletoLista`/`Esqueleto` (não spinner de tela); ação → spinner dentro do botão desabilitado; falha → `EstadoFalha`; vazio → `EstadoVazio`; exclusão → `confirmarExclusao`; retorno → `mostrarAviso`; erro de validação → no próprio campo.
 - Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
+- Padrão visual repetido em 2+ telas → widget em `packages/core/lib/src/widgets/` com teste + golden, e registro no `design-system.md`. Token novo → `packages/core/lib/src/theme/` + doc + regra no teste.
 
 ## Testing & Quality Bar
 "Feito" = `dart run melos run analyze` limpo + `dart run melos run test` e `flutter test` (raiz) verdes. Mudou tela → regenere goldens e versione só `goldens/ci/`.

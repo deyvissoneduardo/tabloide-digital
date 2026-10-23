@@ -6,7 +6,7 @@ import '../../../helpers/montar.dart';
 
 const _telas = {
   'desktop': Size(1440, 900),
-  'tablet': Size(900, 700),
+  'tablet': Size(768, 1024),
   'celular': Size(390, 844),
 };
 
@@ -19,20 +19,18 @@ void main() {
         columns: 2,
         children: [
           for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-            for (final brilho in Brightness.values)
-              GoldenTestScenario(
-                name: 'Marca $nome, ${brilho.name}',
-                constraints: BoxConstraints.tight(tamanho),
-                child: MediaQuery(
-                  data: MediaQueryData(size: tamanho),
-                  child: montar(
-                    marca: marca,
-                    brilho: brilho,
-                    controller: controllerDeTeste()
-                      ..selecionar(SecaoPainel.filiais),
-                  ),
+            GoldenTestScenario(
+              name: 'Marca $nome',
+              constraints: BoxConstraints.tight(tamanho),
+              child: MediaQuery(
+                data: MediaQueryData(size: tamanho),
+                child: montar(
+                  marca: marca,
+                  controller: controllerDeTeste()
+                    ..selecionar(SecaoPainel.filiais),
                 ),
               ),
+            ),
         ],
       ),
     );

@@ -8,31 +8,9 @@ class ConteudoSecao extends StatelessWidget {
   final SecaoPainel secao;
 
   @override
-  Widget build(BuildContext context) {
-    final tema = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppEspacamentos.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              secao.iconeSelecionado,
-              size: 64,
-              color: tema.colorScheme.primary,
-            ),
-            const SizedBox(height: AppEspacamentos.md),
-            Text(secao.titulo, style: tema.textTheme.headlineSmall),
-            const SizedBox(height: AppEspacamentos.sm),
-            Text(
-              'Em breve',
-              style: tema.textTheme.bodyMedium?.copyWith(
-                color: tema.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => EstadoVazio(
+    icone: secao.iconeSelecionado,
+    titulo: secao.titulo,
+    mensagem: 'Em breve',
+  );
 }

@@ -13,7 +13,4 @@ abstract final class AppCores {
 
   /// Fundo neutro claro.
   static const neutroClaro = Color(0xFFF5F5F5);
-
-  /// Fundo neutro escuro.
-  static const neutroEscuro = Color(0xFF1C1B1F);
 }

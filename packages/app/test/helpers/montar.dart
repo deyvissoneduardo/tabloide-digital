@@ -12,7 +12,6 @@ HomeController controllerDeTeste({
 Widget montar({
   BrandConfig marca = const MarcaFake(),
   HomeController? controller,
-  Brightness brilho = Brightness.light,
 }) => MultiProvider(
   providers: [
     Provider<BrandConfig>.value(value: marca),
@@ -20,9 +19,7 @@ Widget montar({
   ],
   child: MaterialApp(
     debugShowCheckedModeBanner: false,
-    theme: brilho == Brightness.light
-        ? AppTheme.claro(marca)
-        : AppTheme.escuro(marca),
+    theme: AppTheme.claro(marca),
     home: const HomeScreen(),
   ),
 );

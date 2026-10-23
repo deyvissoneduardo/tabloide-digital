@@ -3,27 +3,19 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_web/src/features/home/widgets/conteudo_secao.dart';
 
-/// Home do painel no navegador: menu lateral em telas largas e o mesmo
-/// layout do celular em telas estreitas.
+/// Home do painel no navegador, pelas classes de tamanho do Material 3:
+/// compacto usa o layout do celular; médio, menu lateral recolhido;
+/// expandido, menu lateral com rótulos.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  /// Abaixo disso, usa navegação embaixo (lojista no celular).
-  static const larguraCompacta = 600.0;
-
-  /// A partir disso, o menu lateral mostra os rótulos ao lado dos ícones.
-  static const larguraExpandida = 1200.0;
-
-  /// Largura máxima do conteúdo, centralizado.
-  static const larguraMaximaConteudo = 1200.0;
 
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<HomeController>();
-    final largura = MediaQuery.sizeOf(context).width;
+    final classe = ClasseTamanho.de(context);
     final conteudo = ConteudoSecao(secao: controller.secao);
 
-    if (largura < larguraCompacta) {
+    if (classe == ClasseTamanho.compacto) {
       return Scaffold(
         appBar: AppBar(title: const _Marca()),
         body: conteudo,
@@ -42,7 +34,7 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    final expandido = largura >= larguraExpandida;
+    final expandido = classe == ClasseTamanho.expandido;
     return Scaffold(
       body: Row(
         children: [
@@ -54,8 +46,11 @@ class HomeScreen extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.symmetric(vertical: AppEspacamentos.md),
               child: expandido
-                  ? const SizedBox(width: 220, child: _Marca())
-                  : const MarcaLogo(altura: 40),
+                  ? const SizedBox(
+                      width: AppLayout.larguraMenuLateral,
+                      child: _Marca(),
+                    )
+                  : const MarcaLogo(altura: AppIcones.destaque),
             ),
             selectedIndex: controller.secao.index,
             onDestinationSelected: _selecionar(context),
@@ -73,7 +68,7 @@ class HomeScreen extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
-                  maxWidth: larguraMaximaConteudo,
+                  maxWidth: AppLayout.larguraMaximaConteudo,
                 ),
                 child: conteudo,
               ),

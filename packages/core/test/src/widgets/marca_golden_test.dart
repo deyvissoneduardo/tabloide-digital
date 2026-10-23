@@ -33,26 +33,18 @@ class _Cartao extends StatelessWidget {
 
 void main() {
   goldenTest(
-    'Cenário: Dado duas marcas, então logo e nome seguem a marca no claro e no escuro',
+    'Cenário: Dado duas marcas, então logo e nome seguem a marca no tema claro',
     fileName: 'marca_logo_nome',
     pumpBeforeTest: (tester) async => tester.pumpAndSettle(),
     builder: () => GoldenTestGroup(
       columns: 2,
       children: [
         for (final MapEntry(key: nome, value: marca) in _marcas.entries)
-          for (final brilho in Brightness.values)
-            GoldenTestScenario(
-              name: 'Marca $nome, ${brilho.name}',
-              constraints: const BoxConstraints.tightFor(
-                width: 260,
-                height: 80,
-              ),
-              child: montarComMarca(
-                const _Cartao(),
-                marca: marca,
-                brilho: brilho,
-              ),
-            ),
+          GoldenTestScenario(
+            name: 'Marca $nome',
+            constraints: const BoxConstraints.tightFor(width: 260, height: 80),
+            child: montarComMarca(const _Cartao(), marca: marca),
+          ),
       ],
     ),
   );

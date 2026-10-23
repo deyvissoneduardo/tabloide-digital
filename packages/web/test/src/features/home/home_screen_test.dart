@@ -55,24 +55,27 @@ void main() {
       );
     });
 
-    group('Cenário: Dado uma tela de tablet (900×700)', () {
-      testWidgets(
-        'Então o menu lateral aparece recolhido, só com a logo e rótulos sob os ícones',
-        (tester) async {
-          await abrir(tester, const Size(900, 700));
+    group(
+      'Cenário: Dado uma tela de tablet em pé (768×1024), classe média',
+      () {
+        testWidgets(
+          'Então o menu lateral aparece recolhido, só com a logo e rótulos sob os ícones',
+          (tester) async {
+            await abrir(tester, const Size(768, 1024));
 
-          final menu = tester.widget<NavigationRail>(
-            find.byType(NavigationRail),
-          );
-          expect(menu.extended, isFalse);
-          expect(menu.labelType, NavigationRailLabelType.all);
-          expect(
-            find.bySemanticsLabel('Logo de Mercado Bom Preço'),
-            findsOneWidget,
-          );
-        },
-      );
-    });
+            final menu = tester.widget<NavigationRail>(
+              find.byType(NavigationRail),
+            );
+            expect(menu.extended, isFalse);
+            expect(menu.labelType, NavigationRailLabelType.all);
+            expect(
+              find.bySemanticsLabel('Logo de Mercado Bom Preço'),
+              findsOneWidget,
+            );
+          },
+        );
+      },
+    );
 
     group('Cenário: Dado o painel web aberto no celular (390×844)', () {
       testWidgets(

@@ -9,7 +9,7 @@ import '../helpers/montar.dart';
 void main() {
   group('Funcionalidade: raiz do painel mobile', () {
     testWidgets(
-      'Cenário: Dado a marca "Padaria Central", quando o app abre, então título e tema vêm da marca e a home aparece',
+      'Cenário: Dado a marca "Padaria Central", quando o app abre, então título e tema (só claro) vêm da marca e a home aparece',
       (tester) async {
         const marca = MarcaFake(
           nome: 'Padaria Central',
@@ -30,7 +30,8 @@ void main() {
         final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
         expect(app.title, 'Padaria Central');
         expect(app.theme?.colorScheme.primary, marca.corPrimaria);
-        expect(app.darkTheme?.colorScheme.brightness, Brightness.dark);
+        expect(app.darkTheme, isNull);
+        expect(app.themeMode, ThemeMode.light);
         expect(find.byType(HomeScreen), findsOneWidget);
       },
     );

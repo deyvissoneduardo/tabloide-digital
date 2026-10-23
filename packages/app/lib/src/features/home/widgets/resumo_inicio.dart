@@ -10,8 +10,8 @@ class ResumoInicio extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<HomeController>();
     return switch (controller.resumo) {
-      ResumoCarregando() => const Center(child: CircularProgressIndicator()),
-      ResumoComFalha(:final falha) => _Falha(
+      ResumoCarregando() => const EsqueletoLista(),
+      ResumoComFalha(:final falha) => EstadoFalha(
         mensagem: falha.mensagem,
         aoTentarDeNovo: controller.carregarResumo,
       ),
@@ -61,35 +61,4 @@ class _Numero extends StatelessWidget {
       ),
     );
   }
-}
-
-class _Falha extends StatelessWidget {
-  const _Falha({required this.mensagem, required this.aoTentarDeNovo});
-
-  final String mensagem;
-  final VoidCallback aoTentarDeNovo;
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(AppEspacamentos.lg),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.cloud_off,
-            size: 48,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: AppEspacamentos.md),
-          Text(mensagem, textAlign: TextAlign.center),
-          const SizedBox(height: AppEspacamentos.md),
-          FilledButton(
-            onPressed: aoTentarDeNovo,
-            child: const Text('Tentar de novo'),
-          ),
-        ],
-      ),
-    ),
-  );
 }

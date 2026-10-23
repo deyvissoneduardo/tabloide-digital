@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_app/tabloide_app.dart';
 
@@ -26,7 +25,7 @@ final class _RepositoryInstavel implements HomeRepository {
 void main() {
   group('Funcionalidade: seção Início do app', () {
     testWidgets(
-      'Cenário: Dado que o repository demora, quando abro a home, então vejo o carregamento',
+      'Cenário: Dado que o repository demora, quando abro a home, então vejo o skeleton da lista',
       (tester) async {
         await tester.pumpWidget(
           montar(
@@ -36,9 +35,9 @@ void main() {
           ),
         );
 
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(EsqueletoLista), findsOneWidget);
         await tester.pumpAndSettle(const Duration(seconds: 1));
-        expect(find.byType(CircularProgressIndicator), findsNothing);
+        expect(find.byType(EsqueletoLista), findsNothing);
       },
     );
 
