@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Tabloide (dispositivo)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--dart-define-from-file=config/marcas/tabloide.json"]
+    },
+    {
+      "name": "Tabloide (web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "args": ["--dart-define-from-file=config/marcas/tabloide.json"]
+    },
+    {
+      "name": "Mercado Exemplo (dispositivo)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--dart-define-from-file=config/marcas/mercado_exemplo.json"]
+    },
+    {
+      "name": "Mercado Exemplo (web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "args": ["--dart-define-from-file=config/marcas/mercado_exemplo.json"]
+    }
+  ]
+}
