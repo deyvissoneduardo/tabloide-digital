@@ -67,7 +67,7 @@ void main() {
     );
 
     testWidgets(
-      'Cenário: Dado os providers sem homeRepository, quando leio o repository, então recebo o fake padrão',
+      'Cenário: Dado os providers sem repositories injetados, quando leio cada um, então recebo o padrão (fake da home, API no login)',
       (tester) async {
         late BuildContext contexto;
         await tester.pumpWidget(
@@ -87,6 +87,11 @@ void main() {
         );
 
         expect(contexto.read<HomeRepository>(), isA<HomeRepositoryFake>());
+        expect(
+          contexto.read<AuthRepository>(),
+          isA<AuthRepositoryApi>(),
+          reason: 'o login fala com a API de verdade',
+        );
       },
     );
   });
