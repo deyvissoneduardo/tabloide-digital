@@ -24,6 +24,27 @@ Widget montar({
   ),
 );
 
+/// Controller de login com a cadeia real: [AuthServiceApp] → [repository].
+LoginController loginControllerDeTeste({AuthRepository? repository}) =>
+    LoginController(AuthServiceApp(repository ?? AuthRepositoryFake()));
+
+/// Monta a [LoginScreen] como no bootstrap: marca, login e a home de destino.
+Widget montarLogin({
+  BrandConfig marca = const MarcaFake(),
+  LoginController? controller,
+}) => MultiProvider(
+  providers: [
+    Provider<BrandConfig>.value(value: marca),
+    ChangeNotifierProvider.value(value: controller ?? loginControllerDeTeste()),
+    ChangeNotifierProvider(create: (_) => controllerDeTeste()),
+  ],
+  child: MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: AppTheme.claro(marca),
+    home: const LoginScreen(),
+  ),
+);
+
 /// Duas marcas bem diferentes, para os goldens mostrarem o white-label.
 const marcasDeTeste = {
   'azul': MarcaFake(nome: 'Marca Azul'),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tabloide_app/src/features/home/home_screen.dart';
+import 'package:tabloide_app/src/features/login/login_screen.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Raiz do painel mobile; nome e tema vêm da marca do build.
+/// Raiz do painel mobile; abre no login. Nome e tema vêm da marca do build.
 class PainelApp extends StatelessWidget {
   const PainelApp({super.key});
 
@@ -15,7 +15,7 @@ class PainelApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.claro(marca),
       themeMode: ThemeMode.light,
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }
