@@ -5,8 +5,6 @@ import 'package:tabloide_app/src/features/login/login_controller.dart';
 import 'package:tabloide_app/src/features/login/services/auth_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Services e controllers do app; entram no `providersCore(servicos: ...)`,
-/// depois dos repositories que eles consomem.
 List<SingleChildWidget> providersApp() => [
   Provider<AuthServiceApp>(
     create: (context) => AuthServiceApp(context.read<AuthRepository>()),

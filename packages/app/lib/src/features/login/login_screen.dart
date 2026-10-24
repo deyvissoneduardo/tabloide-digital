@@ -8,7 +8,6 @@ import 'package:tabloide_app/src/features/login/login_estado.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:validatorless/validatorless.dart';
 
-/// Login do lojista no celular: marca, e-mail, senha e "Entrar".
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -52,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
     final enviando = context.watch<LoginController>().estado is LoginEnviando;
+    final cores = tema.colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -63,87 +63,98 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: Form(
                 key: _formulario,
-                child: AutofillGroup(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Center(
-                        child: MarcaLogo(altura: AppIcones.destaque),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Center(child: MarcaLogo(altura: AppIcones.destaque)),
+                    const SizedBox(height: AppEspacamentos.sm),
+                    const Center(child: MarcaNome()),
+                    const SizedBox(height: AppEspacamentos.lg),
+                    Text('Entre no painel', style: tema.textTheme.titleMedium),
+                    const SizedBox(height: AppEspacamentos.md),
+                    TextFormField(
+                      controller: _email,
+                      enabled: !enviando,
+                      decoration: const InputDecoration(
+                        labelText: 'E-mail',
+                        prefixIcon: Icon(Icons.email_outlined),
                       ),
-                      const SizedBox(height: AppEspacamentos.sm),
-                      const Center(child: MarcaNome()),
-                      const SizedBox(height: AppEspacamentos.lg),
-                      Text(
-                        'Entre no painel',
-                        style: tema.textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: AppEspacamentos.md),
-                      TextFormField(
-                        controller: _email,
-                        enabled: !enviando,
-                        decoration: const InputDecoration(
-                          labelText: 'E-mail',
-                          prefixIcon: Icon(Icons.email_outlined),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        autocorrect: false,
-                        autofillHints: const [AutofillHints.email],
-                        validator: Validatorless.multiple([
-                          Validatorless.required('Informe o e-mail'),
-                          Validatorless.email(
-                            'Digite um e-mail válido, como nome@loja.com.br',
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      autocorrect: false,
+                      autofillHints: const [AutofillHints.email],
+                      validator: Validatorless.multiple([
+                        Validatorless.required('Informe o e-mail'),
+                        Validatorless.email('Digite um e-mail válido.'),
+                      ]),
+                    ),
+                    const SizedBox(height: AppEspacamentos.md),
+                    TextFormField(
+                      controller: _senha,
+                      enabled: !enviando,
+                      obscureText: !_senhaVisivel,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          tooltip: _senhaVisivel
+                              ? 'Ocultar senha'
+                              : 'Mostrar senha',
+                          icon: Icon(
+                            _senhaVisivel
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
                           ),
-                        ]),
+                          onPressed: () =>
+                              setState(() => _senhaVisivel = !_senhaVisivel),
+                        ),
                       ),
-                      const SizedBox(height: AppEspacamentos.md),
-                      TextFormField(
-                        controller: _senha,
-                        enabled: !enviando,
-                        obscureText: !_senhaVisivel,
-                        decoration: InputDecoration(
-                          labelText: 'Senha',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            tooltip: _senhaVisivel
-                                ? 'Ocultar senha'
-                                : 'Mostrar senha',
-                            icon: Icon(
-                              _senhaVisivel
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
+                      textInputAction: TextInputAction.done,
+                      autofillHints: const [AutofillHints.password],
+                      onFieldSubmitted: (_) => _entrar(),
+                      validator: Validatorless.multiple([
+                        Validatorless.required('Informe a senha.'),
+                        Validatorless.min(6, 'Minimo de 6 caracters.'),
+                      ]),
+                    ),
+                    const SizedBox(height: AppEspacamentos.lg),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: cores.primary,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: AppRaios.bordaMd,
+                        ),
+                      ),
+                      onPressed: enviando ? null : _entrar,
+                      child: enviando
+                          ? SizedBox.square(
+                              dimension: AppIcones.padrao,
+                              child: CircularProgressIndicator(
+                                semanticsLabel: 'Entrando',
+                                color: cores.secondary,
+                              ),
+                            )
+                          : Text(
+                              'Entrar',
+                              style: tema.textTheme.titleMedium?.copyWith(
+                                color: cores.onPrimary,
+                              ),
                             ),
-                            onPressed: () =>
-                                setState(() => _senhaVisivel = !_senhaVisivel),
+                    ),
+                    const SizedBox(height: AppEspacamentos.sm),
+                    Align(
+                      alignment: AlignmentGeometry.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Cadastre - se ',
+                          style: tema.textTheme.titleMedium?.copyWith(
+                            color: cores.primary,
                           ),
                         ),
-                        textInputAction: TextInputAction.done,
-                        autofillHints: const [AutofillHints.password],
-                        onFieldSubmitted: (_) => _entrar(),
-                        validator: Validatorless.required('Informe a senha'),
                       ),
-                      const SizedBox(height: AppEspacamentos.lg),
-                      FilledButton(
-                        onPressed: enviando ? null : _entrar,
-                        child: enviando
-                            ? const SizedBox.square(
-                                dimension: AppIcones.pequeno,
-                                child: CircularProgressIndicator(
-                                  semanticsLabel: 'Entrando',
-                                ),
-                              )
-                            : const Text('Entrar'),
-                      ),
-                      const SizedBox(height: AppEspacamentos.md),
-                      Text(
-                        'Esqueceu a senha? Fale com o suporte.',
-                        style: tema.textTheme.bodyMedium?.copyWith(
-                          color: tema.colorScheme.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -24,17 +24,14 @@ void main() {
 
       await controller.entrar(
         email: '  ana@bompreco.com.br ',
-        senha: 'Teste1234',
+        senha: ' Teste1234 ',
       );
 
       expect(estados, [isA<LoginEnviando>(), isA<LoginConcluido>()]);
       expect(controller.sessao, sessaoFake);
-      expect(
-        repository.pedidos,
-        [const LoginRequest(email: 'ana@bompreco.com.br', senha: 'Teste1234')],
-        reason:
-            'o e-mail vai sem espaços nas pontas; a senha vai como digitada',
-      );
+      expect(repository.pedidos, [
+        const LoginRequest(email: 'ana@bompreco.com.br', senha: 'Teste1234'),
+      ], reason: 'e-mail e senha vão sem espaços nas pontas');
     });
 
     test('Cenário: Dado credenciais recusadas, quando entro, então fico com a falha e sem sessão', () async {
