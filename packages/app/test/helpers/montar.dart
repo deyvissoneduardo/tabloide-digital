@@ -25,13 +25,41 @@ Widget montar({
 LoginController loginControllerDeTeste({AuthRepository? repository}) =>
     LoginController(AuthServiceApp(repository ?? AuthRepositoryFake()));
 
+CadastroController cadastroControllerDeTeste({
+  CadastroRepository? repository,
+}) => CadastroController(
+  CadastroServiceApp(repository ?? CadastroRepositoryFake()),
+);
+
+Widget montarCadastro({
+  BrandConfig marca = const MarcaFake(),
+  CadastroController? controller,
+}) => MultiProvider(
+  providers: [
+    Provider<BrandConfig>.value(value: marca),
+    ChangeNotifierProvider.value(
+      value: controller ?? cadastroControllerDeTeste(),
+    ),
+    ChangeNotifierProvider(create: (_) => controllerDeTeste()),
+  ],
+  child: MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: AppTheme.claro(marca),
+    home: const CadastroScreen(),
+  ),
+);
+
 Widget montarLogin({
   BrandConfig marca = const MarcaFake(),
   LoginController? controller,
+  CadastroController? cadastro,
 }) => MultiProvider(
   providers: [
     Provider<BrandConfig>.value(value: marca),
     ChangeNotifierProvider.value(value: controller ?? loginControllerDeTeste()),
+    ChangeNotifierProvider.value(
+      value: cadastro ?? cadastroControllerDeTeste(),
+    ),
     ChangeNotifierProvider(create: (_) => controllerDeTeste()),
   ],
   child: MaterialApp(

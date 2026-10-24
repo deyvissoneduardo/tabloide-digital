@@ -3,6 +3,10 @@ library;
 export 'package:tabloide_core/tabloide_core.dart';
 
 export 'src/di/providers_web.dart';
+export 'src/features/cadastro/cadastro_controller.dart';
+export 'src/features/cadastro/cadastro_estado.dart';
+export 'src/features/cadastro/cadastro_screen.dart';
+export 'src/features/cadastro/services/cadastro_service_web.dart';
 export 'src/features/home/home_screen.dart';
 export 'src/features/home/services/home_service_web.dart';
 export 'src/features/login/login_controller.dart';

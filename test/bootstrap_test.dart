@@ -21,6 +21,11 @@ void main() {
         expect(contexto.read<AuthRepository>(), isA<AuthRepositoryApi>());
         expect(contexto.read<AuthServiceApp>(), isA<AuthServiceApp>());
         expect(contexto.read<LoginController>().estado, isA<LoginOcioso>());
+        expect(
+          contexto.read<CadastroRepository>(),
+          isA<CadastroRepositoryApi>(),
+        );
+        expect(contexto.read<CadastroServiceApp>(), isA<CadastroServiceApp>());
         expect(contexto.read<HomeService>(), isA<HomeServiceApp>());
         expect(find.text('Marca Bootstrap'), findsOneWidget);
       },

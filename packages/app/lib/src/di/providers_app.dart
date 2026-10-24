@@ -1,11 +1,19 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:tabloide_app/src/features/cadastro/cadastro_controller.dart';
+import 'package:tabloide_app/src/features/cadastro/services/cadastro_service_app.dart';
 import 'package:tabloide_app/src/features/home/services/home_service_app.dart';
 import 'package:tabloide_app/src/features/login/login_controller.dart';
 import 'package:tabloide_app/src/features/login/services/auth_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 List<SingleChildWidget> providersApp() => [
+  Provider<CadastroServiceApp>(
+    create: (context) => CadastroServiceApp(context.read<CadastroRepository>()),
+  ),
+  ChangeNotifierProvider<CadastroController>(
+    create: (context) => CadastroController(context.read<CadastroServiceApp>()),
+  ),
   Provider<AuthServiceApp>(
     create: (context) => AuthServiceApp(context.read<AuthRepository>()),
   ),

@@ -15,6 +15,9 @@ void main() {
             providers: [
               Provider<HomeRepository>.value(value: const HomeRepositoryFake()),
               Provider<AuthRepository>.value(value: AuthRepositoryFake()),
+              Provider<CadastroRepository>.value(
+                value: CadastroRepositoryFake(),
+              ),
               ...providersApp(),
             ],
             child: Builder(
@@ -29,6 +32,11 @@ void main() {
         expect(contexto.read<HomeService>(), isA<HomeServiceApp>());
         expect(contexto.read<AuthServiceApp>(), isA<AuthServiceApp>());
         expect(contexto.read<LoginController>().estado, isA<LoginOcioso>());
+        expect(contexto.read<CadastroServiceApp>(), isA<CadastroServiceApp>());
+        expect(
+          contexto.read<CadastroController>().estado,
+          isA<CadastroOcioso>(),
+        );
       },
     );
   });
