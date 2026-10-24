@@ -146,6 +146,14 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 
 | Componente | Referência | Variantes | Uso canônico |
 |---|---|---|---|
+| `AppBotaoPrincipal` | `packages/core/lib/src/widgets/app_botao_principal.dart` | `carregando`, `rotuloCarregando` | ação principal da tela ("Entrar", "Cadastrar"): `ElevatedButton` em `primary`, raio `bordaMd`, texto `titleMedium` em `onPrimary`; carregando = desabilitado com spinner em `secondary` |
+| `AppBotaoTexto` | `packages/core/lib/src/widgets/app_botao_texto.dart` | — | ação de navegação secundária ("Cadastre-se"), texto `titleMedium` em `primary` |
+| `AppCampoTexto` | `packages/core/lib/src/widgets/app_campo_texto.dart` | `validador`, `erro` (da API), `teclado`, `acao`, `autofill`, `autocorrecao`, `habilitado` | todo campo de texto com rótulo e ícone |
+| `AppCampoSenha` | `packages/core/lib/src/widgets/app_campo_senha.dart` | mesmos do campo de texto | senha, com mostrar/ocultar (estado de visibilidade no próprio widget) |
+| `AppFormulario` | `packages/core/lib/src/widgets/app_formulario.dart` | `chave` (`GlobalKey<FormState>`) | corpo de tela de formulário: `SafeArea`, rolagem, padding `md`, largura máx. `larguraMaximaFormulario`, coluna esticada |
+| `AppMarcaDestaque` | `packages/core/lib/src/widgets/app_marca_destaque.dart` | — | logo grande (`AppIcones.destaque`) e nome da marca centralizados (login) |
+| `AppMarcaCabecalho` | `packages/core/lib/src/widgets/app_marca_cabecalho.dart` | — | logo pequena + nome em linha (título da `AppBar`, menu lateral) |
+| `AppConteudoSecao` | `packages/core/lib/src/widgets/app_conteudo_secao.dart` | `secao` | seção do painel ainda não implementada ("Em breve") |
 | `MarcaLogo` | `packages/core/lib/src/widgets/marca_logo.dart` | `altura` | logo da marca (com iniciais se a imagem falhar) |
 | `MarcaNome` | `packages/core/lib/src/widgets/marca_nome.dart` | `estilo` | nome da marca, 1 linha com reticências |
 | `Esqueleto` / `EsqueletoLista` | `packages/core/lib/src/widgets/esqueleto.dart` | `altura`, `largura` / `quantidade`, `altura` | carregamento de lista e card |
@@ -154,7 +162,7 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | `confirmarExclusao(...)` | `packages/core/lib/src/widgets/feedback.dart` | — | toda exclusão (RN12, RN20) |
 | `mostrarAviso(...)` | `packages/core/lib/src/widgets/feedback.dart` | `TipoAviso.sucesso` / `erro` | retorno de salvar/excluir |
 
-> **Contrato de reuso**: cada plataforma implementa as próprias telas, com service, controller e validação em `packages/{app,web}/lib/src/features/<feature>/`. A mesma tela em `app` e `web` (ex.: `LoginScreen`) é escrita nos dois pacotes, mesmo parecida, e isso não conta como repetição. Padrão visual que se repete entre telas ou features **diferentes** vai para `packages/core/lib/src/widgets/` (com teste de widget + golden) e entra nesta tabela; esse widget não carrega validação de formulário nem estado de tela. Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
+> **Contrato de reuso**: cada plataforma implementa as próprias telas, com service, controller e validação em `packages/{app,web}/lib/src/features/<feature>/`. Toda `*_screen.dart` tem um único widget (Stateless ou Stateful com seu State) e nenhuma função retorna `Widget` (fora o `build`); widget auxiliar vai para arquivo próprio (verificado por `widgets_test.dart`). Widget que se repete ou tem o mesmo comportamento no app e na web vai para `packages/core/lib/src/widgets/` com prefixo `App` (com teste de widget + golden `componentes_app`) e entra nesta tabela; app e web sempre usam esse widget. Ele não carrega validação de formulário (recebe o `validador` por parâmetro) nem estado de tela. Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
 
 ---
 
@@ -183,7 +191,8 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | RN16 / RN17 | conflito de período e "defina a data limite do atual" aparecem como erro no campo de data, com a orientação |
 | RN37 / RN43 | e-mail ou categoria repetidos → erro no próprio campo |
 | RN36 | tela de login com texto de apoio "Esqueceu a senha? Fale com o suporte.", sem link de recuperação |
-| Login | marca (`MarcaLogo` em `AppIcones.destaque` + `MarcaNome`), título "Entre no painel", campos E-mail (teclado de e-mail) e Senha (mínimo de 6 caracteres, botão mostrar/ocultar, "Entrar" no teclado envia). Ação principal é um `ElevatedButton` "Entrar" com `colorScheme.primary`, raio `AppRaios.bordaMd` e texto `titleMedium` em `onPrimary` (exceção ao `FilledButton` pílula, decidida pelo usuário em 24/10/2026); spinner em `colorScheme.secondary` enquanto envia, com campos desabilitados. Abaixo, `TextButton` "Cadastre-se" alinhado à direita, em `primary`. Largura máx. `larguraMaximaFormulario` |
+| Login | marca (`MarcaLogo` em `AppIcones.destaque` + `MarcaNome`), título "Entre no painel", campos E-mail (teclado de e-mail) e Senha (mínimo de 6 caracteres, botão mostrar/ocultar, "Entrar" no teclado envia). Ação principal é o `AppBotaoPrincipal` "Entrar" (exceção ao `FilledButton` pílula, decidida pelo usuário em 24/10/2026); spinner em `colorScheme.secondary` enquanto envia, com campos desabilitados. Abaixo, `TextButton` "Cadastre-se" alinhado à direita, em `primary`. Largura máx. `larguraMaximaFormulario` |
+| Cadastro | aberto pelo "Cadastre-se" do login (push, `AppBar` "Crie sua conta" com voltar). Campos na ordem: Nome fantasia e Nome do responsável (obrigatórios, mínimo 2), E-mail, WhatsApp (com DDD) e CNPJ (obrigatórios, sem máscara), Senha (8 a 128 caracteres, com letra e número — mesma regra da API) e Confirmar senha. Botão "Cadastrar" no mesmo visual do "Entrar". Erros da API (`FalhaApi.campos`, 409 de e-mail no campo E-mail) aparecem embaixo do campo e somem quando o lojista edita o campo, com a mensagem geral em `mostrarAviso` vermelho. Sucesso abre a home e limpa a pilha. Largura máx. `larguraMaximaFormulario` |
 | Status "desativado" | banner fixo no topo com `AppCores.alerta` ("Conta desativada: somente consulta") e ações de criar/editar/excluir desabilitadas (não escondidas) |
 | RN12 / RN20 | textos de confirmação: filial → "Panfleto, categorias e produtos desta filial também serão excluídos."; categoria com vencidos → "Os produtos vencidos desta categoria também serão excluídos." |
 | RNF05 | imagem: tipo e tamanho conferidos antes do envio, com erro no campo |

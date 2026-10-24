@@ -34,6 +34,7 @@ Mudança que toca 2+ pacotes ou um contrato do core (`BrandConfig`, `RestClient`
 
 ## Convenções
 - Imports sempre `package:` (lint `always_use_package_imports`); trailing commas obrigatórias.
+- NUNCA use `unawaited()`. Se parecer necessário, pare e consulte o usuário explicando o motivo antes de usar. Para satisfazer a lint `unawaited_futures`, prefira `await` ou devolver o `Future`.
 - Nomes de domínio em pt-BR (`Falha`, `buscarResumo`, `SecaoPainel`); sufixos técnicos em inglês (`Controller`, `Service`, `Repository`).
 - Testes: `group('Funcionalidade: …')`, casos `'Cenário: Dado …, quando …, então …'`.
 - Fakes para outros pacotes saem de `package:tabloide_core/testing.dart` e só são importados em `test/`.
@@ -50,12 +51,14 @@ Fonte canônica: `docs/specs/design-system.md`. Leia antes de criar ou alterar q
 - Espaços: `AppEspacamentos` (xs 4, sm 8, md 16, lg 24, xl 32). NÃO use números soltos em `EdgeInsets`/`SizedBox`.
 - Raios: `AppRaios` (sm 8, md 12, lg 16, pílula). Ícones: `AppIcones` (20/24/48). NÃO use números em `BorderRadius.circular`, `elevation:`, `size:`.
 - Texto: só `Theme.of(context).textTheme.*` (+ `copyWith(color:)`). NÃO use `TextStyle(`, `fontSize:`, `fontFamily:`.
-- Widgets Material sem `style:` próprio: o visual vem do tema. Ação principal = `FilledButton` (1 por tela).
+- Widgets Material sem `style:` próprio: o visual vem do tema. Ação principal = `AppBotaoPrincipal` (1 por tela); campos = `AppCampoTexto`/`AppCampoSenha`.
 - Layout: `ClasseTamanho.de(context)` (compacto < 600, médio < 840, expandido) e `AppLayout` (larguras máximas). NÃO compare largura com número nem use `MediaQuery.of(context).size`.
 - Tema: `theme: AppTheme.claro(marca)` + `themeMode: ThemeMode.light`. NÃO use `darkTheme:` nem `ThemeMode.dark/system`.
 - Feedback: lista carregando → `EsqueletoLista`/`Esqueleto` (não spinner de tela); ação → spinner dentro do botão desabilitado; falha → `EstadoFalha`; vazio → `EstadoVazio`; exclusão → `confirmarExclusao`; retorno → `mostrarAviso`; erro de validação → no próprio campo.
 - Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
-- A mesma tela em `app` e `web` (ex.: `LoginScreen`) é implementada em cada plataforma, mesmo parecida: isso NÃO conta como padrão repetido. Padrão visual repetido entre telas/features diferentes → widget em `packages/core/lib/src/widgets/` com teste + golden, e registro no `design-system.md` (sem validação de formulário, que fica na plataforma). Token novo → `packages/core/lib/src/theme/` + doc + regra no teste.
+- Toda `*_screen.dart` tem UM ÚNICO widget (StatelessWidget OU StatefulWidget com seu State), nunca dois. Widget auxiliar vai para arquivo próprio.
+- NUNCA crie função ou método que retorne `Widget` (fora o `build`): crie um widget em arquivo próprio. Verificado por `packages/core/test/arquitetura/widgets_test.dart`.
+- A tela em si é implementada em cada plataforma (`app` e `web`). Widget que se repete ou tem o mesmo comportamento no app e na web vai para `packages/core/lib/src/widgets/` com prefixo `App` (ex.: `AppBotaoPrincipal`, `AppCampoTexto`), com teste + golden e registro no `design-system.md`; app e web sempre usam esse widget. Validação de formulário não vai para o core: o widget recebe o `validador` por parâmetro. Token novo → `packages/core/lib/src/theme/` + doc + regra no teste.
 
 ## Testing & Quality Bar
 "Feito" = `dart run melos run analyze` limpo + `dart run melos run test` e `flutter test` (raiz) verdes. Mudou tela → regenere goldens e versione só `goldens/ci/`.
