@@ -7,7 +7,7 @@ import '../../../helpers/montar.dart';
 
 final _email = find.widgetWithText(TextFormField, 'E-mail');
 final _senha = find.widgetWithText(TextFormField, 'Senha');
-final _entrar = find.widgetWithText(FilledButton, 'Entrar');
+final _entrar = find.widgetWithText(ElevatedButton, 'Entrar');
 
 void main() {
   group('Funcionalidade: tela de login na web', () {
@@ -35,7 +35,7 @@ void main() {
     }
 
     testWidgets(
-      'Cenário: Dado a tela aberta, então mostra marca, campos, "Entrar" e o apoio de senha (RN36)',
+      'Cenário: Dado a tela aberta, então mostra marca, campos, "Entrar" e "Cadastre-se"',
       (tester) async {
         await abrir(tester);
 
@@ -48,7 +48,7 @@ void main() {
         expect(_senha, findsOneWidget);
         expect(_entrar, findsOneWidget);
         expect(
-          find.text('Esqueceu a senha? Fale com o suporte.'),
+          find.widgetWithText(TextButton, 'Cadastre - se '),
           findsOneWidget,
         );
       },
@@ -62,7 +62,7 @@ void main() {
         await preencher(tester, '', '');
 
         expect(find.text('Informe o e-mail'), findsOneWidget);
-        expect(find.text('Informe a senha'), findsOneWidget);
+        expect(find.text('Informe a senha.'), findsOneWidget);
         expect(repository.pedidos, isEmpty);
       },
     );
@@ -74,10 +74,19 @@ void main() {
 
         await preencher(tester, 'ana@', 'Teste1234');
 
-        expect(
-          find.text('Digite um e-mail válido, como nome@loja.com.br'),
-          findsOneWidget,
-        );
+        expect(find.text('Digite um e-mail válido.'), findsOneWidget);
+        expect(repository.pedidos, isEmpty);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado uma senha com menos de 6 caracteres, quando toco em "Entrar", então o campo pede o mínimo',
+      (tester) async {
+        await abrir(tester);
+
+        await preencher(tester, 'teste01@gmail.com', '12345');
+
+        expect(find.text('Minimo de 6 caracters.'), findsOneWidget);
         expect(repository.pedidos, isEmpty);
       },
     );
@@ -135,11 +144,13 @@ void main() {
 
         await preencher(tester, 'teste01@gmail.com', 'Teste1234');
 
-        final botao = tester.widget<FilledButton>(find.byType(FilledButton));
+        final botao = tester.widget<ElevatedButton>(
+          find.byType(ElevatedButton),
+        );
         expect(botao.onPressed, isNull);
         expect(
           find.descendant(
-            of: find.byType(FilledButton),
+            of: find.byType(ElevatedButton),
             matching: find.byType(CircularProgressIndicator),
           ),
           findsOneWidget,
