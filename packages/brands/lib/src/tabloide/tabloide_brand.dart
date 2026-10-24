@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Marca padrão: a do próprio produto.
 final class TabloideBrand implements BrandConfig {
   const TabloideBrand();
 
@@ -19,5 +18,5 @@ final class TabloideBrand implements BrandConfig {
       const AssetImage('assets/tabloide/logo.png', package: 'tabloide_brands');
 
   @override
-  String get cnpj => '11444777000161'; // fictício até ter o real
+  String get cnpj => '11444777000161';
 }

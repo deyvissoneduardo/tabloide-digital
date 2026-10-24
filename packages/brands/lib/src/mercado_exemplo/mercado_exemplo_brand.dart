@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Cliente de exemplo, para estudo do white-label.
 final class MercadoExemploBrand implements BrandConfig {
   const MercadoExemploBrand();
 
@@ -21,5 +20,5 @@ final class MercadoExemploBrand implements BrandConfig {
   );
 
   @override
-  String get cnpj => '11222333000181'; // fictício
+  String get cnpj => '11222333000181';
 }
