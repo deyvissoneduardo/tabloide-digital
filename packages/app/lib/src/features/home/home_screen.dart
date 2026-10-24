@@ -4,7 +4,6 @@ import 'package:tabloide_app/src/features/home/widgets/conteudo_secao.dart';
 import 'package:tabloide_app/src/features/home/widgets/resumo_inicio.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Home do painel no celular: barra superior com a marca e navegação embaixo.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 

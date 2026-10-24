@@ -3,7 +3,6 @@ import 'package:tabloide_app/tabloide_app.dart';
 
 import '../../../helpers/montar.dart';
 
-/// Falha na primeira chamada e responde nas seguintes.
 final class _RepositoryInstavel implements HomeRepository {
   var chamadas = 0;
 

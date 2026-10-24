@@ -6,12 +6,7 @@ import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 import 'package:tabloide_core/src/theme/app_tipografia.dart';
 
-/// Tema do painel calculado a partir da marca do cliente.
-///
-/// O painel só tem tema claro (ver `docs/specs/design-system.md`). As telas
-/// usam os widgets Material puros; o visual de cada um vem daqui.
 abstract final class AppTheme {
-  /// Tema claro da [marca].
   static ThemeData claro(BrandConfig marca) {
     final esquema = _esquemaDaMarca(marca);
     final base = ThemeData(useMaterial3: true, colorScheme: esquema);
@@ -133,8 +128,6 @@ abstract final class AppTheme {
 
   static ColorScheme _esquemaDaMarca(BrandConfig marca) {
     final daPrimaria = _esquema(marca.corPrimaria);
-    // A secundária vem de um esquema próprio: passar a cor crua em
-    // `secondary:` não recalcula o onSecondary.
     final daSecundaria = _esquema(marca.corSecundaria);
     var esquema = daPrimaria.copyWith(
       secondary: daSecundaria.primary,
@@ -143,8 +136,6 @@ abstract final class AppTheme {
       onSecondaryContainer: daSecundaria.onPrimaryContainer,
       error: AppCores.erro,
     );
-    // O cliente vê a cor exata dele sempre que ela tiver contraste com
-    // branco ou preto; senão fica o tom calculado.
     final primaria = _corExata(marca.corPrimaria);
     if (primaria != null) {
       esquema = esquema.copyWith(primary: primaria.$1, onPrimary: primaria.$2);
@@ -159,11 +150,8 @@ abstract final class AppTheme {
     return esquema;
   }
 
-  /// Contraste mínimo de texto normal (WCAG AA).
   static const contrasteMinimo = 4.5;
 
-  /// [cor] com o texto (branco ou preto) de maior contraste, ou `null` se
-  /// nenhum dos dois atingir [contrasteMinimo].
   static (Color, Color)? _corExata(Color cor) {
     final sobreBranco = contraste(cor, _branco);
     final sobrePreto = contraste(cor, _preto);
@@ -176,7 +164,6 @@ abstract final class AppTheme {
   static const _branco = Color(0xFFFFFFFF);
   static const _preto = Color(0xFF000000);
 
-  /// Razão de contraste WCAG entre duas cores opacas.
   static double contraste(Color a, Color b) {
     final la = a.computeLuminance();
     final lb = b.computeLuminance();
@@ -184,8 +171,6 @@ abstract final class AppTheme {
     return (claro + 0.05) / (escuro + 0.05);
   }
 
-  // fidelity mantém o tom perto da cor do cliente; o padrão (tonalSpot)
-  // dessatura.
   static ColorScheme _esquema(Color semente) => ColorScheme.fromSeed(
     seedColor: semente,
     dynamicSchemeVariant: DynamicSchemeVariant.fidelity,

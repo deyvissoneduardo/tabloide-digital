@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Corpo 201 de `POST /auth/login`, como na documentação da API.
 Map<String, Object?> corpoLogin() => {
   'lojista': {
     'id': '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01',

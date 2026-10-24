@@ -3,15 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-/// Log das chamadas à API no console de debug.
-///
-/// Request e response saem em blocos separados, em amarelo; response com
-/// status de erro (≥ 400) ou sem resposta (rede, timeout) sai em vermelho.
-/// Senha, token e header `Authorization` aparecem como `***`.
-///
-/// O `DioRestClient` só o instala em `kDebugMode`: nada disso vai para release.
 final class LogApiInterceptor extends Interceptor {
-  /// Cria o interceptor; [escrever] existe para os testes capturarem o log.
   LogApiInterceptor({void Function(String linha)? escrever})
     : _escrever = escrever ?? debugPrint;
 
@@ -78,7 +70,6 @@ final class LogApiInterceptor extends Interceptor {
       for (final linha in linhas)
         for (final parte in linha.split('\n')) '│ $parte',
     ];
-    // Cor em toda linha: o console pode quebrar o texto em vários prints.
     for (final linha in [topo.padRight(60, '─'), ...corpo, '└${'─' * 59}']) {
       _escrever('$cor$linha$_reset');
     }

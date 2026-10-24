@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Seção Início no celular: um cartão por número, em coluna.
 class ResumoInicio extends StatelessWidget {
   const ResumoInicio({super.key});
 

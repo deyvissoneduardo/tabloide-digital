@@ -6,9 +6,7 @@ import 'package:tabloide_core/src/http/rest_client.dart';
 import 'package:tabloide_core/src/requests/login_request.dart';
 import 'package:tabloide_core/src/responses/login_response.dart';
 
-/// [AuthRepository] sobre a API do Tabloide (`POST /auth/login`).
 final class AuthRepositoryApi implements AuthRepository {
-  /// Cria o repository com o [RestClient] injetado.
   const AuthRepositoryApi(this._client);
 
   final RestClient _client;
@@ -26,7 +24,6 @@ final class AuthRepositoryApi implements AuthRepository {
     };
   }
 
-  /// Lê o corpo `{"erro": {"codigo", "mensagem"}}` da API.
   Falha _falhaDa(RestResposta resposta) => switch (resposta.dados) {
     {
       'erro': {

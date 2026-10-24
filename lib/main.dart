@@ -15,9 +15,6 @@ void main() {
   runApp(bootstrap(marca: resolverMarca(marcaId), baseUrl: baseUrl));
 }
 
-/// Registra os clientes e devolve a marca do build.
-///
-/// Lança `MarcaNaoRegistrada` (app não sobe) se [id] não existir.
 BrandConfig resolverMarca(String id) {
   final registry = BrandRegistry();
   registrarMarcas(registry);

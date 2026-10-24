@@ -1,4 +1,3 @@
-/// Tudo que é compartilhado entre o painel app e o painel web.
 library;
 
 export 'src/brand/brand_config.dart';

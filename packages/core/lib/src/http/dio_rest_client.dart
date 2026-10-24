@@ -4,14 +4,7 @@ import 'package:tabloide_core/src/http/dio_factory.dart';
 import 'package:tabloide_core/src/http/log_api_interceptor.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 
-/// [RestClient] sobre o Dio da plataforma (`DioForNative` ou `DioForBrowser`).
-///
-/// O Dio lança exceção em 4xx/5xx; aqui ela volta a ser [RestResposta], para
-/// o repository ler o corpo de erro da API.
 final class DioRestClient implements RestClient {
-  /// Cria o cliente; [dio] existe para os testes injetarem um mock.
-  ///
-  /// Em debug, as chamadas aparecem no console (ver [LogApiInterceptor]).
   DioRestClient({required String baseUrl, Dio? dio})
     : _dio =
           dio ??

@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Pede confirmação antes de uma exclusão (RN12, RN20).
-///
-/// O botão de confirmar usa a cor de erro e repete o nome da ação
-/// ([rotuloConfirmar], ex.: "Excluir filial"); [mensagem] descreve o impacto
-/// (ex.: "Panfleto, categorias e produtos desta filial também serão
-/// excluídos."). Devolve `true` só se o lojista confirmar.
 Future<bool> confirmarExclusao(
   BuildContext context, {
   required String titulo,
@@ -39,17 +33,8 @@ Future<bool> confirmarExclusao(
   return confirmou ?? false;
 }
 
-/// Tipo do aviso mostrado em [mostrarAviso].
-enum TipoAviso {
-  /// Ação concluída (ex.: "Produto salvo").
-  sucesso,
+enum TipoAviso { sucesso, erro }
 
-  /// Ação falhou (ex.: mensagem da `Falha` ao salvar).
-  erro,
-}
-
-/// Retorno de uma ação em SnackBar. Erros de validação de campo NÃO usam
-/// isto: aparecem no próprio campo (`errorText`/`validator`).
 void mostrarAviso(
   BuildContext context,
   String mensagem, {

@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Raiz do workspace, a partir de `packages/core` (cwd do `flutter test`).
 final _raiz = Directory.current.parent.parent;
 
 const _pacotes = {
@@ -15,7 +14,6 @@ const _pacotes = {
   'tabloide_web': 'packages/web',
 };
 
-/// Pacotes do workspace citados em `dependencies` do pubspec de [pasta].
 Set<String> _dependenciasDoWorkspace(String pasta) {
   final linhas = File('${_raiz.path}/$pasta/pubspec.yaml').readAsLinesSync();
   final inicio = linhas.indexOf('dependencies:');
@@ -29,7 +27,6 @@ Set<String> _dependenciasDoWorkspace(String pasta) {
   };
 }
 
-/// Arquivos `.dart` de `lib/` de [pasta] que contêm [padrao].
 List<String> _arquivosCom(String pasta, Pattern padrao) => [
   for (final f in Directory(
     '${_raiz.path}/$pasta/lib',
@@ -40,7 +37,6 @@ List<String> _arquivosCom(String pasta, Pattern padrao) => [
       f.path.substring(_raiz.path.length + 1),
 ];
 
-/// Arquivos `.dart` de `lib/` de [pasta] dentro de uma pasta chamada [camada].
 List<File> _arquivosDaCamada(String pasta, String camada) => [
   for (final f in Directory(
     '${_raiz.path}/$pasta/lib',
@@ -51,7 +47,6 @@ List<File> _arquivosDaCamada(String pasta, String camada) => [
       f,
 ];
 
-/// Tipo de retorno de cada método público de [arquivo] (indentação de membro).
 Map<String, String> _retornosPublicos(File arquivo) => {
   for (final m in RegExp(
     r'^  (?!const |final |static |factory )(\S.*?) ([a-z]\w*)\(',
@@ -60,8 +55,6 @@ Map<String, String> _retornosPublicos(File arquivo) => {
     m.group(2)!: m.group(1)!,
 };
 
-/// `Future<Either<Falha, T>>` com `T` sendo um tipo nomeado, nunca `Map`,
-/// `Object`, `dynamic`, record ou coleção de `Map`.
 final _retornoValido = RegExp(
   r'^Future<Either<Falha, (?!Map\b|Object\b|Record\b|List<Map|List<dynamic|List<Object)[A-Z]\w*(<[A-Z][\w<>, ]*>)?>>$',
 );

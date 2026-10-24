@@ -6,7 +6,6 @@ import 'package:tabloide_app/tabloide_app.dart';
 
 import '../../../helpers/montar.dart';
 
-/// Login que nunca responde, para o golden mostrar o estado "enviando".
 final class _AuthRepositoryPendente implements AuthRepository {
   @override
   Future<Either<Falha, LoginResponse>> entrar(LoginRequest request) =>
@@ -21,8 +20,6 @@ void main() {
   goldenTest(
     'Cenário: Dado o login do app no tema claro, então o formulário segue a marca',
     fileName: 'login_screen_app_light',
-    // O spinner do "enviando" gira para sempre: pumpAndSettle não termina, e
-    // no primeiro quadro o arco ainda não aparece.
     pumpBeforeTest: pumpNTimes(2, const Duration(milliseconds: 300)),
     builder: () => GoldenTestGroup(
       columns: 2,

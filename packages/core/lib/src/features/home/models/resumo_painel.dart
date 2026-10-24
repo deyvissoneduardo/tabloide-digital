@@ -1,19 +1,14 @@
-/// Números da seção Início do painel.
 final class ResumoPainel {
-  /// Cria o resumo.
   const ResumoPainel({
     required this.filiais,
     required this.panfletosVigentes,
     required this.produtosVigentes,
   });
 
-  /// Filiais cadastradas.
   final int filiais;
 
-  /// Panfletos no ar hoje.
   final int panfletosVigentes;
 
-  /// Produtos no ar hoje.
   final int produtosVigentes;
 
   @override

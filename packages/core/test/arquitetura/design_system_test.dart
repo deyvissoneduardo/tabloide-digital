@@ -5,14 +5,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Raiz do workspace, a partir de `packages/core` (cwd do `flutter test`).
 final _raiz = Directory.current.parent.parent;
 
-/// Pacotes de tela: tudo em `lib/` deles segue o design system
-/// (`docs/specs/design-system.md`).
 const _pacotesDeTela = ['packages/app', 'packages/web', 'lib'];
 
-/// O que uma tela não pode conter e o token/padrão que substitui.
 final _proibidos = <String, (RegExp, String)>{
   'cor literal': (
     RegExp(r'Color\(0x|Color\.fromA?RGBO?\(|\bColors\.(?!transparent\b)'),
@@ -53,7 +49,6 @@ final _proibidos = <String, (RegExp, String)>{
   ),
 };
 
-/// Linhas de `lib/` de [pasta] que casam com [padrao], como `arquivo:linha`.
 List<String> _ocorrencias(String pasta, RegExp padrao) => [
   for (final f in Directory('${_raiz.path}/$pasta').listSync(recursive: true))
     if (f is File && f.path.endsWith('.dart'))

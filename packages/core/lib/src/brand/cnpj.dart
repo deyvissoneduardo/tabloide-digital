@@ -4,10 +4,6 @@ final _formato = RegExp(r'^[0-9A-Z]{12}[0-9]{2}$');
 const _pesosPrimeiroDv = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 const _pesosSegundoDv = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-/// Valida CNPJ numérico e alfanumérico (com ou sem máscara).
-///
-/// No alfanumérico, cada caractere vale `codeUnit - 48`; o cálculo do dígito
-/// verificador é o mesmo do numérico.
 bool cnpjValido(String valor) {
   final cnpj = valor.replaceAll(_mascara, '').toUpperCase();
   if (!_formato.hasMatch(cnpj)) return false;

@@ -3,9 +3,7 @@ import 'package:tabloide_core/src/theme/app_espacamentos.dart';
 import 'package:tabloide_core/src/theme/app_icones.dart';
 import 'package:tabloide_core/src/theme/app_layout.dart';
 
-/// Tela ou seção sem conteúdo: ícone, título, mensagem e ação opcional.
 class EstadoVazio extends StatelessWidget {
-  /// Cria o estado vazio.
   const EstadoVazio({
     super.key,
     required this.icone,
@@ -18,19 +16,14 @@ class EstadoVazio extends StatelessWidget {
          'rotuloAcao e aoAgir vêm juntos',
        );
 
-  /// Ícone ilustrativo, na cor primária.
   final IconData icone;
 
-  /// O que está vazio (ex.: "Nenhuma filial cadastrada").
   final String titulo;
 
-  /// Orientação para o lojista sair do vazio.
   final String? mensagem;
 
-  /// Texto do botão (ex.: "Cadastrar filial").
   final String? rotuloAcao;
 
-  /// Ação do botão.
   final VoidCallback? aoAgir;
 
   @override
@@ -64,9 +57,7 @@ class EstadoVazio extends StatelessWidget {
   }
 }
 
-/// Falha ao carregar: ícone de erro, mensagem e "Tentar de novo".
 class EstadoFalha extends StatelessWidget {
-  /// Cria o estado de falha.
   const EstadoFalha({
     super.key,
     required this.mensagem,
@@ -74,13 +65,10 @@ class EstadoFalha extends StatelessWidget {
     this.icone = Icons.cloud_off,
   });
 
-  /// Mensagem da `Falha`, já em linguagem do lojista.
   final String mensagem;
 
-  /// Refaz a operação que falhou.
   final VoidCallback aoTentarDeNovo;
 
-  /// Ícone ilustrativo, na cor de erro.
   final IconData icone;
 
   @override

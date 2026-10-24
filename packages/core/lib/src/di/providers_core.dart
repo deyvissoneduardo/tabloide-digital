@@ -10,12 +10,6 @@ import 'package:tabloide_core/src/features/home/services/home_service.dart';
 import 'package:tabloide_core/src/http/dio_rest_client.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 
-/// Providers que valem no app e na web, na ordem das camadas:
-/// infraestrutura → repositories → [servicos] da plataforma → controllers.
-///
-/// Os services vêm de fora porque cada plataforma tem os seus; eles ficam
-/// entre os repositories (que consomem) e os controllers (que os consomem).
-/// [restClient], [authRepository] e [homeRepository] existem para os testes.
 List<SingleChildWidget> providersCore({
   required BrandConfig marca,
   required String baseUrl,

@@ -5,7 +5,6 @@ import 'package:tabloide_core/testing.dart';
 
 import '../../helpers/montar.dart';
 
-/// Amostra dos componentes Material com o tema do painel.
 class _Componentes extends StatelessWidget {
   const _Componentes();
 

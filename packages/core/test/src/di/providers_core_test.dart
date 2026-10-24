@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_core/testing.dart';
 
-/// Service mínimo de plataforma: só repassa ao repository injetado.
 final class _ServicoDeTeste implements HomeService {
   _ServicoDeTeste(this._repository);
 

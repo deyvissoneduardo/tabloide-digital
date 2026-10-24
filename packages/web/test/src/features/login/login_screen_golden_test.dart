@@ -12,7 +12,6 @@ const _telas = {
   'celular': Size(390, 844),
 };
 
-/// Login que nunca responde, para o golden mostrar o estado "enviando".
 final class _AuthRepositoryPendente implements AuthRepository {
   @override
   Future<Either<Falha, LoginResponse>> entrar(LoginRequest request) =>
@@ -28,8 +27,6 @@ void main() {
     goldenTest(
       'Cenário: Dado o login web em $tela, então o formulário segue a largura e a marca',
       fileName: 'login_screen_web_$tela',
-      // O spinner do "enviando" gira para sempre: pumpAndSettle não termina, e
-      // no primeiro quadro o arco ainda não aparece.
       pumpBeforeTest: pumpNTimes(2, const Duration(milliseconds: 300)),
       builder: () => GoldenTestGroup(
         columns: 2,

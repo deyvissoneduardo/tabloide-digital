@@ -1,4 +1,3 @@
-/// Painel do lojista para navegador.
 library;
 
 export 'package:tabloide_core/tabloide_core.dart';

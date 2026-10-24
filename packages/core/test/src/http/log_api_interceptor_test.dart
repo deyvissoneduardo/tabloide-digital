@@ -8,7 +8,6 @@ import 'package:tabloide_core/src/http/log_api_interceptor.dart';
 const _amarelo = '\x1B[33m';
 const _vermelho = '\x1B[31m';
 
-/// Servidor falso: responde [status] com [corpo], ou falha sem conexão.
 final class _Adaptador implements HttpClientAdapter {
   _Adaptador({this.status = 200, this.corpo, this.semConexao = false});
 
@@ -50,7 +49,6 @@ void main() {
           ..httpClientAdapter = adaptador
           ..interceptors.add(LogApiInterceptor(escrever: linhas.add));
 
-    /// Linhas do bloco cujo topo contém [titulo].
     List<String> bloco(String titulo) {
       final inicio = linhas.indexWhere(
         (l) => l.contains('┌') && l.contains(titulo),

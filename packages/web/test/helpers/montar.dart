@@ -3,12 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_web/tabloide_web.dart';
 import 'package:tabloide_core/testing.dart';
 
-/// Controller com a cadeia real: [HomeServiceWeb] → [HomeRepositoryFake].
 HomeController controllerDeTeste({
   HomeRepository repository = const HomeRepositoryFake(atraso: Duration.zero),
 }) => HomeController(HomeServiceWeb(repository));
 
-/// Monta a [HomeScreen] com marca e controller no Provider, igual ao bootstrap.
 Widget montar({
   BrandConfig marca = const MarcaFake(),
   HomeController? controller,
@@ -24,11 +22,9 @@ Widget montar({
   ),
 );
 
-/// Controller de login com a cadeia real: [AuthServiceWeb] → [repository].
 LoginController loginControllerDeTeste({AuthRepository? repository}) =>
     LoginController(AuthServiceWeb(repository ?? AuthRepositoryFake()));
 
-/// Monta a [LoginScreen] como no bootstrap: marca, login e a home de destino.
 Widget montarLogin({
   BrandConfig marca = const MarcaFake(),
   LoginController? controller,
@@ -45,7 +41,6 @@ Widget montarLogin({
   ),
 );
 
-/// Duas marcas bem diferentes, para os goldens mostrarem o white-label.
 const marcasDeTeste = {
   'azul': MarcaFake(nome: 'Marca Azul'),
   'vermelha': MarcaFake(

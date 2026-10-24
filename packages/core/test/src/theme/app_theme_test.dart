@@ -38,8 +38,6 @@ void main() {
             );
           });
         } else {
-          // Cor muito clara não dá contraste com branco: o tema usa a cor
-          // exata com texto preto ou, sem contraste, um tom mais escuro.
           test(
             'Quando gero o tema claro, então o texto sobre a primária é preto',
             () {

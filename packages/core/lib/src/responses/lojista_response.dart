@@ -1,6 +1,4 @@
-/// Lojista devolvido pela API (ex.: no login).
 final class LojistaResponse {
-  /// Cria o lojista.
   const LojistaResponse({
     required this.id,
     required this.nomeFantasia,
@@ -12,7 +10,6 @@ final class LojistaResponse {
     required this.criadoEm,
   });
 
-  /// Lê o JSON da API; lança [FormatException] se faltar campo.
   factory LojistaResponse.fromJson(Object? json) => switch (json) {
     {
       'id': final String id,
@@ -37,28 +34,20 @@ final class LojistaResponse {
     _ => throw const FormatException('Lojista fora do formato esperado'),
   };
 
-  /// Identificador do lojista.
   final String id;
 
-  /// Nome da loja exibido ao consumidor.
   final String nomeFantasia;
 
-  /// Pessoa responsável pela conta.
   final String nomeResponsavel;
 
-  /// E-mail de acesso.
   final String email;
 
-  /// WhatsApp no formato E.164 (ex.: `+5511987654321`).
   final String whatsapp;
 
-  /// Só dígitos, sem máscara.
   final String cnpj;
 
-  /// Situação da conta na API (ex.: `AGUARDANDO_ATIVACAO`).
   final String status;
 
-  /// Quando a conta foi criada.
   final DateTime criadoEm;
 
   @override

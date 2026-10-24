@@ -4,7 +4,6 @@ import 'package:tabloide_core/tabloide_core.dart';
 
 import '../../helpers/montar.dart';
 
-/// Botão que abre a confirmação e guarda a resposta.
 class _Excluir extends StatelessWidget {
   const _Excluir({required this.aoResponder});
 

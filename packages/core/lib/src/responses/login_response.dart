@@ -1,15 +1,12 @@
 import 'package:tabloide_core/src/responses/lojista_response.dart';
 
-/// Sessão aberta por `POST /auth/login`.
 final class LoginResponse {
-  /// Cria a sessão.
   const LoginResponse({
     required this.lojista,
     required this.token,
     required this.expiraEm,
   });
 
-  /// Lê o JSON da API; lança [FormatException] se faltar campo.
   factory LoginResponse.fromJson(Object? json) => switch (json) {
     {
       'lojista': final Object lojista,
@@ -24,13 +21,10 @@ final class LoginResponse {
     _ => throw const FormatException('Login fora do formato esperado'),
   };
 
-  /// Lojista autenticado.
   final LojistaResponse lojista;
 
-  /// JWT para as próximas chamadas.
   final String token;
 
-  /// Quando o [token] deixa de valer.
   final DateTime expiraEm;
 
   @override
@@ -43,7 +37,6 @@ final class LoginResponse {
   @override
   int get hashCode => Object.hash(lojista, token, expiraEm);
 
-  // O token fica fora do texto para não ir parar em log.
   @override
   String toString() => 'LoginResponse(lojista: $lojista, expiraEm: $expiraEm)';
 }

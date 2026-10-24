@@ -3,9 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_web/src/features/home/widgets/conteudo_secao.dart';
 
-/// Home do painel no navegador, pelas classes de tamanho do Material 3:
-/// compacto usa o layout do celular; médio, menu lateral recolhido;
-/// expandido, menu lateral com rótulos.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 

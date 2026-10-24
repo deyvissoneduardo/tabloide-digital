@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_core/src/brand/brand_config.dart';
 
-/// Logo da marca ativa, com as iniciais do nome se a imagem falhar.
 class MarcaLogo extends StatelessWidget {
-  /// Cria a logo com a [altura] informada.
   const MarcaLogo({super.key, this.altura = 32});
 
-  /// Altura da logo; a largura segue a proporção da imagem.
   final double altura;
 
   @override

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_brands/tabloide_brands.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Amostra de uma marca: o que o cliente aprova quando entra no white-label.
 class _Amostra extends StatelessWidget {
   const _Amostra();
 

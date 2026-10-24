@@ -34,7 +34,6 @@ Mudança que toca 2+ pacotes ou um contrato do core (`BrandConfig`, `RestClient`
 
 ## Convenções
 - Imports sempre `package:` (lint `always_use_package_imports`); trailing commas obrigatórias.
-- Todo membro público do `core` tem doc comment `///` (lint `public_member_api_docs`).
 - Nomes de domínio em pt-BR (`Falha`, `buscarResumo`, `SecaoPainel`); sufixos técnicos em inglês (`Controller`, `Service`, `Repository`).
 - Testes: `group('Funcionalidade: …')`, casos `'Cenário: Dado …, quando …, então …'`.
 - Fakes para outros pacotes saem de `package:tabloide_core/testing.dart` e só são importados em `test/`.

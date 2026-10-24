@@ -1,4 +1,3 @@
-/// Painel do lojista para Android e iOS.
 library;
 
 export 'package:tabloide_core/tabloide_core.dart';
