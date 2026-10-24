@@ -102,7 +102,7 @@ Classes de tamanho do Material 3, em `AppLayout` + `ClasseTamanho` (`app_layout.
 
 - Formulários (filial, panfleto, produto, cadastro, login) ficam limitados a `AppLayout.larguraMaximaFormulario` (600) em qualquer classe.
 - Obter a classe: `ClasseTamanho.de(context)`. Proibido comparar largura com número solto (`largura < 600`) e usar `MediaQuery.of(context).size`.
-- Referências implementadas: `packages/web/lib/src/features/home/home_screen.dart` (navegação por classe) e `packages/web/lib/src/features/login/login_screen.dart` (formulário: no compacto ocupa a tela; a partir do médio fica num `Card` centralizado com padding `lg`).
+- Referências implementadas: `packages/web/lib/src/features/home/home_screen.dart` (navegação por classe) e `packages/web/lib/src/features/login/login_screen.dart` (formulário centralizado, igual ao do app em qualquer classe, limitado a `larguraMaximaFormulario`).
 
 ### 3.2 Classes de tamanho e adaptação (mobile)
 
@@ -183,7 +183,7 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | RN16 / RN17 | conflito de período e "defina a data limite do atual" aparecem como erro no campo de data, com a orientação |
 | RN37 / RN43 | e-mail ou categoria repetidos → erro no próprio campo |
 | RN36 | tela de login com texto de apoio "Esqueceu a senha? Fale com o suporte.", sem link de recuperação |
-| Login | marca (`MarcaLogo` em `AppIcones.destaque` + `MarcaNome`), título "Entre no painel", campos E-mail (teclado de e-mail, autofill) e Senha (botão mostrar/ocultar, "Entrar" no teclado envia), `FilledButton` "Entrar" com spinner enquanto envia e campos desabilitados; largura máx. `larguraMaximaFormulario` |
+| Login | marca (`MarcaLogo` em `AppIcones.destaque` + `MarcaNome`), título "Entre no painel", campos E-mail (teclado de e-mail) e Senha (mínimo de 6 caracteres, botão mostrar/ocultar, "Entrar" no teclado envia). Ação principal é um `ElevatedButton` "Entrar" com `colorScheme.primary`, raio `AppRaios.bordaMd` e texto `titleMedium` em `onPrimary` (exceção ao `FilledButton` pílula, decidida pelo usuário em 24/10/2026); spinner em `colorScheme.secondary` enquanto envia, com campos desabilitados. Abaixo, `TextButton` "Cadastre-se" alinhado à direita, em `primary`. Largura máx. `larguraMaximaFormulario` |
 | Status "desativado" | banner fixo no topo com `AppCores.alerta` ("Conta desativada: somente consulta") e ações de criar/editar/excluir desabilitadas (não escondidas) |
 | RN12 / RN20 | textos de confirmação: filial → "Panfleto, categorias e produtos desta filial também serão excluídos."; categoria com vencidos → "Os produtos vencidos desta categoria também serão excluídos." |
 | RNF05 | imagem: tipo e tamanho conferidos antes do envio, com erro no campo |
