@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tabloide_app/src/features/home/widgets/conteudo_secao.dart';
 import 'package:tabloide_app/src/features/home/widgets/resumo_inicio.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
@@ -13,17 +12,11 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: AppEspacamentos.md,
-        title: const Row(
-          children: [
-            MarcaLogo(),
-            SizedBox(width: AppEspacamentos.sm),
-            Expanded(child: MarcaNome()),
-          ],
-        ),
+        title: const AppMarcaCabecalho(),
       ),
       body: secao == SecaoPainel.inicio
           ? const ResumoInicio()
-          : ConteudoSecao(secao: secao),
+          : AppConteudoSecao(secao: secao),
       bottomNavigationBar: NavigationBar(
         selectedIndex: secao.index,
         onDestinationSelected: (i) =>

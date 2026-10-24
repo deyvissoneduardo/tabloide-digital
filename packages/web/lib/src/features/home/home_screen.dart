@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
-import 'package:tabloide_web/src/features/home/widgets/conteudo_secao.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,11 +9,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<HomeController>();
     final classe = ClasseTamanho.de(context);
-    final conteudo = ConteudoSecao(secao: controller.secao);
+    final conteudo = AppConteudoSecao(secao: controller.secao);
 
     if (classe == ClasseTamanho.compacto) {
       return Scaffold(
-        appBar: AppBar(title: const _Marca()),
+        appBar: AppBar(title: const AppMarcaCabecalho()),
         body: conteudo,
         bottomNavigationBar: NavigationBar(
           selectedIndex: controller.secao.index,
@@ -45,7 +44,7 @@ class HomeScreen extends StatelessWidget {
               child: expandido
                   ? const SizedBox(
                       width: AppLayout.larguraMenuLateral,
-                      child: _Marca(),
+                      child: AppMarcaCabecalho(),
                     )
                   : const MarcaLogo(altura: AppIcones.destaque),
             ),
@@ -78,17 +77,4 @@ class HomeScreen extends StatelessWidget {
 
   ValueChanged<int> _selecionar(BuildContext context) =>
       (i) => context.read<HomeController>().selecionar(SecaoPainel.values[i]);
-}
-
-class _Marca extends StatelessWidget {
-  const _Marca();
-
-  @override
-  Widget build(BuildContext context) => const Row(
-    children: [
-      MarcaLogo(),
-      SizedBox(width: AppEspacamentos.sm),
-      Flexible(child: MarcaNome()),
-    ],
-  );
 }
