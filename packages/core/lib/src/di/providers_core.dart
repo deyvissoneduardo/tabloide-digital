@@ -3,6 +3,8 @@ import 'package:provider/single_child_widget.dart';
 import 'package:tabloide_core/src/brand/brand_config.dart';
 import 'package:tabloide_core/src/features/auth/repositories/auth_repository.dart';
 import 'package:tabloide_core/src/features/auth/repositories/auth_repository_api.dart';
+import 'package:tabloide_core/src/features/cadastro/repositories/cadastro_repository.dart';
+import 'package:tabloide_core/src/features/cadastro/repositories/cadastro_repository_api.dart';
 import 'package:tabloide_core/src/features/home/home_controller.dart';
 import 'package:tabloide_core/src/features/home/repositories/home_repository.dart';
 import 'package:tabloide_core/src/features/home/repositories/home_repository_fake.dart';
@@ -16,6 +18,7 @@ List<SingleChildWidget> providersCore({
   required List<SingleChildWidget> servicos,
   RestClient? restClient,
   AuthRepository? authRepository,
+  CadastroRepository? cadastroRepository,
   HomeRepository? homeRepository,
 }) => [
   Provider<BrandConfig>.value(value: marca),
@@ -25,6 +28,10 @@ List<SingleChildWidget> providersCore({
   Provider<AuthRepository>(
     create: (context) =>
         authRepository ?? AuthRepositoryApi(context.read<RestClient>()),
+  ),
+  Provider<CadastroRepository>(
+    create: (context) =>
+        cadastroRepository ?? CadastroRepositoryApi(context.read<RestClient>()),
   ),
   Provider<HomeRepository>(
     create: (_) => homeRepository ?? const HomeRepositoryFake(),

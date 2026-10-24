@@ -32,15 +32,43 @@ final class FalhaInesperada extends Falha {
 }
 
 final class FalhaApi extends Falha {
-  const FalhaApi({required this.codigo, required String mensagem})
-    : super(mensagem);
+  const FalhaApi({
+    required this.codigo,
+    required String mensagem,
+    this.campos = const {},
+  }) : super(mensagem);
 
   final String codigo;
 
-  @override
-  bool operator ==(Object other) =>
-      other is FalhaApi && other.codigo == codigo && other.mensagem == mensagem;
+  final Map<String, List<String>> campos;
 
   @override
-  int get hashCode => Object.hash(FalhaApi, codigo, mensagem);
+  bool operator ==(Object other) =>
+      other is FalhaApi &&
+      other.codigo == codigo &&
+      other.mensagem == mensagem &&
+      _camposIguais(other.campos, campos);
+
+  @override
+  int get hashCode => Object.hash(
+    FalhaApi,
+    codigo,
+    mensagem,
+    Object.hashAllUnordered([
+      for (final MapEntry(:key, :value) in campos.entries)
+        Object.hash(key, Object.hashAll(value)),
+    ]),
+  );
+}
+
+bool _camposIguais(Map<String, List<String>> a, Map<String, List<String>> b) {
+  if (a.length != b.length) return false;
+  for (final MapEntry(:key, :value) in a.entries) {
+    final outro = b[key];
+    if (outro == null || outro.length != value.length) return false;
+    for (var i = 0; i < value.length; i++) {
+      if (outro[i] != value[i]) return false;
+    }
+  }
+  return true;
 }
