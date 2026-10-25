@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tabloide_core/src/theme/app_raios.dart';
+import 'package:tabloide_core/src/widgets/app_aviso.dart';
 
 Future<bool> confirmarExclusao(
   BuildContext context, {
@@ -33,22 +35,67 @@ Future<bool> confirmarExclusao(
   return confirmou ?? false;
 }
 
-enum TipoAviso { sucesso, erro }
+Future<bool> confirmar(
+  BuildContext context, {
+  required String titulo,
+  required String mensagem,
+  required String rotuloConfirmar,
+}) async {
+  final confirmou = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(titulo),
+      content: Text(mensagem),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancelar'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text(rotuloConfirmar),
+        ),
+      ],
+    ),
+  );
+  return confirmou ?? false;
+}
 
 void mostrarAviso(
   BuildContext context,
   String mensagem, {
   TipoAviso tipo = TipoAviso.sucesso,
+  String? titulo,
+  IconData? icone,
+  Duration duracao = const Duration(seconds: 4),
+  String? rotuloAcao,
+  VoidCallback? aoAgir,
 }) {
   final cores = Theme.of(context).colorScheme;
+  final cor = tipo.cor(cores);
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
       SnackBar(
-        content: Text(mensagem),
-        backgroundColor: switch (tipo) {
-          TipoAviso.sucesso => null,
-          TipoAviso.erro => cores.error,
+        backgroundColor: cores.surfaceContainerLowest,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRaios.bordaMd,
+          side: BorderSide(color: cor),
+        ),
+        duration: duracao,
+        content: AppAviso(
+          mensagem: mensagem,
+          tipo: tipo,
+          titulo: titulo,
+          icone: icone,
+        ),
+        action: switch ((rotuloAcao, aoAgir)) {
+          (final rotulo?, final acao?) => SnackBarAction(
+            label: rotulo,
+            textColor: cor,
+            onPressed: acao,
+          ),
+          _ => null,
         },
       ),
     );

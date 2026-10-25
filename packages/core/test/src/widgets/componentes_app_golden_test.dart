@@ -47,6 +47,18 @@ class _ComponentesAppState extends State<_ComponentesApp> {
       ),
       const SizedBox(height: AppEspacamentos.md),
       AppCampoSenha(controller: _senha, rotulo: 'Senha'),
+      const SizedBox(height: AppEspacamentos.md),
+      AppCampoSelecao<FusoHorario>(
+        valor: FusoHorario.saoPaulo,
+        opcoes: FusoHorario.values,
+        rotuloDe: (fuso) => fuso.rotulo,
+        rotulo: 'Fuso horário',
+        icone: Icons.schedule_outlined,
+        aoMudar: (_) {},
+      ),
+      const SizedBox(height: AppEspacamentos.md),
+      AppCartaoFilial(filial: filialFake, emUso: true, aoEscolherAcao: (_) {}),
+      AppCartaoFilial(filial: filialFakeBairro, aoEscolherAcao: (_) {}),
       const SizedBox(height: AppEspacamentos.lg),
       AppBotaoPrincipal(rotulo: 'Entrar', aoPressionar: () {}),
       const SizedBox(height: AppEspacamentos.sm),
@@ -83,7 +95,10 @@ void main() {
         for (final MapEntry(key: nome, value: marca) in _marcas.entries)
           GoldenTestScenario(
             name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(width: 360, height: 760),
+            constraints: const BoxConstraints.tightFor(
+              width: 360,
+              height: 1000,
+            ),
             child: montarComMarca(
               const SizedBox.expand(child: _ComponentesApp()),
               marca: marca,

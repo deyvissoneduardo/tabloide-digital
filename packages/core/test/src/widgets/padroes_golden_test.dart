@@ -120,4 +120,40 @@ void main() {
       ],
     ),
   );
+
+  goldenTest(
+    'Cenário: Dado os quatro tipos de aviso, então cada um tem título amigável, ícone e borda na cor do status',
+    fileName: 'avisos',
+    builder: () => GoldenTestGroup(
+      columns: 2,
+      children: [
+        for (final MapEntry(key: nome, value: marca) in _marcas.entries)
+          GoldenTestScenario(
+            name: 'Marca $nome',
+            constraints: const BoxConstraints.tightFor(width: 360, height: 420),
+            child: montarComMarca(
+              SizedBox.expand(
+                child: ListView(
+                  padding: const EdgeInsets.all(AppEspacamentos.md),
+                  children: [
+                    for (final tipo in TipoAviso.values)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppEspacamentos.md),
+                          child: AppAviso(
+                            tipo: tipo,
+                            mensagem:
+                                'Mensagem de ${tipo.name} para o lojista.',
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              marca: marca,
+            ),
+          ),
+      ],
+    ),
+  );
 }

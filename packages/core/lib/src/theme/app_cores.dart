@@ -7,5 +7,7 @@ abstract final class AppCores {
 
   static const alerta = Color(0xFFED6C02);
 
+  static const info = Color(0xFF0277BD);
+
   static const neutroClaro = Color(0xFFF5F5F5);
 }

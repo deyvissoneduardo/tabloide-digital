@@ -96,6 +96,42 @@ void main() {
           isA<CadastroRepositoryApi>(),
           reason: 'o cadastro fala com a API de verdade',
         );
+        expect(contexto.read<FilialRepository>(), isA<FilialRepositoryApi>());
+        expect(contexto.read<CepRepository>(), isA<CepRepositoryViaCep>());
+        expect(contexto.read<Sessao>().ativa, isFalse);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado um cache injetado, quando inicio a sessão, então ela grava nesse cache',
+      (tester) async {
+        final armazenamento = ArmazenamentoMemoria();
+        late BuildContext contexto;
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: providersCore(
+              marca: const MarcaFake(),
+              baseUrl: 'http://api',
+              armazenamento: armazenamento,
+              servicos: const [],
+            ),
+            child: Builder(
+              builder: (context) {
+                contexto = context;
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+
+        await tester.runAsync(
+          () => contexto.read<Sessao>().iniciar(
+            token: 'eyJ.token',
+            expiraEm: DateTime.now().add(const Duration(hours: 1)),
+          ),
+        );
+
+        expect(armazenamento.valores[Sessao.chaveToken], 'eyJ.token');
       },
     );
   });

@@ -164,4 +164,38 @@ void main() {
       },
     );
   });
+
+  group('Funcionalidade: campo de texto só leitura', () {
+    testWidgets(
+      'Cenário: Dado um campo só leitura com sufixo, quando toco, então não abre teclado e aviso quem chamou',
+      (tester) async {
+        final texto = TextEditingController();
+        addTearDown(texto.dispose);
+        var toques = 0;
+        await tester.pumpWidget(
+          _noFormulario(
+            GlobalKey<FormState>(),
+            AppCampoTexto(
+              controller: texto,
+              rotulo: 'UF',
+              icone: Icons.flag_outlined,
+              somenteLeitura: true,
+              aoTocar: () => toques++,
+              sufixo: const Icon(Icons.arrow_drop_down),
+            ),
+          ),
+        );
+
+        await tester.tap(find.byType(TextFormField));
+        await tester.enterText(find.byType(TextFormField), 'SP');
+
+        expect(toques, greaterThanOrEqualTo(1));
+        expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+        expect(
+          tester.widget<EditableText>(find.byType(EditableText)).readOnly,
+          isTrue,
+        );
+      },
+    );
+  });
 }

@@ -1,15 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:tabloide_core/src/http/autenticacao_interceptor.dart';
 import 'package:tabloide_core/src/http/dio_factory.dart';
 import 'package:tabloide_core/src/http/log_api_interceptor.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 
 final class DioRestClient implements RestClient {
-  DioRestClient({required String baseUrl, Dio? dio})
+  DioRestClient({required String baseUrl, Dio? dio, String? Function()? token})
     : _dio =
           dio ??
           (criarDio(BaseOptions(baseUrl: baseUrl))
-            ..interceptors.addAll([if (kDebugMode) LogApiInterceptor()]));
+            ..interceptors.addAll([
+              if (token != null) AutenticacaoInterceptor(token),
+              if (kDebugMode) LogApiInterceptor(),
+            ]));
 
   final Dio _dio;
 

@@ -17,6 +17,9 @@ class AppCampoTexto extends StatelessWidget {
     this.aoMudar,
     this.aoEnviar,
     this.inputFormatters,
+    this.somenteLeitura = false,
+    this.aoTocar,
+    this.sufixo,
   });
 
   final TextEditingController controller;
@@ -32,13 +35,22 @@ class AppCampoTexto extends StatelessWidget {
   final ValueChanged<String>? aoMudar;
   final ValueChanged<String>? aoEnviar;
   final List<TextInputFormatter>? inputFormatters;
+  final bool somenteLeitura;
+  final VoidCallback? aoTocar;
+  final Widget? sufixo;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
       enabled: habilitado,
-      decoration: InputDecoration(labelText: rotulo, prefixIcon: Icon(icone)),
+      decoration: InputDecoration(
+        labelText: rotulo,
+        prefixIcon: Icon(icone),
+        suffixIcon: sufixo,
+      ),
+      readOnly: somenteLeitura,
+      onTap: aoTocar,
       keyboardType: teclado,
       textInputAction: acao,
       autocorrect: autocorrecao,
