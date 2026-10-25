@@ -8,7 +8,7 @@ void main() {
       'Cenário: Dado o controller recém-criado, então está ocioso e sem sessão',
       () {
         final controller = LoginController(
-          AuthServiceApp(AuthRepositoryFake()),
+          AuthServiceApp(AuthRepositoryFake(), sessaoDeTeste()),
         );
 
         expect(controller.estado, isA<LoginOcioso>());
@@ -18,7 +18,9 @@ void main() {
 
     test('Cenário: Dado credenciais aceitas, quando entro, então passo por enviando e guardo a sessão em memória', () async {
       final repository = AuthRepositoryFake();
-      final controller = LoginController(AuthServiceApp(repository));
+      final controller = LoginController(
+        AuthServiceApp(repository, sessaoDeTeste()),
+      );
       final estados = <LoginEstado>[];
       controller.addListener(() => estados.add(controller.estado));
 
@@ -40,7 +42,10 @@ void main() {
         mensagem: 'E-mail ou senha incorretos.',
       );
       final controller = LoginController(
-        AuthServiceApp(AuthRepositoryFake(falhaSimulada: falha)),
+        AuthServiceApp(
+          AuthRepositoryFake(falhaSimulada: falha),
+          sessaoDeTeste(),
+        ),
       );
 
       await controller.entrar(email: 'a@b.com', senha: 'errada');
@@ -54,7 +59,9 @@ void main() {
 
     test('Cenário: Dado um login em andamento, quando peço de novo, então não envio duas vezes', () async {
       final repository = AuthRepositoryFake();
-      final controller = LoginController(AuthServiceApp(repository));
+      final controller = LoginController(
+        AuthServiceApp(repository, sessaoDeTeste()),
+      );
 
       await Future.wait([
         controller.entrar(email: 'a@b.com', senha: 'x'),

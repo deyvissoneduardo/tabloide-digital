@@ -13,7 +13,7 @@ void main() {
     late AuthServiceApp service;
     setUp(() {
       repository = _AuthRepositoryMock();
-      service = AuthServiceApp(repository);
+      service = AuthServiceApp(repository, sessaoDeTeste());
     });
 
     test('Cenário: Dado que o repository abre a sessão, quando entro, então devolvo o mesmo Success', () async {

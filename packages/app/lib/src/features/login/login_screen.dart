@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/cadastro/cadastro_screen.dart';
-import 'package:tabloide_app/src/features/home/home_screen.dart';
+import 'package:tabloide_app/src/features/filiais/inicio_sessao_screen.dart';
 import 'package:tabloide_app/src/features/login/login_controller.dart';
 import 'package:tabloide_app/src/features/login/login_estado.dart';
 import 'package:tabloide_core/tabloide_core.dart';
@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     switch (controller.estado) {
       case LoginConcluido():
         await Navigator.of(context).pushReplacement(
-          MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
+          MaterialPageRoute<void>(builder: (_) => const InicioSessaoScreen()),
         );
       case LoginComFalha(:final falha):
         mostrarAviso(context, falha.mensagem, tipo: TipoAviso.erro);

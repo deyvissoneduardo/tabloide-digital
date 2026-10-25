@@ -17,9 +17,14 @@ void main() {
 
     Future<void> abrir(WidgetTester tester, {CadastroRepositoryFake? fake}) {
       repository = fake ?? CadastroRepositoryFake();
+      final sessao = sessaoDeTeste();
       return tester.pumpWidget(
         montarCadastro(
-          controller: cadastroControllerDeTeste(repository: repository),
+          sessao: sessao,
+          controller: cadastroControllerDeTeste(
+            repository: repository,
+            sessao: sessao,
+          ),
         ),
       );
     }
@@ -255,9 +260,14 @@ void main() {
       'Cenário: Dado o login, quando toco em "Cadastre-se", cadastro com sucesso, então vou para a home sem o login na pilha',
       (tester) async {
         repository = CadastroRepositoryFake();
+        final sessao = sessaoDeTeste();
         await tester.pumpWidget(
           montarLogin(
-            cadastro: cadastroControllerDeTeste(repository: repository),
+            sessao: sessao,
+            cadastro: cadastroControllerDeTeste(
+              repository: repository,
+              sessao: sessao,
+            ),
           ),
         );
 

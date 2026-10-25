@@ -24,7 +24,7 @@ void main() {
   group('Funcionalidade: estado do cadastro no app', () {
     test('Cenário: Dado o controller recém-criado, então está ocioso, sem conta e sem erros', () {
       final controller = CadastroController(
-        CadastroServiceApp(CadastroRepositoryFake()),
+        CadastroServiceApp(CadastroRepositoryFake(), sessaoDeTeste()),
       );
 
       expect(controller.estado, isA<CadastroOcioso>());
@@ -34,7 +34,9 @@ void main() {
 
     test('Cenário: Dado dados aceitos, quando cadastro, então passo por enviando, guardo a conta e envio tudo sem espaços nas pontas', () async {
       final repository = CadastroRepositoryFake();
-      final controller = CadastroController(CadastroServiceApp(repository));
+      final controller = CadastroController(
+        CadastroServiceApp(repository, sessaoDeTeste()),
+      );
       final estados = <CadastroEstado>[];
       controller.addListener(() => estados.add(controller.estado));
 
@@ -58,6 +60,7 @@ void main() {
       final controller = CadastroController(
         CadastroServiceApp(
           CadastroRepositoryFake(falhaSimulada: _falhaValidacao),
+          sessaoDeTeste(),
         ),
       );
 
@@ -93,6 +96,7 @@ void main() {
               },
             ),
           ),
+          sessaoDeTeste(),
         ),
       );
 
@@ -105,6 +109,7 @@ void main() {
       final controller = CadastroController(
         CadastroServiceApp(
           CadastroRepositoryFake(falhaSimulada: _falhaValidacao),
+          sessaoDeTeste(),
         ),
       );
       await _cadastrar(controller);
@@ -123,6 +128,7 @@ void main() {
       final controller = CadastroController(
         CadastroServiceApp(
           CadastroRepositoryFake(falhaSimulada: const FalhaSemConexao()),
+          sessaoDeTeste(),
         ),
       );
 
@@ -134,11 +140,13 @@ void main() {
 
     test('Cenário: Dado erros de uma tentativa anterior, quando cadastro de novo, então os erros antigos somem', () async {
       final repository = CadastroRepositoryFake(falhaSimulada: _falhaValidacao);
-      final controller = CadastroController(CadastroServiceApp(repository));
+      final controller = CadastroController(
+        CadastroServiceApp(repository, sessaoDeTeste()),
+      );
       await _cadastrar(controller);
 
       final segunda = CadastroController(
-        CadastroServiceApp(CadastroRepositoryFake()),
+        CadastroServiceApp(CadastroRepositoryFake(), sessaoDeTeste()),
       );
       await _cadastrar(segunda);
       expect(segunda.erroDoCampo('senha'), isNull);
@@ -150,7 +158,9 @@ void main() {
 
     test('Cenário: Dado um cadastro em andamento, quando peço de novo, então não envio duas vezes', () async {
       final repository = CadastroRepositoryFake();
-      final controller = CadastroController(CadastroServiceApp(repository));
+      final controller = CadastroController(
+        CadastroServiceApp(repository, sessaoDeTeste()),
+      );
 
       await Future.wait([_cadastrar(controller), _cadastrar(controller)]);
 
@@ -159,7 +169,9 @@ void main() {
 
     test('Cenário: Dado WhatsApp e CNPJ com máscara, quando cadastro, então envio só letras e números', () async {
       final repository = CadastroRepositoryFake();
-      final controller = CadastroController(CadastroServiceApp(repository));
+      final controller = CadastroController(
+        CadastroServiceApp(repository, sessaoDeTeste()),
+      );
 
       await controller.cadastrar(
         nomeFantasia: 'Mercado Bom Preço',

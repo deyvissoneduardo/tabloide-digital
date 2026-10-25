@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/cadastro/cadastro_controller.dart';
 import 'package:tabloide_app/src/features/cadastro/cadastro_estado.dart';
-import 'package:tabloide_app/src/features/home/home_screen.dart';
+import 'package:tabloide_app/src/features/filiais/inicio_sessao_screen.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -68,7 +68,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
     switch (controller.estado) {
       case CadastroConcluido():
         await Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
+          MaterialPageRoute<void>(builder: (_) => const InicioSessaoScreen()),
           (_) => false,
         );
       case CadastroComFalha(:final falha):

@@ -30,4 +30,10 @@ class LoginController extends ChangeNotifier {
     };
     notifyListeners();
   }
+
+  Future<void> sair() async {
+    await _service.sair();
+    _estado = const LoginOcioso();
+    notifyListeners();
+  }
 }

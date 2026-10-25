@@ -9,7 +9,7 @@ import '../helpers/montar.dart';
 void main() {
   group('Funcionalidade: raiz do painel mobile', () {
     testWidgets(
-      'Cenário: Dado a marca "Padaria Central", quando o app abre, então título e tema (só claro) vêm da marca e o login aparece',
+      'Cenário: Dado a marca "Padaria Central", quando o app abre, então título e tema (só claro) vêm da marca e sem sessão no cache o login aparece',
       (tester) async {
         const marca = MarcaFake(
           nome: 'Padaria Central',
@@ -20,7 +20,9 @@ void main() {
           MultiProvider(
             providers: [
               Provider<BrandConfig>.value(value: marca),
+              Provider<Sessao>.value(value: sessaoDeTeste()),
               ChangeNotifierProvider(create: (_) => loginControllerDeTeste()),
+              ChangeNotifierProvider(create: (_) => filiaisControllerDeTeste()),
             ],
             child: const PainelApp(),
           ),
