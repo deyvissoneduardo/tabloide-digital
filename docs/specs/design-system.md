@@ -33,6 +33,7 @@ A cor é da **marca** (white-label): o esquema é derivado de `BrandConfig.corPr
 | `AppCores.erro` (= `colorScheme.error`) | `#B3261E` | erro de validação, falha, ação destrutiva | [derivado] `app_cores.dart` |
 | `AppCores.sucesso` | `#2E7D32` | confirmação | [derivado] |
 | `AppCores.alerta` | `#ED6C02` | aviso (ex.: lojista desativado, só consulta) | [derivado] |
+| `AppCores.info` | `#0277BD` | aviso informativo (não depende da cor da marca, para não parecer erro em marca vermelha) | [derivado] |
 | `AppCores.neutroClaro` | `#F5F5F5` | fundo neutro | [derivado] |
 
 **Regra**: tela nunca declara cor. Use `Theme.of(context).colorScheme.*` ou `AppCores.*`. Proibido `Color(0x…)`, `Color.fromARGB/RGBO` e `Colors.*` (exceto `Colors.transparent`).
@@ -148,8 +149,10 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 |---|---|---|---|
 | `AppBotaoPrincipal` | `packages/core/lib/src/widgets/app_botao_principal.dart` | `carregando`, `rotuloCarregando` | ação principal da tela ("Entrar", "Cadastrar"): `ElevatedButton` em `primary`, raio `bordaMd`, texto `titleMedium` em `onPrimary`; carregando = desabilitado com spinner em `secondary` |
 | `AppBotaoTexto` | `packages/core/lib/src/widgets/app_botao_texto.dart` | — | ação de navegação secundária ("Cadastre-se"), texto `titleMedium` em `primary` |
-| `AppCampoTexto` | `packages/core/lib/src/widgets/app_campo_texto.dart` | `validador`, `erro` (da API), `teclado`, `acao`, `autofill`, `autocorrecao`, `habilitado`, `inputFormatters` (máscara `brasil_fields`, vinda de `app`/`web`) | todo campo de texto com rótulo e ícone |
+| `AppCampoTexto` | `packages/core/lib/src/widgets/app_campo_texto.dart` | `validador`, `erro` (da API), `teclado`, `acao`, `autofill`, `autocorrecao`, `habilitado`, `inputFormatters` (máscara `brasil_fields`, vinda de `app`/`web`), `somenteLeitura` + `aoTocar` (campo que abre seletor), `sufixo` (ex.: spinner de busca) | todo campo de texto com rótulo e ícone |
 | `AppCampoSenha` | `packages/core/lib/src/widgets/app_campo_senha.dart` | mesmos do campo de texto | senha, com mostrar/ocultar (estado de visibilidade no próprio widget) |
+| `AppCampoSelecao<T>` | `packages/core/lib/src/widgets/app_campo_selecao.dart` | `valor`, `opcoes`, `rotuloDe`, `validador`, `erro` (da API), `habilitado` | campo de escolha com rótulo e ícone (`DropdownButtonFormField`): UF da filial na web |
+| `AppCartaoFilial` | `packages/core/lib/src/widgets/app_cartao_filial.dart` | `emUso` (chip "Em uso"), `aoTocar`, `aoEscolherAcao` (menu Usar/Editar/Excluir), `podeExcluir` | item de filial na seção Filiais e na escolha de filial; com `podeExcluir: false` o "Excluir" fica desabilitado com o motivo |
 | `AppFormulario` | `packages/core/lib/src/widgets/app_formulario.dart` | `chave` (`GlobalKey<FormState>`) | corpo de tela de formulário: `SafeArea`, rolagem, padding `md`, largura máx. `larguraMaximaFormulario`, coluna esticada |
 | `AppMarcaDestaque` | `packages/core/lib/src/widgets/app_marca_destaque.dart` | — | logo grande (`AppIcones.destaque`) e nome da marca centralizados (login) |
 | `AppMarcaCabecalho` | `packages/core/lib/src/widgets/app_marca_cabecalho.dart` | — | logo pequena + nome em linha (título da `AppBar`, menu lateral) |
@@ -160,7 +163,9 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | `EstadoVazio` | `packages/core/lib/src/widgets/estado_vazio.dart` | com ou sem ação | lista/seção sem itens |
 | `EstadoFalha` | `packages/core/lib/src/widgets/estado_vazio.dart` | `icone` | falha ao carregar, com "Tentar de novo" |
 | `confirmarExclusao(...)` | `packages/core/lib/src/widgets/feedback.dart` | — | toda exclusão (RN12, RN20) |
-| `mostrarAviso(...)` | `packages/core/lib/src/widgets/feedback.dart` | `TipoAviso.sucesso` / `erro` | retorno de salvar/excluir |
+| `confirmar(...)` | `packages/core/lib/src/widgets/feedback.dart` | — | confirmação de ação não destrutiva (ex.: "Sair do painel?"), botão de confirmar no tema |
+| `mostrarAviso(...)` | `packages/core/lib/src/widgets/feedback.dart` | `TipoAviso.sucesso` / `erro` / `alerta` / `info`; opcionais `titulo`, `icone`, `duracao`, `rotuloAcao` + `aoAgir` | retorno de ação em SnackBar amigável: fundo `surfaceContainerLowest`, borda e ícone na cor do status, título amigável padrão ("Tudo certo!", "Ops, algo deu errado", "Atenção", "Para sua informação") e a mensagem |
+| `AppAviso` | `packages/core/lib/src/widgets/app_aviso.dart` | `tipo`, `titulo`, `icone` | conteúdo do aviso (ícone + título + mensagem), usado pelo `mostrarAviso`; golden `avisos` |
 
 > **Contrato de reuso**: cada plataforma implementa as próprias telas, com service, controller e validação em `packages/{app,web}/lib/src/features/<feature>/`. Toda `*_screen.dart` tem um único widget (Stateless ou Stateful com seu State) e nenhuma função retorna `Widget` (fora o `build`); widget auxiliar vai para arquivo próprio (verificado por `widgets_test.dart`). Widget que se repete ou tem o mesmo comportamento no app e na web vai para `packages/core/lib/src/widgets/` com prefixo `App` (com teste de widget + golden `componentes_app`) e entra nesta tabela; app e web sempre usam esse widget. Ele não carrega validação de formulário (recebe o `validador` por parâmetro) nem estado de tela. Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
 
@@ -174,9 +179,9 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | Loading de ação | spinner dentro do botão que disparou (`CircularProgressIndicator` no `child`), botão com `onPressed: null` até terminar, sem duplo envio | `FilledButton` | [usuário] |
 | Erro ao carregar | ícone na cor de erro, mensagem da `Falha` e botão "Tentar de novo" | `EstadoFalha` | [derivado] `resumo_inicio.dart` |
 | Erro de validação | no próprio campo (`validator`/`errorText`), nunca em SnackBar; texto diz o que fazer ("Precisa ser maior que o promocional"). Validadores com `validatorless` e máscaras (telefone, CNPJ…) com `brasil_fields`, só em `app`/`web` (nunca no core) | `TextFormField` | [usuário] |
-| Erro de envio (back-end recusou) | SnackBar vermelho com a mensagem da `Falha`; quando a API manda o erro (`FalhaApi`), a mensagem é a da própria API (ex.: "E-mail ou senha incorretos.") | `mostrarAviso(tipo: TipoAviso.erro)` | [usuário] |
+| Erro de envio (back-end recusou) | aviso de erro (`mostrarAviso`, borda e ícone vermelhos, título "Ops, algo deu errado") com a mensagem da `Falha`; quando a API manda o erro (`FalhaApi`), a mensagem é a da própria API (ex.: "E-mail ou senha incorretos.") | `mostrarAviso(tipo: TipoAviso.erro)` | [usuário] |
 | Vazio | ícone na primária, título do que falta, orientação e ação principal ("Cadastrar filial") | `EstadoVazio` | [usuário] |
-| Sucesso | SnackBar curto ("Produto salvo"); salvar já publica (RN40), então não existe "rascunho salvo" | `mostrarAviso()` | [usuário] |
+| Sucesso | aviso de sucesso (título "Tudo certo!") com mensagem curta ("Produto salvo"); salvar já publica (RN40), então não existe "rascunho salvo" | `mostrarAviso()` | [usuário] |
 | Ação destrutiva | `AlertDialog` com título em pergunta, impacto descrito e botão vermelho que repete a ação ("Excluir filial"), mais "Cancelar". Nunca "desfazer" no lugar de confirmar | `confirmarExclusao` | [usuário] RN12/RN20 |
 
 ### 6.1 Padrões de formulário (derivados das regras de negócio)
@@ -193,6 +198,9 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | RN36 | tela de login com texto de apoio "Esqueceu a senha? Fale com o suporte.", sem link de recuperação |
 | Login | marca (`MarcaLogo` em `AppIcones.destaque` + `MarcaNome`), título "Entre no painel", campos E-mail (teclado de e-mail) e Senha (mínimo de 6 caracteres, botão mostrar/ocultar, "Entrar" no teclado envia). Ação principal é o `AppBotaoPrincipal` "Entrar" (exceção ao `FilledButton` pílula, decidida pelo usuário em 24/10/2026); spinner em `colorScheme.secondary` enquanto envia, com campos desabilitados. Abaixo, `TextButton` "Cadastre-se" alinhado à direita, em `primary`. Largura máx. `larguraMaximaFormulario` |
 | Cadastro | aberto pelo "Cadastre-se" do login (push, `AppBar` "Crie sua conta" com voltar). Campos na ordem: Nome fantasia e Nome do responsável (obrigatórios, mínimo 2), E-mail, WhatsApp (com DDD) e CNPJ (obrigatórios, sem máscara), Senha (8 a 128 caracteres, com letra e número — mesma regra da API) e Confirmar senha. Botão "Cadastrar" no mesmo visual do "Entrar". Erros da API (`FalhaApi.campos`, 409 de e-mail no campo E-mail) aparecem embaixo do campo e somem quando o lojista edita o campo, com a mensagem geral em `mostrarAviso` vermelho. Sucesso abre a home e limpa a pilha. Largura máx. `larguraMaximaFormulario` |
+| Filial | campos na ordem: Nome da filial (mínimo 2), CEP (máscara `00000-000`, 8 números), Rua ou avenida, Número, Complemento (opcional), Bairro, Cidade e UF. Ao completar o CEP, busca no ViaCEP (spinner no campo) e preenche rua, bairro, cidade e UF (nunca o complemento; campo vazio no ViaCEP não sobrescreve). CEP inexistente → erro no campo CEP; ViaCEP fora do ar → aviso `alerta` "CEP indisponível" para preencher à mão. Sem campo de fuso: o fuso vem da UF (`Uf.fuso`); erro de fuso da API aparece no campo UF. UF no app abre bottom sheet (`SeletorUf`, "SP · São Paulo"); na web, `AppCampoSelecao`. Botão "Salvar filial" (`AppBotaoPrincipal`). Erros da API no campo (`endereco.*` vira o campo do endereço) e mensagem geral em aviso de erro (ex.: 409 limite do plano) |
+| Entrada no painel (sessão e filial) | `InicioSessaoScreen` é a raiz: restaura a sessão do cache (sem sessão → login), lista as filiais com skeleton e decide: 0 → "Cadastre sua filial" sem voltar; 1 → home com ela em uso; 2+ → "Escolha a filial". Falha → `EstadoFalha`; 401 → encerra a sessão e volta ao login |
+| Seção Filiais | lista de `AppCartaoFilial` com "Nova filial" no topo; "Usar esta filial" troca a filial em uso; excluir pede `confirmarExclusao` (RN12) e a única filial não pode ser excluída; excluir a filial em uso com 2+ restantes leva à escolha de filial |
 | Status "desativado" | banner fixo no topo com `AppCores.alerta` ("Conta desativada: somente consulta") e ações de criar/editar/excluir desabilitadas (não escondidas) |
 | RN12 / RN20 | textos de confirmação: filial → "Panfleto, categorias e produtos desta filial também serão excluídos."; categoria com vencidos → "Os produtos vencidos desta categoria também serão excluídos." |
 | RNF05 | imagem: tipo e tamanho conferidos antes do envio, com erro no campo |
