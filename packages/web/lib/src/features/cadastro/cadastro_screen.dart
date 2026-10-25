@@ -1,4 +1,6 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_web/src/features/cadastro/cadastro_controller.dart';
 import 'package:tabloide_web/src/features/cadastro/cadastro_estado.dart';
@@ -138,6 +140,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
             erro: controller.erroDoCampo('whatsapp'),
             aoMudar: (_) => controller.limparErroDoCampo('whatsapp'),
             validador: Validatorless.required('Informe o WhatsApp.'),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              CelularInputFormatter(),
+            ],
           ),
           const SizedBox(height: AppEspacamentos.md),
           AppCampoTexto(
@@ -148,6 +154,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
             erro: controller.erroDoCampo('cnpj'),
             aoMudar: (_) => controller.limparErroDoCampo('cnpj'),
             validador: Validatorless.required('Informe o CNPJ.'),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp('[0-9a-zA-Z]')),
+              CnpjAlfanumericoInputFormatter(),
+            ],
           ),
           const SizedBox(height: AppEspacamentos.md),
           AppCampoSenha(

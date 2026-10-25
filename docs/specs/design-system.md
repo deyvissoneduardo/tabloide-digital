@@ -148,7 +148,7 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 |---|---|---|---|
 | `AppBotaoPrincipal` | `packages/core/lib/src/widgets/app_botao_principal.dart` | `carregando`, `rotuloCarregando` | ação principal da tela ("Entrar", "Cadastrar"): `ElevatedButton` em `primary`, raio `bordaMd`, texto `titleMedium` em `onPrimary`; carregando = desabilitado com spinner em `secondary` |
 | `AppBotaoTexto` | `packages/core/lib/src/widgets/app_botao_texto.dart` | — | ação de navegação secundária ("Cadastre-se"), texto `titleMedium` em `primary` |
-| `AppCampoTexto` | `packages/core/lib/src/widgets/app_campo_texto.dart` | `validador`, `erro` (da API), `teclado`, `acao`, `autofill`, `autocorrecao`, `habilitado` | todo campo de texto com rótulo e ícone |
+| `AppCampoTexto` | `packages/core/lib/src/widgets/app_campo_texto.dart` | `validador`, `erro` (da API), `teclado`, `acao`, `autofill`, `autocorrecao`, `habilitado`, `inputFormatters` (máscara `brasil_fields`, vinda de `app`/`web`) | todo campo de texto com rótulo e ícone |
 | `AppCampoSenha` | `packages/core/lib/src/widgets/app_campo_senha.dart` | mesmos do campo de texto | senha, com mostrar/ocultar (estado de visibilidade no próprio widget) |
 | `AppFormulario` | `packages/core/lib/src/widgets/app_formulario.dart` | `chave` (`GlobalKey<FormState>`) | corpo de tela de formulário: `SafeArea`, rolagem, padding `md`, largura máx. `larguraMaximaFormulario`, coluna esticada |
 | `AppMarcaDestaque` | `packages/core/lib/src/widgets/app_marca_destaque.dart` | — | logo grande (`AppIcones.destaque`) e nome da marca centralizados (login) |

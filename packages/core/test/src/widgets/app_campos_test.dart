@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
@@ -64,6 +65,29 @@ void main() {
         );
 
         expect(find.text('Este e-mail já está cadastrado.'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado formatadores recebidos, quando digito, então o texto passa por eles',
+      (tester) async {
+        final texto = TextEditingController();
+        addTearDown(texto.dispose);
+        await tester.pumpWidget(
+          _noFormulario(
+            GlobalKey<FormState>(),
+            AppCampoTexto(
+              controller: texto,
+              rotulo: 'WhatsApp',
+              icone: Icons.phone_outlined,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+          ),
+        );
+
+        await tester.enterText(find.byType(TextFormField), '(11) 98765-4321');
+
+        expect(texto.text, '11987654321');
       },
     );
 

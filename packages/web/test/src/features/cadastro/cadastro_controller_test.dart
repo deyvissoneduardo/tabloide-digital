@@ -156,5 +156,22 @@ void main() {
 
       expect(repository.pedidos, hasLength(1));
     });
+
+    test('Cenário: Dado WhatsApp e CNPJ com máscara, quando cadastro, então envio só letras e números', () async {
+      final repository = CadastroRepositoryFake();
+      final controller = CadastroController(CadastroServiceWeb(repository));
+
+      await controller.cadastrar(
+        nomeFantasia: 'Mercado Bom Preço',
+        nomeResponsavel: 'Teste 02',
+        email: 'teste01@gmail.com',
+        senha: 'Teste1234',
+        whatsapp: '(11) 98765-4321',
+        cnpj: '12.ABC.345/01DE-35',
+      );
+
+      expect(repository.pedidos.single.whatsapp, '11987654321');
+      expect(repository.pedidos.single.cnpj, '12ABC34501DE35');
+    });
   });
 }

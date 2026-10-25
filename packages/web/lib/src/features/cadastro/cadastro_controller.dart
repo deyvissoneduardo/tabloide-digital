@@ -3,6 +3,8 @@ import 'package:tabloide_web/src/features/cadastro/cadastro_estado.dart';
 import 'package:tabloide_web/src/features/cadastro/services/cadastro_service_web.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
+final _mascara = RegExp('[^0-9a-zA-Z]');
+
 class CadastroController extends ChangeNotifier {
   CadastroController(this._service);
 
@@ -50,8 +52,8 @@ class CadastroController extends ChangeNotifier {
         nomeResponsavel: nomeResponsavel.trim(),
         email: email.trim(),
         senha: senha.trim(),
-        whatsapp: whatsapp.trim(),
-        cnpj: cnpj.trim(),
+        whatsapp: whatsapp.replaceAll(_mascara, ''),
+        cnpj: cnpj.replaceAll(_mascara, ''),
       ),
     );
     switch (resultado) {
