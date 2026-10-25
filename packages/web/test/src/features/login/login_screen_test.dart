@@ -15,10 +15,15 @@ void main() {
 
     Future<void> abrir(WidgetTester tester, {AuthRepositoryFake? fake}) {
       repository = fake ?? AuthRepositoryFake();
+      final sessao = sessaoDeTeste();
       return tester.pumpWidget(
         montarLogin(
+          sessao: sessao,
           marca: const MarcaFake(nome: 'Mercado Bom Preço'),
-          controller: loginControllerDeTeste(repository: repository),
+          controller: loginControllerDeTeste(
+            repository: repository,
+            sessao: sessao,
+          ),
         ),
       );
     }

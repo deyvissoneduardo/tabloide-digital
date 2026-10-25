@@ -18,6 +18,9 @@ void main() {
               Provider<CadastroRepository>.value(
                 value: CadastroRepositoryFake(),
               ),
+              Provider<FilialRepository>.value(value: FilialRepositoryFake()),
+              Provider<CepRepository>.value(value: CepRepositoryFake()),
+              Provider<Sessao>.value(value: sessaoDeTeste()),
               ...providersWeb(),
             ],
             child: Builder(
@@ -36,6 +39,15 @@ void main() {
         expect(
           contexto.read<CadastroController>().estado,
           isA<CadastroOcioso>(),
+        );
+        expect(contexto.read<FilialServiceWeb>(), isA<FilialServiceWeb>());
+        expect(
+          contexto.read<FiliaisController>().estado,
+          isA<FiliaisCarregando>(),
+        );
+        expect(
+          contexto.read<FilialFormController>().estado,
+          isA<FilialFormOcioso>(),
         );
       },
     );

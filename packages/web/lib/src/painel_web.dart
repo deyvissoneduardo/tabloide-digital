@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tabloide_web/src/features/login/login_screen.dart';
 import 'package:tabloide_core/tabloide_core.dart';
+import 'package:tabloide_web/src/features/filiais/inicio_sessao_screen.dart';
 
 class PainelWeb extends StatelessWidget {
   const PainelWeb({super.key});
@@ -14,7 +14,7 @@ class PainelWeb extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.claro(marca),
       themeMode: ThemeMode.light,
-      home: const LoginScreen(),
+      home: const InicioSessaoScreen(),
     );
   }
 }

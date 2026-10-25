@@ -20,7 +20,7 @@ void main() {
     late CadastroServiceWeb service;
     setUp(() {
       repository = _CadastroRepositoryMock();
-      service = CadastroServiceWeb(repository);
+      service = CadastroServiceWeb(repository, sessaoDeTeste());
     });
 
     test('Cenário: Dado que o repository cria a conta, quando cadastro, então devolvo o mesmo Success', () async {
