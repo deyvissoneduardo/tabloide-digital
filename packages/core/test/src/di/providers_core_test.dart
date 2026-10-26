@@ -98,6 +98,10 @@ void main() {
         );
         expect(contexto.read<FilialRepository>(), isA<FilialRepositoryApi>());
         expect(contexto.read<CepRepository>(), isA<CepRepositoryViaCep>());
+        expect(
+          contexto.read<IdentidadeRepository>(),
+          isA<IdentidadeRepositoryApi>(),
+        );
         expect(contexto.read<Sessao>().ativa, isFalse);
       },
     );

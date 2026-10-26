@@ -37,6 +37,25 @@ final class DioRestClient implements RestClient {
   Future<RestResposta> delete(String caminho) =>
       _converter(_dio.delete<Object?>(caminho));
 
+  @override
+  Future<RestResposta> enviarArquivo(
+    String caminho, {
+    required String campo,
+    required List<int> bytes,
+    required String nomeArquivo,
+  }) => _converter(
+    _dio.put<Object?>(
+      caminho,
+      data: FormData.fromMap({
+        campo: MultipartFile.fromBytes(
+          bytes,
+          filename: nomeArquivo,
+          contentType: MultipartFile.lookupMediaType(nomeArquivo),
+        ),
+      }),
+    ),
+  );
+
   Future<RestResposta> _converter(Future<Response<Object?>> chamada) async {
     try {
       return _resposta(await chamada);

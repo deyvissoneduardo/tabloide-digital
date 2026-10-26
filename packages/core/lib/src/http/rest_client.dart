@@ -8,6 +8,13 @@ abstract interface class RestClient {
   Future<RestResposta> put(String caminho, {Object? corpo});
 
   Future<RestResposta> delete(String caminho);
+
+  Future<RestResposta> enviarArquivo(
+    String caminho, {
+    required String campo,
+    required List<int> bytes,
+    required String nomeArquivo,
+  });
 }
 
 final class RestResposta {

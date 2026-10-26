@@ -13,6 +13,8 @@ import 'package:tabloide_core/src/features/home/home_controller.dart';
 import 'package:tabloide_core/src/features/home/repositories/home_repository.dart';
 import 'package:tabloide_core/src/features/home/repositories/home_repository_fake.dart';
 import 'package:tabloide_core/src/features/home/services/home_service.dart';
+import 'package:tabloide_core/src/features/identidade/repositories/identidade_repository.dart';
+import 'package:tabloide_core/src/features/identidade/repositories/identidade_repository_api.dart';
 import 'package:tabloide_core/src/http/dio_rest_client.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 import 'package:tabloide_core/src/sessao/armazenamento_local.dart';
@@ -29,6 +31,7 @@ List<SingleChildWidget> providersCore({
   CadastroRepository? cadastroRepository,
   FilialRepository? filialRepository,
   CepRepository? cepRepository,
+  IdentidadeRepository? identidadeRepository,
   HomeRepository? homeRepository,
 }) => [
   Provider<BrandConfig>.value(value: marca),
@@ -58,6 +61,11 @@ List<SingleChildWidget> providersCore({
   Provider<CepRepository>(
     create: (_) =>
         cepRepository ?? CepRepositoryViaCep(DioRestClient(baseUrl: urlViaCep)),
+  ),
+  Provider<IdentidadeRepository>(
+    create: (context) =>
+        identidadeRepository ??
+        IdentidadeRepositoryApi(context.read<RestClient>()),
   ),
   Provider<HomeRepository>(
     create: (_) => homeRepository ?? const HomeRepositoryFake(),

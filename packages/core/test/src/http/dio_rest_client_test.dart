@@ -57,6 +57,33 @@ void main() {
         verify(() => dio.put<Object?>('/a', data: 2)).called(1);
       });
 
+      test('Quando envio um arquivo, então faço PUT multipart com o campo, o nome e o tipo do arquivo', () async {
+        when(() => dio.put<Object?>('/logo', data: any(named: 'data')))
+            .thenAnswer((_) async => _resposta(200, {'ok': true}));
+
+        final resposta = await cliente.enviarArquivo(
+          '/logo',
+          campo: 'imagem',
+          bytes: [1, 2, 3],
+          nomeArquivo: 'logo.png',
+        );
+
+        expect(resposta.status, 200);
+        final dados =
+            verify(
+                  () => dio.put<Object?>(
+                    '/logo',
+                    data: captureAny(named: 'data'),
+                  ),
+                ).captured.single
+                as FormData;
+        final MapEntry(key: campo, value: arquivo) = dados.files.single;
+        expect(campo, 'imagem');
+        expect(arquivo.filename, 'logo.png');
+        expect(arquivo.length, 3);
+        expect(arquivo.contentType?.mimeType, 'image/png');
+      });
+
       test('Quando a API responde 401, então devolvo a resposta com o corpo de erro em vez de lançar', () async {
         when(() => dio.post<Object?>('/auth/login', data: any(named: 'data')))
             .thenAnswer(
