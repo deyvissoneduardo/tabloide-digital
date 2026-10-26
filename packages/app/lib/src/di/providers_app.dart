@@ -9,6 +9,9 @@ import 'package:tabloide_app/src/features/filiais/services/filial_service_app.da
 import 'package:tabloide_app/src/features/home/services/home_service_app.dart';
 import 'package:tabloide_app/src/features/login/login_controller.dart';
 import 'package:tabloide_app/src/features/login/services/auth_service_app.dart';
+import 'package:tabloide_app/src/features/panfletos/panfleto_form_controller.dart';
+import 'package:tabloide_app/src/features/panfletos/panfletos_controller.dart';
+import 'package:tabloide_app/src/features/panfletos/services/panfleto_service_app.dart';
 import 'package:tabloide_app/src/features/perfil/perfil_controller.dart';
 import 'package:tabloide_app/src/features/perfil/services/perfil_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
@@ -50,6 +53,17 @@ List<SingleChildWidget> providersApp() => [
   ),
   ChangeNotifierProvider<PerfilController>(
     create: (context) => PerfilController(context.read<PerfilServiceApp>()),
+  ),
+  Provider<PanfletoServiceApp>(
+    create: (context) => PanfletoServiceApp(context.read<PanfletoRepository>()),
+  ),
+  ChangeNotifierProvider<PanfletosController>(
+    create: (context) =>
+        PanfletosController(context.read<PanfletoServiceApp>()),
+  ),
+  ChangeNotifierProvider<PanfletoFormController>(
+    create: (context) =>
+        PanfletoFormController(context.read<PanfletoServiceApp>()),
   ),
   Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(
