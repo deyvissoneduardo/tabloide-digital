@@ -1,18 +1,8 @@
 import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
 import 'package:tabloide_core/tabloide_core.dart';
-import 'package:tabloide_core/testing.dart';
 
 import '../../helpers/montar.dart';
-
-const _marcas = {
-  'azul': MarcaFake(nome: 'Marca Azul'),
-  'vermelha': MarcaFake(
-    nome: 'Marca Vermelha',
-    corPrimaria: Color(0xFFC62828),
-    corSecundaria: Color(0xFF2E7D32),
-  ),
-};
 
 class _Cartao extends StatelessWidget {
   const _Cartao();
@@ -33,18 +23,19 @@ class _Cartao extends StatelessWidget {
 
 void main() {
   goldenTest(
-    'Cenário: Dado duas marcas, então logo e nome seguem a marca no tema claro',
+    'Cenário: Dado o tema claro, então mostra a logo e o nome do Tabloide Digital',
     fileName: 'marca_logo_nome',
-    pumpBeforeTest: (tester) async => tester.pumpAndSettle(),
+    pumpBeforeTest: (tester) async {
+      await precarregarLogo(tester);
+      await tester.pumpAndSettle();
+    },
     builder: () => GoldenTestGroup(
-      columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in _marcas.entries)
-          GoldenTestScenario(
-            name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(width: 260, height: 80),
-            child: montarComMarca(const _Cartao(), marca: marca),
-          ),
+        GoldenTestScenario(
+          name: 'Tema claro',
+          constraints: const BoxConstraints.tightFor(width: 260, height: 80),
+          child: montarComMarca(const _Cartao()),
+        ),
       ],
     ),
   );

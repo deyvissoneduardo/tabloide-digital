@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tabloide_core/src/brand/brand_config.dart';
+import 'package:tabloide_core/src/theme/app_marca.dart';
 
 class MarcaLogo extends StatelessWidget {
   const MarcaLogo({super.key, this.altura = 32});
@@ -9,13 +8,12 @@ class MarcaLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final marca = context.read<BrandConfig>();
     return Image(
-      image: marca.logo,
+      image: AppMarca.logo,
       height: altura,
-      semanticLabel: 'Logo de ${marca.nome}',
+      semanticLabel: 'Logo de ${AppMarca.nome}',
       errorBuilder: (context, _, _) =>
-          _Iniciais(nome: marca.nome, altura: altura),
+          _Iniciais(nome: AppMarca.nome, altura: altura),
     );
   }
 }

@@ -1,71 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
-import 'package:tabloide_core/testing.dart';
 
 void main() {
-  group('Funcionalidade: tema derivado da marca', () {
-    const marcas = {
-      'azul e âmbar': MarcaFake(),
-      'vermelha e verde': MarcaFake(
-        corPrimaria: Color(0xFFC62828),
-        corSecundaria: Color(0xFF2E7D32),
-      ),
-      'amarela clara e rosa': MarcaFake(
-        corPrimaria: Color(0xFFFFEB3B),
-        corSecundaria: Color(0xFFF8BBD0),
-      ),
-    };
+  group('Funcionalidade: tema claro do painel', () {
+    group('Cenário: Dado as cores do Tabloide', () {
+      final esquema = AppTheme.claro().colorScheme;
 
-    for (final MapEntry(key: nome, value: marca) in marcas.entries) {
-      group('Cenário: Dado a marca $nome', () {
-        test('Quando gero o tema claro, então é Material 3 e claro', () {
-          final tema = AppTheme.claro(marca);
-          expect(tema.useMaterial3, isTrue);
-          expect(tema.colorScheme.brightness, Brightness.light);
-        });
-
-        test('Quando gero os temas, então a primária e a secundária são de famílias diferentes', () {
-          final esquema = AppTheme.claro(marca).colorScheme;
-          expect(esquema.primary, isNot(esquema.secondary));
-        });
-
-        if (marca.corPrimaria.computeLuminance() < 0.5) {
-          test('Quando gero o tema claro, então a primária é exatamente a cor da marca', () {
-            expect(
-              AppTheme.claro(marca).colorScheme.primary,
-              marca.corPrimaria,
-            );
-          });
-        } else {
-          test(
-            'Quando gero o tema claro, então o texto sobre a primária é preto',
-            () {
-              expect(
-                AppTheme.claro(marca).colorScheme.onPrimary,
-                const Color(0xFF000000),
-              );
-            },
-          );
-        }
-
-        test('Quando gero o tema claro, então texto sobre primária, secundária e erro tem contraste >= 4.5 (RNF10)', () {
-          final e = AppTheme.claro(marca).colorScheme;
-          for (final (fundo, texto) in [
-            (e.primary, e.onPrimary),
-            (e.secondary, e.onSecondary),
-            (e.error, e.onError),
-            (e.surface, e.onSurface),
-            (e.surface, e.onSurfaceVariant),
-          ]) {
-            expect(AppTheme.contraste(fundo, texto), greaterThanOrEqualTo(4.5));
-          }
-        });
+      test('Quando gero o tema claro, então é Material 3 e claro', () {
+        final tema = AppTheme.claro();
+        expect(tema.useMaterial3, isTrue);
+        expect(tema.colorScheme.brightness, Brightness.light);
       });
-    }
 
-    group('Cenário: Dado qualquer marca, quando gero o tema claro', () {
-      final tema = AppTheme.claro(const MarcaFake());
+      test('Quando gero o tema, então a primária e a secundária são de famílias diferentes', () {
+        expect(esquema.primary, isNot(esquema.secondary));
+      });
+
+      test('Quando gero o tema claro, então primária e secundária são exatamente as de AppCores', () {
+        expect(esquema.primary, AppCores.primaria);
+        expect(esquema.secondary, AppCores.secundaria);
+      });
+
+      test('Quando gero o tema claro, então texto sobre primária, secundária e erro tem contraste >= 4.5 (RNF10)', () {
+        for (final (fundo, texto) in [
+          (esquema.primary, esquema.onPrimary),
+          (esquema.secondary, esquema.onSecondary),
+          (esquema.error, esquema.onError),
+          (esquema.surface, esquema.onSurface),
+          (esquema.surface, esquema.onSurfaceVariant),
+        ]) {
+          expect(AppTheme.contraste(fundo, texto), greaterThanOrEqualTo(4.5));
+        }
+      });
+    });
+
+    group('Cenário: Dado o tema claro', () {
+      final tema = AppTheme.claro();
 
       test('Então cards são planos, com borda e raio md', () {
         final card = tema.cardTheme;
@@ -104,11 +75,8 @@ void main() {
       });
     });
 
-    test('Cenário: Dado qualquer marca, quando gero o tema claro, então o erro é o de AppCores', () {
-      expect(
-        AppTheme.claro(const MarcaFake()).colorScheme.error,
-        AppCores.erro,
-      );
+    test('Cenário: Dado o tema claro, então o erro é o de AppCores', () {
+      expect(AppTheme.claro().colorScheme.error, AppCores.erro);
     });
   });
 }

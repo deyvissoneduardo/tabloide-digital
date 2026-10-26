@@ -1,8 +1,5 @@
 library;
 
-export 'src/brand/brand_config.dart';
-export 'src/brand/brand_erros.dart';
-export 'src/brand/brand_registry.dart';
 export 'src/di/providers_core.dart';
 export 'src/either/either.dart';
 export 'src/either/falha.dart';
@@ -67,6 +64,7 @@ export 'src/theme/app_cores.dart';
 export 'src/theme/app_espacamentos.dart';
 export 'src/theme/app_icones.dart';
 export 'src/theme/app_layout.dart';
+export 'src/theme/app_marca.dart';
 export 'src/theme/app_raios.dart';
 export 'src/theme/app_theme.dart';
 export 'src/widgets/app_aviso.dart';

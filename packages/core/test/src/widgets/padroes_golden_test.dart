@@ -1,7 +1,6 @@
 import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
 import 'package:tabloide_core/tabloide_core.dart';
-import 'package:tabloide_core/testing.dart';
 
 import '../../helpers/montar.dart';
 
@@ -52,33 +51,19 @@ class _Componentes extends StatelessWidget {
   );
 }
 
-const _marcas = {
-  'azul': MarcaFake(nome: 'Marca Azul'),
-  'vermelha': MarcaFake(
-    nome: 'Marca Vermelha',
-    corPrimaria: Color(0xFFC62828),
-    corSecundaria: Color(0xFF2E7D32),
-  ),
-};
-
 const _celular = BoxConstraints.tightFor(width: 360, height: 480);
 
 void main() {
   goldenTest(
-    'Cenário: Dado duas marcas, então os componentes Material seguem o tema do painel',
+    'Cenário: Dado o tema claro, então os componentes Material seguem o tema do painel',
     fileName: 'componentes_tema',
     builder: () => GoldenTestGroup(
-      columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in _marcas.entries)
-          GoldenTestScenario(
-            name: 'Marca $nome',
-            constraints: _celular,
-            child: montarComMarca(
-              const SizedBox.expand(child: _Componentes()),
-              marca: marca,
-            ),
-          ),
+        GoldenTestScenario(
+          name: 'Tema claro',
+          constraints: _celular,
+          child: montarComMarca(const SizedBox.expand(child: _Componentes())),
+        ),
       ],
     ),
   );
@@ -125,34 +110,30 @@ void main() {
     'Cenário: Dado os quatro tipos de aviso, então cada um tem título amigável, ícone e borda na cor do status',
     fileName: 'avisos',
     builder: () => GoldenTestGroup(
-      columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in _marcas.entries)
-          GoldenTestScenario(
-            name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(width: 360, height: 420),
-            child: montarComMarca(
-              SizedBox.expand(
-                child: ListView(
-                  padding: const EdgeInsets.all(AppEspacamentos.md),
-                  children: [
-                    for (final tipo in TipoAviso.values)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppEspacamentos.md),
-                          child: AppAviso(
-                            tipo: tipo,
-                            mensagem:
-                                'Mensagem de ${tipo.name} para o lojista.',
-                          ),
+        GoldenTestScenario(
+          name: 'Tema claro',
+          constraints: const BoxConstraints.tightFor(width: 360, height: 420),
+          child: montarComMarca(
+            SizedBox.expand(
+              child: ListView(
+                padding: const EdgeInsets.all(AppEspacamentos.md),
+                children: [
+                  for (final tipo in TipoAviso.values)
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppEspacamentos.md),
+                        child: AppAviso(
+                          tipo: tipo,
+                          mensagem: 'Mensagem de ${tipo.name} para o lojista.',
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
-              marca: marca,
             ),
           ),
+        ),
       ],
     ),
   );

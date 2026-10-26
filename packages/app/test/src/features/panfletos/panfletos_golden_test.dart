@@ -15,27 +15,20 @@ void main() {
     builder: () => GoldenTestGroup(
       columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          for (final (estado, panfletos) in [
-            ('vigente e agendado', [panfletoFake, panfletoFakeAgendado]),
-            ('vazia', <PanfletoResponse>[]),
-          ])
-            GoldenTestScenario(
-              name: 'Marca $nome, $estado',
-              constraints: const BoxConstraints.tightFor(
-                width: 360,
-                height: 640,
-              ),
-              child: montarTela(
-                const HomeScreen(),
-                marca: marca,
-                home: controllerDeTeste()..selecionar(SecaoPainel.panfletos),
-                filiais: filiaisControllerDeTeste()..carregar(),
-                panfletoRepository: PanfletoRepositoryFake(
-                  panfletos: panfletos,
-                ),
-              ),
+        for (final (estado, panfletos) in [
+          ('vigente e agendado', [panfletoFake, panfletoFakeAgendado]),
+          ('vazia', <PanfletoResponse>[]),
+        ])
+          GoldenTestScenario(
+            name: estado,
+            constraints: const BoxConstraints.tightFor(width: 360, height: 640),
+            child: montarTela(
+              const HomeScreen(),
+              home: controllerDeTeste()..selecionar(SecaoPainel.panfletos),
+              filiais: filiaisControllerDeTeste()..carregar(),
+              panfletoRepository: PanfletoRepositoryFake(panfletos: panfletos),
             ),
+          ),
       ],
     ),
   );
@@ -46,30 +39,23 @@ void main() {
     builder: () => GoldenTestGroup(
       columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          for (final (estado, tela, controller) in [
-            (
-              'novo sem imagem',
-              PanfletoFormScreen(filialId: filialFake.id),
-              _semImagem,
-            ),
-            (
-              'edição de vigente',
-              PanfletoFormScreen(
-                filialId: filialFake.id,
-                panfleto: panfletoFake,
-              ),
-              panfletoFormControllerDeTeste,
-            ),
-          ])
-            GoldenTestScenario(
-              name: 'Marca $nome, $estado',
-              constraints: const BoxConstraints.tightFor(
-                width: 360,
-                height: 900,
-              ),
-              child: montarTela(tela, marca: marca, panfletoForm: controller()),
-            ),
+        for (final (estado, tela, controller) in [
+          (
+            'novo sem imagem',
+            PanfletoFormScreen(filialId: filialFake.id),
+            _semImagem,
+          ),
+          (
+            'edição de vigente',
+            PanfletoFormScreen(filialId: filialFake.id, panfleto: panfletoFake),
+            panfletoFormControllerDeTeste,
+          ),
+        ])
+          GoldenTestScenario(
+            name: estado,
+            constraints: const BoxConstraints.tightFor(width: 360, height: 900),
+            child: montarTela(tela, panfletoForm: controller()),
+          ),
       ],
     ),
   );

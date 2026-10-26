@@ -9,7 +9,6 @@ final _raiz = Directory.current.parent.parent;
 
 const _pacotes = {
   'tabloide_core': 'packages/core',
-  'tabloide_brands': 'packages/brands',
   'tabloide_app': 'packages/app',
   'tabloide_web': 'packages/web',
 };
@@ -65,15 +64,9 @@ void main() {
       expect(_dependenciasDoWorkspace(_pacotes['tabloide_core']!), isEmpty);
     });
 
-    test('Cenário: Dado o brands, então ele depende só do core', () {
-      expect(_dependenciasDoWorkspace(_pacotes['tabloide_brands']!), {
-        'tabloide_core',
-      });
-    });
-
     for (final pacote in ['tabloide_app', 'tabloide_web']) {
       test(
-        'Cenário: Dado o $pacote, então ele depende só do core (não conhece clientes nem a outra plataforma)',
+        'Cenário: Dado o $pacote, então ele depende só do core (não conhece a outra plataforma)',
         () {
           expect(_dependenciasDoWorkspace(_pacotes[pacote]!), {
             'tabloide_core',

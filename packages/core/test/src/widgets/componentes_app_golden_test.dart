@@ -75,35 +75,23 @@ class _ComponentesAppState extends State<_ComponentesApp> {
   );
 }
 
-const _marcas = {
-  'azul': MarcaFake(nome: 'Marca Azul'),
-  'vermelha': MarcaFake(
-    nome: 'Marca Vermelha',
-    corPrimaria: Color(0xFFC62828),
-    corSecundaria: Color(0xFF2E7D32),
-  ),
-};
-
 void main() {
   goldenTest(
-    'Cenário: Dado duas marcas, então os componentes App* do core seguem o tema e a marca',
+    'Cenário: Dado o tema claro, então os componentes App* do core seguem o tema',
     fileName: 'componentes_app',
-    pumpBeforeTest: pumpNTimes(2, const Duration(milliseconds: 300)),
+    pumpBeforeTest: (tester) async {
+      await precarregarLogo(tester);
+      await pumpNTimes(2, const Duration(milliseconds: 300))(tester);
+    },
     builder: () => GoldenTestGroup(
-      columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in _marcas.entries)
-          GoldenTestScenario(
-            name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(
-              width: 360,
-              height: 1000,
-            ),
-            child: montarComMarca(
-              const SizedBox.expand(child: _ComponentesApp()),
-              marca: marca,
-            ),
+        GoldenTestScenario(
+          name: 'Tema claro',
+          constraints: const BoxConstraints.tightFor(width: 360, height: 1000),
+          child: montarComMarca(
+            const SizedBox.expand(child: _ComponentesApp()),
           ),
+        ),
       ],
     ),
   );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -105,7 +106,6 @@ SingleChildWidget _notificador<T extends ChangeNotifier>(
 
 Widget montarTela(
   Widget tela, {
-  BrandConfig marca = const MarcaFake(),
   Sessao? sessao,
   HomeController? home,
   LoginController? login,
@@ -139,7 +139,6 @@ Widget montarTela(
       ProdutoRepositoryFake(produtos: [produtoFake, produtoFakeAgendado]);
   return MultiProvider(
     providers: [
-      Provider<BrandConfig>.value(value: marca),
       Provider<Sessao>.value(value: sessaoDaTela),
       _notificador(home, controllerDeTeste),
       _notificador(login, () => loginControllerDeTeste(sessao: sessaoDaTela)),
@@ -187,7 +186,7 @@ Widget montarTela(
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.claro(marca),
+      theme: AppTheme.claro(),
       locale: const Locale('pt', 'BR'),
       supportedLocales: const [Locale('pt', 'BR')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
@@ -196,50 +195,36 @@ Widget montarTela(
   );
 }
 
-Widget montar({
-  BrandConfig marca = const MarcaFake(),
-  HomeController? controller,
-  FiliaisController? filiais,
-}) => montarTela(
-  const HomeScreen(),
-  marca: marca,
-  home: controller,
-  filiais: filiais,
-);
+Widget montar({HomeController? controller, FiliaisController? filiais}) =>
+    montarTela(const HomeScreen(), home: controller, filiais: filiais);
 
 Widget montarCadastro({
-  BrandConfig marca = const MarcaFake(),
   CadastroController? controller,
   Sessao? sessao,
   FilialRepository? filialRepository,
 }) => montarTela(
   const CadastroScreen(),
-  marca: marca,
   cadastro: controller,
   sessao: sessao,
   filialRepository: filialRepository,
 );
 
 Widget montarLogin({
-  BrandConfig marca = const MarcaFake(),
   LoginController? controller,
   CadastroController? cadastro,
   Sessao? sessao,
   FilialRepository? filialRepository,
 }) => montarTela(
   const LoginScreen(),
-  marca: marca,
   login: controller,
   cadastro: cadastro,
   sessao: sessao,
   filialRepository: filialRepository,
 );
 
-const marcasDeTeste = {
-  'azul': MarcaFake(nome: 'Marca Azul'),
-  'vermelha': MarcaFake(
-    nome: 'Marca Vermelha',
-    corPrimaria: Color(0xFFC62828),
-    corSecundaria: Color(0xFF2E7D32),
-  ),
-};
+Future<void> precarregarLogo(WidgetTester tester) => tester.runAsync(
+  () => Future.wait([
+    for (final elemento in find.byType(MarcaLogo).evaluate())
+      precacheImage(AppMarca.logo, elemento),
+  ]),
+);

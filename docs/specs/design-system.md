@@ -5,7 +5,7 @@
 
 ## 1. Identificação
 
-- **Produto**: Tabloide Digital — painel do lojista, white-label (marca escolhida no build).
+- **Produto**: Tabloide Digital — painel do lojista, com identidade única (nome, logo e cores do Tabloide Digital).
 - **Frente(s)**: ambas — app (Android/iOS) e web, com o mesmo painel. **Mobile first**: o layout base é o do celular; telas largas só acrescentam.
 - **Stack de UI**: Flutter (Dart `^3.13.0`), Material 3 (`useMaterial3: true`).
 - **Biblioteca de UI base**: widgets Material puros, estilizados só pelo `ThemeData` (`AppTheme.claro`). Não há kit de componentes próprio; o core só oferece os padrões de feedback que o Material não tem (seção 5).
@@ -19,12 +19,12 @@ Todos os tokens moram em `packages/core/lib/src/theme/` e saem pelo barrel `pack
 
 ### 2.1 Cores
 
-A cor é da **marca** (white-label): o esquema é derivado de `BrandConfig.corPrimaria`/`corSecundaria` com `ColorScheme.fromSeed(dynamicSchemeVariant: fidelity)`. A cor exata do cliente é usada sempre que tiver contraste ≥ 4.5 com branco ou preto; senão fica o tom calculado.
+A cor é a do **Tabloide Digital**: o esquema é derivado de `AppCores.primaria` (`#1565C0`) e `AppCores.secundaria` (`#FFB300`) com `ColorScheme.fromSeed(dynamicSchemeVariant: fidelity)`. A cor exata é usada sempre que tiver contraste ≥ 4.5 com branco ou preto; senão fica o tom calculado.
 
 | Token | Valor | Uso | Origem |
 |---|---|---|---|
-| `colorScheme.primary` / `onPrimary` | cor primária da marca | botão principal, ícones de destaque, foco de campo | [derivado] `app_theme.dart` |
-| `colorScheme.secondary` / `secondaryContainer` | cor secundária da marca | indicador da navegação, destaques secundários | [derivado] `app_theme.dart` |
+| `colorScheme.primary` / `onPrimary` | `AppCores.primaria` (`#1565C0`) | botão principal, ícones de destaque, foco de campo | [derivado] `app_theme.dart` |
+| `colorScheme.secondary` / `secondaryContainer` | `AppCores.secundaria` (`#FFB300`) | indicador da navegação, destaques secundários | [derivado] `app_theme.dart` |
 | `colorScheme.surface` / `onSurface` | do esquema | fundo de tela, card, AppBar, dialog | [derivado] `app_theme.dart` |
 | `colorScheme.onSurfaceVariant` | do esquema | texto de apoio (mensagens, legendas, "Em breve") | [derivado] |
 | `colorScheme.outlineVariant` | do esquema | borda de card, divisórias, borda inferior da AppBar | [usuário] forma "suave e plana" |
@@ -33,10 +33,12 @@ A cor é da **marca** (white-label): o esquema é derivado de `BrandConfig.corPr
 | `AppCores.erro` (= `colorScheme.error`) | `#B3261E` | erro de validação, falha, ação destrutiva | [derivado] `app_cores.dart` |
 | `AppCores.sucesso` | `#2E7D32` | confirmação | [derivado] |
 | `AppCores.alerta` | `#ED6C02` | aviso (ex.: lojista desativado, só consulta) | [derivado] |
-| `AppCores.info` | `#0277BD` | aviso informativo (não depende da cor da marca, para não parecer erro em marca vermelha) | [derivado] |
+| `AppCores.info` | `#0277BD` | aviso informativo (separado da primária, para o aviso não se confundir com ação) | [derivado] |
 | `AppCores.neutroClaro` | `#F5F5F5` | fundo neutro | [derivado] |
 
 **Regra**: tela nunca declara cor. Use `Theme.of(context).colorScheme.*` ou `AppCores.*`. Proibido `Color(0x…)`, `Color.fromARGB/RGBO` e `Colors.*` (exceto `Colors.transparent`).
+
+**Identidade**: `AppMarca.nome` (`'Tabloide Digital'`) e `AppMarca.logo` (`packages/core/assets/logo.png`, com 2.0x/3.0x) em `app_marca.dart`. Na tela, use `MarcaLogo`/`MarcaNome`.
 
 ### 2.2 Tipografia
 
@@ -45,7 +47,7 @@ Fonte do sistema: Roboto (Android/web) e SF (iOS), sem dependência nem download
 | Estilo | Peso | Uso | Origem |
 |---|---|---|---|
 | `headlineSmall` | 400 | números de resumo (ex.: total de produtos no ar) | [derivado] |
-| `titleLarge` | **700** | nome da marca, título de tela/dialog | [derivado] `app_tipografia.dart` |
+| `titleLarge` | **700** | nome do produto, título de tela/dialog | [derivado] `app_tipografia.dart` |
 | `titleMedium` | **600** | título de card, de estado vazio, de seção | [derivado] |
 | `bodyLarge` | 400 | mensagem de falha, texto principal | [usuário] |
 | `bodyMedium` | 400 | texto corrido, mensagens de apoio | [derivado] |
@@ -99,7 +101,7 @@ Classes de tamanho do Material 3, em `AppLayout` + `ClasseTamanho` (`app_layout.
 |---|---|---|---|
 | `ClasseTamanho.compacto` | < 600 | `AppBar` com `MarcaLogo` + `MarcaNome` e `NavigationBar` embaixo | coluna única, margem `md` |
 | `ClasseTamanho.medio` | 600 – 839 | `NavigationRail` recolhido (só logo, rótulos sob os ícones) | coluna única |
-| `ClasseTamanho.expandido` | ≥ 840 | `NavigationRail` estendido (`AppLayout.larguraMenuLateral` = 220) com marca | centralizado, máx. `AppLayout.larguraMaximaConteudo` (1200) |
+| `ClasseTamanho.expandido` | ≥ 840 | `NavigationRail` estendido (`AppLayout.larguraMenuLateral` = 220) com logo e nome | centralizado, máx. `AppLayout.larguraMaximaConteudo` (1200) |
 
 - Formulários (filial, panfleto, produto, cadastro, login) ficam limitados a `AppLayout.larguraMaximaFormulario` (600) em qualquer classe.
 - Obter a classe: `ClasseTamanho.de(context)`. Proibido comparar largura com número solto (`largura < 600`) e usar `MediaQuery.of(context).size`.
@@ -119,8 +121,8 @@ Classes de tamanho do Material 3, em `AppLayout` + `ClasseTamanho` (`app_layout.
 
 ## 4. Tema
 
-- **Modos suportados**: **só claro**. `MaterialApp` usa `theme: AppTheme.claro(marca)` e `themeMode: ThemeMode.light`. O tema escuro foi removido do código; proibidos `darkTheme:`, `ThemeMode.dark/system` e `AppTheme.escuro`.
-- **Estratégia de theming**: um `ThemeData` central (`AppTheme.claro`) gerado da marca, com tema configurado para cada componente Material. Tela usa o widget Material puro (`FilledButton`, `TextField`, `Card`…) sem `style:` próprio.
+- **Modos suportados**: **só claro**. `MaterialApp` usa `title: AppMarca.nome`, `theme: AppTheme.claro()` e `themeMode: ThemeMode.light`. O tema escuro foi removido do código; proibidos `darkTheme:`, `ThemeMode.dark/system` e `AppTheme.escuro`.
+- **Estratégia de theming**: um `ThemeData` central (`AppTheme.claro`) gerado das cores do Tabloide, com tema configurado para cada componente Material. Tela usa o widget Material puro (`FilledButton`, `TextField`, `Card`…) sem `style:` próprio.
 - **Tokens semânticos**: os papéis do `ColorScheme` (`primary`, `surface`, `outlineVariant`, `error`…) mais `AppCores` para status.
 
 ---
@@ -161,11 +163,11 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | `AppSeletorCor` | `packages/core/lib/src/widgets/app_seletor_cor.dart` | `validador`, `erro` (da API), `habilitado`, `aoMudar` | cor em `#RRGGBB`: campo com máscara hex (maiúsculas, 6 dígitos), amostra da cor à esquerda e botão de paleta que abre o `ColorPicker` (`flutter_colorpicker`) em diálogo "Cancelar"/"Usar cor"; golden `identidade_componentes` |
 | `AppLogoIdentidade` | `packages/core/lib/src/widgets/app_logo_identidade.dart` | `url` (nula = sem logo), `nome`, `tamanho` | logo do lojista (`Image.network`, `contain`) em quadro `surfaceContainerHighest` com raio `bordaMd`; sem logo → ícone de adicionar imagem; falha → ícone de imagem quebrada |
 | `AppFormulario` | `packages/core/lib/src/widgets/app_formulario.dart` | `chave` (`GlobalKey<FormState>`) | corpo de tela de formulário: `SafeArea`, rolagem, padding `md`, largura máx. `larguraMaximaFormulario`, coluna esticada |
-| `AppMarcaDestaque` | `packages/core/lib/src/widgets/app_marca_destaque.dart` | — | logo grande (`AppIcones.destaque`) e nome da marca centralizados (login) |
+| `AppMarcaDestaque` | `packages/core/lib/src/widgets/app_marca_destaque.dart` | — | logo grande (`AppIcones.destaque`) e nome do produto centralizados (login) |
 | `AppMarcaCabecalho` | `packages/core/lib/src/widgets/app_marca_cabecalho.dart` | — | logo pequena + nome em linha (título da `AppBar`, menu lateral) |
 | `AppConteudoSecao` | `packages/core/lib/src/widgets/app_conteudo_secao.dart` | `secao` | seção do painel ainda não implementada ("Em breve") |
-| `MarcaLogo` | `packages/core/lib/src/widgets/marca_logo.dart` | `altura` | logo da marca (com iniciais se a imagem falhar) |
-| `MarcaNome` | `packages/core/lib/src/widgets/marca_nome.dart` | `estilo` | nome da marca, 1 linha com reticências |
+| `MarcaLogo` | `packages/core/lib/src/widgets/marca_logo.dart` | `altura` | logo do Tabloide (`AppMarca.logo`, asset em `packages/core/assets/`; iniciais se a imagem falhar) |
+| `MarcaNome` | `packages/core/lib/src/widgets/marca_nome.dart` | `estilo` | nome do produto (`AppMarca.nome`), 1 linha com reticências |
 | `Esqueleto` / `EsqueletoLista` | `packages/core/lib/src/widgets/esqueleto.dart` | `altura`, `largura` / `quantidade`, `altura` | carregamento de lista e card |
 | `EstadoVazio` | `packages/core/lib/src/widgets/estado_vazio.dart` | com ou sem ação | lista/seção sem itens |
 | `EstadoFalha` | `packages/core/lib/src/widgets/estado_vazio.dart` | `icone` | falha ao carregar, com "Tentar de novo" |
@@ -174,7 +176,7 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 | `mostrarAviso(...)` | `packages/core/lib/src/widgets/feedback.dart` | `TipoAviso.sucesso` / `erro` / `alerta` / `info`; opcionais `titulo`, `icone`, `duracao`, `rotuloAcao` + `aoAgir` | retorno de ação em SnackBar amigável: fundo `surfaceContainerLowest`, borda e ícone na cor do status, título amigável padrão ("Tudo certo!", "Ops, algo deu errado", "Atenção", "Para sua informação") e a mensagem |
 | `AppAviso` | `packages/core/lib/src/widgets/app_aviso.dart` | `tipo`, `titulo`, `icone` | conteúdo do aviso (ícone + título + mensagem), usado pelo `mostrarAviso`; golden `avisos` |
 
-> **Contrato de reuso**: cada plataforma implementa as próprias telas, com service, controller e validação em `packages/{app,web}/lib/src/features/<feature>/`. Toda `*_screen.dart` tem um único widget (Stateless ou Stateful com seu State) e nenhuma função retorna `Widget` (fora o `build`); widget auxiliar vai para arquivo próprio (verificado por `widgets_test.dart`). Widget que se repete ou tem o mesmo comportamento no app e na web vai para `packages/core/lib/src/widgets/` com prefixo `App` (com teste de widget + golden `componentes_app`) e entra nesta tabela; app e web sempre usam esse widget. Ele não carrega validação de formulário (recebe o `validador` por parâmetro) nem estado de tela. Marca na tela só via `MarcaLogo`/`MarcaNome`/`context.read<BrandConfig>()`.
+> **Contrato de reuso**: cada plataforma implementa as próprias telas, com service, controller e validação em `packages/{app,web}/lib/src/features/<feature>/`. Toda `*_screen.dart` tem um único widget (Stateless ou Stateful com seu State) e nenhuma função retorna `Widget` (fora o `build`); widget auxiliar vai para arquivo próprio (verificado por `widgets_test.dart`). Widget que se repete ou tem o mesmo comportamento no app e na web vai para `packages/core/lib/src/widgets/` com prefixo `App` (com teste de widget + golden `componentes_app`) e entra nesta tabela; app e web sempre usam esse widget. Ele não carrega validação de formulário (recebe o `validador` por parâmetro) nem estado de tela. Identidade na tela só via `MarcaLogo`/`MarcaNome` e `AppMarca`.
 
 ---
 
@@ -224,7 +226,7 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 
 ## 7. Acessibilidade Visual (RNF10)
 
-- **Contraste mínimo**: WCAG AA 4.5:1. Garantido por `AppTheme.contraste` para primária, secundária, erro e superfície (testado em `app_theme_test.dart` com marcas escura, média e clara).
+- **Contraste mínimo**: WCAG AA 4.5:1. Garantido por `AppTheme.contraste` para primária, secundária, erro e superfície (testado em `app_theme_test.dart`).
 - **Texto alternativo**: toda imagem tem `semanticLabel` (logo, foto de produto, panfleto). Skeleton anuncia "Carregando".
 - **Foco visível**: borda de 2 px na primária em campos; foco padrão do Material nos botões.
 - **Touch targets**: mínimo 48×48 (`AppLayout.alvoMinimo`).
@@ -255,9 +257,9 @@ Componentes próprios do core (contrato de reuso: importe pelo barrel `package:t
 
 | Eixo | Escolha | Alternativas consideradas | Origem |
 |---|---|---|---|
-| 1 · Fundações — tipografia | fonte do sistema | Inter como asset; Poppins como asset; fonte por marca no `BrandConfig` | [usuário] |
+| 1 · Fundações — tipografia | fonte do sistema | Inter como asset; Poppins como asset; fonte por marca (white-label, removido em 26/10/2026) | [usuário] |
 | 1 · Fundações — forma | suave e plana (raio 12, pílula, sem sombra) | bem arredondado; reto e denso; padrão M3 | [usuário] |
-| 1 · Fundações — cores e espaço | cores da marca + `AppCores`; escala 4 pt | — | [derivado] |
+| 1 · Fundações — cores e espaço | cores fixas do Tabloide em `AppCores` (`primaria`/`secundaria` + status); escala 4 pt | cores por marca no build (white-label, removido em 26/10/2026 a pedido do usuário) | [derivado] |
 | 2 · Biblioteca de componentes | só tema no `ThemeData` (Material puro) + padrões de feedback no core | kit `Ds*` obrigatório; híbrido; pacote `tabloide_ui` | [usuário] |
 | 3 · Layout | classes do Material 3 (600 / 840) | corte único em 1024; coluna única; 5 breakpoints | [usuário] |
 | 4 · Tema | só claro, escuro removido | manter sem usar; escuro como débito; seguir o SO | [usuário] |

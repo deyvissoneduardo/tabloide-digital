@@ -84,7 +84,7 @@ void main() {
       ('elevação literal', 'elevation: 2,'),
       ('tamanho de ícone literal', 'Icon(Icons.add, size: 64)'),
       ('estilo de texto avulso', 'style: TextStyle(fontSize: 18)'),
-      ('tema escuro', 'darkTheme: AppTheme.escuro(marca),'),
+      ('tema escuro', 'darkTheme: AppTheme.escuro(),'),
       ('breakpoint literal', 'if (largura < 600) {'),
       ('MediaQuery.of para tamanho', 'MediaQuery.of(context).size.width'),
     ]) {

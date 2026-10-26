@@ -15,27 +15,23 @@ void main() {
       builder: () => GoldenTestGroup(
         columns: 2,
         children: [
-          for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-            for (final (estado, produtos) in [
-              ('vigente e agendado', [produtoFake, produtoFakeAgendado]),
-              ('vazia', <ProdutoResponse>[]),
-            ])
-              GoldenTestScenario(
-                name: 'Marca $nome, $estado',
-                constraints: BoxConstraints.tight(tamanho),
-                child: MediaQuery(
-                  data: MediaQueryData(size: tamanho),
-                  child: montarTela(
-                    const HomeScreen(),
-                    marca: marca,
-                    home: controllerDeTeste()..selecionar(SecaoPainel.produtos),
-                    filiais: filiaisControllerDeTeste()..carregar(),
-                    produtoRepository: ProdutoRepositoryFake(
-                      produtos: produtos,
-                    ),
-                  ),
+          for (final (estado, produtos) in [
+            ('vigente e agendado', [produtoFake, produtoFakeAgendado]),
+            ('vazia', <ProdutoResponse>[]),
+          ])
+            GoldenTestScenario(
+              name: estado,
+              constraints: BoxConstraints.tight(tamanho),
+              child: MediaQuery(
+                data: MediaQueryData(size: tamanho),
+                child: montarTela(
+                  const HomeScreen(),
+                  home: controllerDeTeste()..selecionar(SecaoPainel.produtos),
+                  filiais: filiaisControllerDeTeste()..carregar(),
+                  produtoRepository: ProdutoRepositoryFake(produtos: produtos),
                 ),
               ),
+            ),
         ],
       ),
     );
@@ -47,24 +43,22 @@ void main() {
     builder: () => GoldenTestGroup(
       columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          for (final (estado, produto) in [
-            ('novo', null),
-            ('edição de vigente', produtoFake),
-          ])
-            GoldenTestScenario(
-              name: 'Marca $nome, $estado',
-              constraints: const BoxConstraints.tightFor(
-                width: 360,
-                height: 1500,
-              ),
-              child: montarTela(
-                ProdutoFormScreen(filialId: filialFake.id, produto: produto),
-                marca: marca,
-                categorias: categoriasControllerDeTeste()
-                  ..carregar(filialFake.id),
-              ),
+        for (final (estado, produto) in [
+          ('novo', null),
+          ('edição de vigente', produtoFake),
+        ])
+          GoldenTestScenario(
+            name: estado,
+            constraints: const BoxConstraints.tightFor(
+              width: 360,
+              height: 1500,
             ),
+            child: montarTela(
+              ProdutoFormScreen(filialId: filialFake.id, produto: produto),
+              categorias: categoriasControllerDeTeste()
+                ..carregar(filialFake.id),
+            ),
+          ),
       ],
     ),
   );
@@ -73,17 +67,12 @@ void main() {
     'Cenário: Dado a tela de categorias da web, então a lista segue a marca',
     fileName: 'categorias_screen_web_light',
     builder: () => GoldenTestGroup(
-      columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          GoldenTestScenario(
-            name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(width: 360, height: 640),
-            child: montarTela(
-              CategoriasScreen(filialId: filialFake.id),
-              marca: marca,
-            ),
-          ),
+        GoldenTestScenario(
+          name: 'Tema claro',
+          constraints: const BoxConstraints.tightFor(width: 360, height: 640),
+          child: montarTela(CategoriasScreen(filialId: filialFake.id)),
+        ),
       ],
     ),
   );

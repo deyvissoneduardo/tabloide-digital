@@ -36,19 +36,15 @@ void main() {
     builder: () => GoldenTestGroup(
       columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          for (final (estado, controller) in [
-            ('inicial', cadastroControllerDeTeste),
-            ('erros da API', _comErrosDaApi),
-          ])
-            GoldenTestScenario(
-              name: 'Marca $nome, $estado',
-              constraints: const BoxConstraints.tightFor(
-                width: 360,
-                height: 900,
-              ),
-              child: montarCadastro(marca: marca, controller: controller()),
-            ),
+        for (final (estado, controller) in [
+          ('inicial', cadastroControllerDeTeste),
+          ('erros da API', _comErrosDaApi),
+        ])
+          GoldenTestScenario(
+            name: estado,
+            constraints: const BoxConstraints.tightFor(width: 360, height: 900),
+            child: montarCadastro(controller: controller()),
+          ),
       ],
     ),
   );

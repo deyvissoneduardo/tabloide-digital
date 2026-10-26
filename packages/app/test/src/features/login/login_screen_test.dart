@@ -19,7 +19,6 @@ void main() {
       return tester.pumpWidget(
         montarLogin(
           sessao: sessao,
-          marca: const MarcaFake(nome: 'Mercado Bom Preço'),
           controller: loginControllerDeTeste(
             repository: repository,
             sessao: sessao,
@@ -44,9 +43,9 @@ void main() {
       (tester) async {
         await abrir(tester);
 
-        expect(find.text('Mercado Bom Preço'), findsOneWidget);
+        expect(find.text('Tabloide Digital'), findsOneWidget);
         expect(
-          find.bySemanticsLabel('Logo de Mercado Bom Preço'),
+          find.bySemanticsLabel('Logo de Tabloide Digital'),
           findsOneWidget,
         );
         expect(_email, findsOneWidget);

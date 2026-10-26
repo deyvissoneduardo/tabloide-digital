@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
-import 'package:tabloide_core/testing.dart';
 
 import '../../helpers/montar.dart';
 
@@ -11,18 +10,16 @@ void main() {
       'Cenário: Dado o botão parado, quando toco, então a ação roda e o rótulo usa a cor do tema',
       (tester) async {
         var toques = 0;
-        const marca = MarcaFake(corPrimaria: Color(0xFFC62828));
         await tester.pumpWidget(
           montarComMarca(
             AppBotaoPrincipal(rotulo: 'Entrar', aoPressionar: () => toques++),
-            marca: marca,
           ),
         );
 
         await tester.tap(find.text('Entrar'));
 
         expect(toques, 1);
-        final cores = AppTheme.claro(marca).colorScheme;
+        final cores = AppTheme.claro().colorScheme;
         final estilo = tester
             .widget<ElevatedButton>(find.byType(ElevatedButton))
             .style!;

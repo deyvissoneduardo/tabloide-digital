@@ -2,10 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_app/tabloide_app.dart';
 
-Widget bootstrap({required BrandConfig marca, required String baseUrl}) =>
+Widget bootstrap({required String baseUrl}) =>
     MultiProvider(
       providers: providersCore(
-        marca: marca,
         baseUrl: baseUrl,
         servicos: providersApp(),
       ),

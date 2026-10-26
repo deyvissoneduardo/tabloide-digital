@@ -35,28 +35,27 @@ void main() {
     builder: () => GoldenTestGroup(
       columns: 3,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          for (final (estado, tela, controller) in [
-            (
-              'primeira filial',
-              const FilialFormScreen(obrigatoria: true),
-              filialFormControllerDeTeste,
+        for (final (estado, tela, controller) in [
+          (
+            'primeira filial',
+            const FilialFormScreen(obrigatoria: true),
+            filialFormControllerDeTeste,
+          ),
+          (
+            'edição',
+            FilialFormScreen(filial: filialFake),
+            filialFormControllerDeTeste,
+          ),
+          ('erros da API', const FilialFormScreen(), _comErrosDaApi),
+        ])
+          GoldenTestScenario(
+            name: estado,
+            constraints: const BoxConstraints.tightFor(
+              width: 360,
+              height: 1000,
             ),
-            (
-              'edição',
-              FilialFormScreen(filial: filialFake),
-              filialFormControllerDeTeste,
-            ),
-            ('erros da API', const FilialFormScreen(), _comErrosDaApi),
-          ])
-            GoldenTestScenario(
-              name: 'Marca $nome, $estado',
-              constraints: const BoxConstraints.tightFor(
-                width: 360,
-                height: 1000,
-              ),
-              child: montarTela(tela, marca: marca, filialForm: controller()),
-            ),
+            child: montarTela(tela, filialForm: controller()),
+          ),
       ],
     ),
   );
@@ -65,22 +64,19 @@ void main() {
     'Cenário: Dado mais de uma filial, então a escolha de filial lista os cartões na marca',
     fileName: 'escolher_filial_screen_web_light',
     builder: () => GoldenTestGroup(
-      columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          GoldenTestScenario(
-            name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(width: 360, height: 640),
-            child: montarTela(
-              const EscolherFilialScreen(),
-              marca: marca,
-              filiais: filiaisControllerDeTeste(
-                repository: FilialRepositoryFake(
-                  filiais: [filialFake, filialFakeBairro],
-                ),
-              )..carregar(),
-            ),
+        GoldenTestScenario(
+          name: 'Tema claro',
+          constraints: const BoxConstraints.tightFor(width: 360, height: 640),
+          child: montarTela(
+            const EscolherFilialScreen(),
+            filiais: filiaisControllerDeTeste(
+              repository: FilialRepositoryFake(
+                filiais: [filialFake, filialFakeBairro],
+              ),
+            )..carregar(),
           ),
+        ),
       ],
     ),
   );
