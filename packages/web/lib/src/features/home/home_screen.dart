@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_web/src/features/filiais/widgets/secao_filiais.dart';
-import 'package:tabloide_web/src/features/identidade/identidade_screen.dart';
+import 'package:tabloide_web/src/features/perfil/perfil_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<void> _abrirIdentidade(BuildContext context) => Navigator.of(context)
-      .push(MaterialPageRoute<void>(builder: (_) => const IdentidadeScreen()));
+  Future<void> _abrirPerfil(BuildContext context) =>
+      Navigator.of(context)
+          .push(MaterialPageRoute<void>(builder: (_) => const PerfilScreen()));
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +26,9 @@ class HomeScreen extends StatelessWidget {
           title: const AppMarcaCabecalho(),
           actions: [
             IconButton(
-              tooltip: 'Identidade visual',
-              icon: const Icon(Icons.palette_outlined),
-              onPressed: () => _abrirIdentidade(context),
+              tooltip: 'Perfil',
+              icon: const Icon(Icons.person_outline),
+              onPressed: () => _abrirPerfil(context),
             ),
           ],
         ),
@@ -70,14 +71,14 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: AppEspacamentos.md),
               child: expandido
                   ? TextButton.icon(
-                      onPressed: () => _abrirIdentidade(context),
-                      icon: const Icon(Icons.palette_outlined),
-                      label: const Text('Identidade visual'),
+                      onPressed: () => _abrirPerfil(context),
+                      icon: const Icon(Icons.person_outline),
+                      label: const Text('Perfil'),
                     )
                   : IconButton(
-                      tooltip: 'Identidade visual',
-                      icon: const Icon(Icons.palette_outlined),
-                      onPressed: () => _abrirIdentidade(context),
+                      tooltip: 'Perfil',
+                      icon: const Icon(Icons.person_outline),
+                      onPressed: () => _abrirPerfil(context),
                     ),
             ),
             selectedIndex: controller.secao.index,

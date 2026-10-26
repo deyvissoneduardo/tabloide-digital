@@ -13,20 +13,23 @@ const _semLogo = IdentidadeResponse(
 
 void main() {
   goldenTest(
-    'Cenário: Dado a identidade visual da web, então o formulário segue a marca com logo, cores e o botão de sair',
-    fileName: 'identidade_screen_web_light',
+    'Cenário: Dado o perfil da web, então os dados da loja vêm antes da identidade visual, seguindo a marca, com o botão de sair',
+    fileName: 'perfil_screen_web_light',
     builder: () => GoldenTestGroup(
       columns: 2,
       children: [
         for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
           GoldenTestScenario(
             name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(width: 360, height: 900),
+            constraints: const BoxConstraints.tightFor(
+              width: 360,
+              height: 1300,
+            ),
             child: montarTela(
-              const IdentidadeScreen(),
+              const PerfilScreen(),
               marca: marca,
-              identidade: identidadeControllerDeTeste(
-                repository: IdentidadeRepositoryFake(identidade: _semLogo),
+              perfil: perfilControllerDeTeste(
+                identidade: IdentidadeRepositoryFake(identidade: _semLogo),
               ),
             ),
           ),
