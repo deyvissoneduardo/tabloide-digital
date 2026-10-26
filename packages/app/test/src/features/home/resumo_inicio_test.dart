@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_app/tabloide_app.dart';
+import 'package:tabloide_core/testing.dart';
 
 import '../../../helpers/montar.dart';
 
@@ -41,15 +42,21 @@ void main() {
     );
 
     testWidgets(
-      'Cenário: Dado o resumo 3/2/48, quando a home carrega, então vejo os três números',
+      'Cenário: Dado 2 filiais na lista e o resumo 3/2/48, quando a home carrega, então Filiais mostra o tamanho da lista e não o do resumo',
       (tester) async {
-        await tester.pumpWidget(montar());
+        final filiais = filiaisControllerDeTeste(
+          repository: FilialRepositoryFake(
+            filiais: [filialFake, filialFakeBairro],
+          ),
+        );
+        await tester.runAsync(filiais.carregar);
+        await tester.pumpWidget(montar(filiais: filiais));
         await tester.pumpAndSettle();
 
         expect(find.text('Filiais'), findsWidgets);
-        expect(find.text('3'), findsOneWidget);
+        expect(find.text('3'), findsNothing);
         expect(find.text('Panfletos no ar'), findsOneWidget);
-        expect(find.text('2'), findsOneWidget);
+        expect(find.text('2'), findsNWidgets(2));
         expect(find.text('Produtos no ar'), findsOneWidget);
         expect(find.text('48'), findsOneWidget);
       },
@@ -70,7 +77,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(repository.chamadas, 2);
-        expect(find.text('7'), findsOneWidget);
+        expect(find.text('30'), findsOneWidget);
       },
     );
   });

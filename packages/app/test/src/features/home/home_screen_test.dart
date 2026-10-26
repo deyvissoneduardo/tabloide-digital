@@ -11,12 +11,17 @@ void main() {
       late HomeController controller;
       setUp(() => controller = controllerDeTeste());
 
-      Future<void> abrir(WidgetTester tester) => tester.pumpWidget(
-        montar(
-          marca: const MarcaFake(nome: 'Mercado Bom Preço'),
-          controller: controller,
-        ),
-      );
+      Future<void> abrir(WidgetTester tester) async {
+        final filiais = filiaisControllerDeTeste();
+        await tester.runAsync(filiais.carregar);
+        await tester.pumpWidget(
+          montar(
+            marca: const MarcaFake(nome: 'Mercado Bom Preço'),
+            controller: controller,
+            filiais: filiais,
+          ),
+        );
+      }
 
       testWidgets('Então a barra superior mostra o nome e a logo da marca', (
         tester,

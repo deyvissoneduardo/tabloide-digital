@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tabloide_app/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 class ResumoInicio extends StatelessWidget {
@@ -8,6 +9,7 @@ class ResumoInicio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<HomeController>();
+    final filiais = context.watch<FiliaisController>().filiais;
     return switch (controller.resumo) {
       ResumoCarregando() => const EsqueletoLista(),
       ResumoComFalha(:final falha) => EstadoFalha(
@@ -20,7 +22,7 @@ class ResumoInicio extends StatelessWidget {
           _Numero(
             icone: SecaoPainel.filiais.iconeSelecionado,
             rotulo: 'Filiais',
-            valor: resumo.filiais,
+            valor: filiais.length,
           ),
           _Numero(
             icone: SecaoPainel.panfletos.iconeSelecionado,
