@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_app/tabloide_app.dart';
-import 'package:tabloide_core/testing.dart';
 
 import '../../../helpers/montar.dart';
 
 void main() {
   group('Funcionalidade: home do painel no app', () {
-    group('Cenário: Dado a home aberta com a marca "Mercado Bom Preço"', () {
+    group('Cenário: Dado a home aberta com a marca Tabloide Digital', () {
       late HomeController controller;
       setUp(() => controller = controllerDeTeste());
 
@@ -15,11 +14,7 @@ void main() {
         final filiais = filiaisControllerDeTeste();
         await tester.runAsync(filiais.carregar);
         await tester.pumpWidget(
-          montar(
-            marca: const MarcaFake(nome: 'Mercado Bom Preço'),
-            controller: controller,
-            filiais: filiais,
-          ),
+          montar(controller: controller, filiais: filiais),
         );
         await tester.pump(const Duration(milliseconds: 1));
       }
@@ -32,12 +27,12 @@ void main() {
         expect(
           find.descendant(
             of: find.byType(AppBar),
-            matching: find.text('Mercado Bom Preço'),
+            matching: find.text('Tabloide Digital'),
           ),
           findsOneWidget,
         );
         expect(
-          find.bySemanticsLabel(RegExp('^Logo de Mercado Bom Preço')),
+          find.bySemanticsLabel(RegExp('^Logo de Tabloide Digital')),
           findsOneWidget,
         );
       });

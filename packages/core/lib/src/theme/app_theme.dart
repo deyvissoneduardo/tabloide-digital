@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tabloide_core/src/brand/brand_config.dart';
 import 'package:tabloide_core/src/theme/app_cores.dart';
 import 'package:tabloide_core/src/theme/app_espacamentos.dart';
 import 'package:tabloide_core/src/theme/app_layout.dart';
@@ -7,8 +6,8 @@ import 'package:tabloide_core/src/theme/app_raios.dart';
 import 'package:tabloide_core/src/theme/app_tipografia.dart';
 
 abstract final class AppTheme {
-  static ThemeData claro(BrandConfig marca) {
-    final esquema = _esquemaDaMarca(marca);
+  static ThemeData claro() {
+    final esquema = _esquema();
     final base = ThemeData(useMaterial3: true, colorScheme: esquema);
     final texto = AppTipografia.aplicar(base.textTheme);
     return base.copyWith(
@@ -126,9 +125,9 @@ abstract final class AppTheme {
     textStyle: WidgetStatePropertyAll(texto.labelLarge),
   );
 
-  static ColorScheme _esquemaDaMarca(BrandConfig marca) {
-    final daPrimaria = _esquema(marca.corPrimaria);
-    final daSecundaria = _esquema(marca.corSecundaria);
+  static ColorScheme _esquema() {
+    final daPrimaria = _daSemente(AppCores.primaria);
+    final daSecundaria = _daSemente(AppCores.secundaria);
     var esquema = daPrimaria.copyWith(
       secondary: daSecundaria.primary,
       onSecondary: daSecundaria.onPrimary,
@@ -136,11 +135,11 @@ abstract final class AppTheme {
       onSecondaryContainer: daSecundaria.onPrimaryContainer,
       error: AppCores.erro,
     );
-    final primaria = _corExata(marca.corPrimaria);
+    final primaria = _corExata(AppCores.primaria);
     if (primaria != null) {
       esquema = esquema.copyWith(primary: primaria.$1, onPrimary: primaria.$2);
     }
-    final secundaria = _corExata(marca.corSecundaria);
+    final secundaria = _corExata(AppCores.secundaria);
     if (secundaria != null) {
       esquema = esquema.copyWith(
         secondary: secundaria.$1,
@@ -171,7 +170,7 @@ abstract final class AppTheme {
     return (claro + 0.05) / (escuro + 0.05);
   }
 
-  static ColorScheme _esquema(Color semente) => ColorScheme.fromSeed(
+  static ColorScheme _daSemente(Color semente) => ColorScheme.fromSeed(
     seedColor: semente,
     dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
   );

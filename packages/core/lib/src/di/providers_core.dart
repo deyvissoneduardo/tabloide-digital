@@ -1,6 +1,5 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:tabloide_core/src/brand/brand_config.dart';
 import 'package:tabloide_core/src/features/auth/repositories/auth_repository.dart';
 import 'package:tabloide_core/src/features/auth/repositories/auth_repository_api.dart';
 import 'package:tabloide_core/src/features/cadastro/repositories/cadastro_repository.dart';
@@ -30,7 +29,6 @@ import 'package:tabloide_core/src/sessao/armazenamento_preferencias.dart';
 import 'package:tabloide_core/src/sessao/sessao.dart';
 
 List<SingleChildWidget> providersCore({
-  required BrandConfig marca,
   required String baseUrl,
   required List<SingleChildWidget> servicos,
   ArmazenamentoLocal? armazenamento,
@@ -46,7 +44,6 @@ List<SingleChildWidget> providersCore({
   ProdutoRepository? produtoRepository,
   HomeRepository? homeRepository,
 }) => [
-  Provider<BrandConfig>.value(value: marca),
   Provider<Sessao>(
     create: (_) => Sessao(armazenamento ?? ArmazenamentoPreferencias()),
   ),

@@ -9,17 +9,11 @@ import '../helpers/montar.dart';
 void main() {
   group('Funcionalidade: raiz do painel web', () {
     testWidgets(
-      'Cenário: Dado a marca "Padaria Central", quando a web abre, então o título da aba e o tema (só claro) vêm da marca e sem sessão no cache o login aparece',
+      'Cenário: Dado o painel, quando a web abre, então o título da aba e o tema (só claro) são do Tabloide Digital e sem sessão no cache o login aparece',
       (tester) async {
-        const marca = MarcaFake(
-          nome: 'Padaria Central',
-          corPrimaria: Color(0xFFC62828),
-        );
-
         await tester.pumpWidget(
           MultiProvider(
             providers: [
-              Provider<BrandConfig>.value(value: marca),
               Provider<Sessao>.value(value: sessaoDeTeste()),
               ChangeNotifierProvider(create: (_) => loginControllerDeTeste()),
               ChangeNotifierProvider(create: (_) => filiaisControllerDeTeste()),
@@ -30,8 +24,8 @@ void main() {
         await tester.pumpAndSettle();
 
         final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
-        expect(app.title, 'Padaria Central');
-        expect(app.theme?.colorScheme.primary, marca.corPrimaria);
+        expect(app.title, 'Tabloide Digital');
+        expect(app.theme?.colorScheme.primary, AppCores.primaria);
         expect(app.darkTheme, isNull);
         expect(app.themeMode, ThemeMode.light);
         expect(app.locale, const Locale('pt', 'BR'));

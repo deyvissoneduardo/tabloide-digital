@@ -19,14 +19,12 @@ void main() {
     testWidgets(
       'Cenário: Dado os providers do core com o service da plataforma, quando monto a árvore, então cada camada recebe a de baixo',
       (tester) async {
-        const marca = MarcaFake(nome: 'Marca DI');
         const resumo = ResumoPainel(panfletosVigentes: 9, produtosVigentes: 9);
         late BuildContext contexto;
 
         await tester.pumpWidget(
           MultiProvider(
             providers: providersCore(
-              marca: marca,
               baseUrl: 'http://api',
               homeRepository: const HomeRepositoryFake(
                 resumo: resumo,
@@ -47,7 +45,6 @@ void main() {
           ),
         );
 
-        expect(contexto.read<BrandConfig>(), same(marca));
         expect(contexto.read<RestClient>(), isA<RestClient>());
         expect(contexto.read<HomeService>(), isA<_ServicoDeTeste>());
 
@@ -72,11 +69,7 @@ void main() {
         late BuildContext contexto;
         await tester.pumpWidget(
           MultiProvider(
-            providers: providersCore(
-              marca: const MarcaFake(),
-              baseUrl: 'http://api',
-              servicos: const [],
-            ),
+            providers: providersCore(baseUrl: 'http://api', servicos: const []),
             child: Builder(
               builder: (context) {
                 contexto = context;
@@ -125,7 +118,6 @@ void main() {
         await tester.pumpWidget(
           MultiProvider(
             providers: providersCore(
-              marca: const MarcaFake(),
               baseUrl: 'http://api',
               armazenamento: armazenamento,
               servicos: const [],

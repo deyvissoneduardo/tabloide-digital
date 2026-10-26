@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
-import 'package:tabloide_core/testing.dart';
 
 import '../../helpers/montar.dart';
 
@@ -35,15 +34,14 @@ void main() {
 
   group('Funcionalidade: marca no topo das telas', () {
     testWidgets(
-      'Cenário: Dado a marca "Mercado Bom Preço", então o destaque e o cabeçalho mostram logo e nome',
+      'Cenário: Dado o Tabloide Digital, então o destaque e o cabeçalho mostram logo e nome',
       (tester) async {
-        const marca = MarcaFake(nome: 'Mercado Bom Preço');
         for (final widget in const [AppMarcaDestaque(), AppMarcaCabecalho()]) {
-          await tester.pumpWidget(montarComMarca(widget, marca: marca));
+          await tester.pumpWidget(montarComMarca(widget));
 
-          expect(find.text('Mercado Bom Preço'), findsOneWidget);
+          expect(find.text('Tabloide Digital'), findsOneWidget);
           expect(
-            find.bySemanticsLabel('Logo de Mercado Bom Preço'),
+            find.bySemanticsLabel('Logo de Tabloide Digital'),
             findsOneWidget,
           );
         }
@@ -52,9 +50,7 @@ void main() {
           isNot(AppIcones.destaque),
           reason: 'o cabeçalho usa a logo pequena',
         );
-        await tester.pumpWidget(
-          montarComMarca(const AppMarcaDestaque(), marca: marca),
-        );
+        await tester.pumpWidget(montarComMarca(const AppMarcaDestaque()));
         expect(
           tester.widget<MarcaLogo>(find.byType(MarcaLogo)).altura,
           AppIcones.destaque,

@@ -16,23 +16,17 @@ void main() {
     'Cenário: Dado o perfil da web, então os dados da loja vêm antes da identidade visual, seguindo a marca, com o botão de sair',
     fileName: 'perfil_screen_web_light',
     builder: () => GoldenTestGroup(
-      columns: 2,
       children: [
-        for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-          GoldenTestScenario(
-            name: 'Marca $nome',
-            constraints: const BoxConstraints.tightFor(
-              width: 360,
-              height: 1300,
-            ),
-            child: montarTela(
-              const PerfilScreen(),
-              marca: marca,
-              perfil: perfilControllerDeTeste(
-                identidade: IdentidadeRepositoryFake(identidade: _semLogo),
-              ),
+        GoldenTestScenario(
+          name: 'Tema claro',
+          constraints: const BoxConstraints.tightFor(width: 360, height: 1300),
+          child: montarTela(
+            const PerfilScreen(),
+            perfil: perfilControllerDeTeste(
+              identidade: IdentidadeRepositoryFake(identidade: _semLogo),
             ),
           ),
+        ),
       ],
     ),
   );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tabloide_core/testing.dart';
 import 'package:tabloide_web/tabloide_web.dart';
 
 import '../../../helpers/montar.dart';
@@ -14,12 +13,7 @@ void main() {
       tester.view.physicalSize = tela;
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
-      await tester.pumpWidget(
-        montar(
-          marca: const MarcaFake(nome: 'Mercado Bom Preço'),
-          controller: controller,
-        ),
-      );
+      await tester.pumpWidget(montar(controller: controller));
       await tester.pumpAndSettle();
     }
 
@@ -34,7 +28,7 @@ void main() {
             isTrue,
           );
           expect(find.byType(NavigationBar), findsNothing);
-          expect(find.text('Mercado Bom Preço'), findsOneWidget);
+          expect(find.text('Tabloide Digital'), findsOneWidget);
         },
       );
 
@@ -70,7 +64,7 @@ void main() {
             expect(menu.extended, isFalse);
             expect(menu.labelType, NavigationRailLabelType.all);
             expect(
-              find.bySemanticsLabel('Logo de Mercado Bom Preço'),
+              find.bySemanticsLabel('Logo de Tabloide Digital'),
               findsOneWidget,
             );
           },
@@ -89,7 +83,7 @@ void main() {
           expect(
             find.descendant(
               of: find.byType(AppBar),
-              matching: find.text('Mercado Bom Preço'),
+              matching: find.text('Tabloide Digital'),
             ),
             findsOneWidget,
           );

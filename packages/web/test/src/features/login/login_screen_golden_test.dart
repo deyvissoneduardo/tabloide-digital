@@ -27,23 +27,25 @@ void main() {
     goldenTest(
       'Cenário: Dado o login web em $tela, então o formulário segue a largura e a marca',
       fileName: 'login_screen_web_$tela',
-      pumpBeforeTest: pumpNTimes(2, const Duration(milliseconds: 300)),
+      pumpBeforeTest: (tester) async {
+        await precarregarLogo(tester);
+        await pumpNTimes(2, const Duration(milliseconds: 300))(tester);
+      },
       builder: () => GoldenTestGroup(
         columns: 2,
         children: [
-          for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-            for (final (estado, controller) in [
-              ('inicial', loginControllerDeTeste),
-              ('enviando', _enviando),
-            ])
-              GoldenTestScenario(
-                name: 'Marca $nome, $estado',
-                constraints: BoxConstraints.tight(tamanho),
-                child: MediaQuery(
-                  data: MediaQueryData(size: tamanho),
-                  child: montarLogin(marca: marca, controller: controller()),
-                ),
+          for (final (estado, controller) in [
+            ('inicial', loginControllerDeTeste),
+            ('enviando', _enviando),
+          ])
+            GoldenTestScenario(
+              name: estado,
+              constraints: BoxConstraints.tight(tamanho),
+              child: MediaQuery(
+                data: MediaQueryData(size: tamanho),
+                child: montarLogin(controller: controller()),
               ),
+            ),
         ],
       ),
     );

@@ -6,7 +6,7 @@
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
-      "args": ["--dart-define-from-file=config/marcas/tabloide.json"]
+      "args": ["--dart-define=API_URL=https://tabloide-api.vercel.app/v1"]
     },
     {
       "name": "Tabloide (web)",
@@ -14,22 +14,7 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "chrome",
-      "args": ["--dart-define-from-file=config/marcas/tabloide.json"]
-    },
-    {
-      "name": "Mercado Exemplo (dispositivo)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "args": ["--dart-define-from-file=config/marcas/mercado_exemplo.json"]
-    },
-    {
-      "name": "Mercado Exemplo (web)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "deviceId": "chrome",
-      "args": ["--dart-define-from-file=config/marcas/mercado_exemplo.json"]
+      "args": ["--dart-define=API_URL=https://tabloide-api.vercel.app/v1"]
     }
   ]
 }

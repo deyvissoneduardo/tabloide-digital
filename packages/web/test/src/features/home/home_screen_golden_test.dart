@@ -15,22 +15,23 @@ void main() {
     goldenTest(
       'Cenário: Dado a home web em $tela, então o layout segue a largura e a marca',
       fileName: 'home_screen_web_$tela',
+      pumpBeforeTest: (tester) async {
+        await precarregarLogo(tester);
+        await tester.pumpAndSettle();
+      },
       builder: () => GoldenTestGroup(
-        columns: 2,
         children: [
-          for (final MapEntry(key: nome, value: marca) in marcasDeTeste.entries)
-            GoldenTestScenario(
-              name: 'Marca $nome',
-              constraints: BoxConstraints.tight(tamanho),
-              child: MediaQuery(
-                data: MediaQueryData(size: tamanho),
-                child: montar(
-                  marca: marca,
-                  controller: controllerDeTeste()
-                    ..selecionar(SecaoPainel.filiais),
-                ),
+          GoldenTestScenario(
+            name: 'Tema claro',
+            constraints: BoxConstraints.tight(tamanho),
+            child: MediaQuery(
+              data: MediaQueryData(size: tamanho),
+              child: montar(
+                controller: controllerDeTeste()
+                  ..selecionar(SecaoPainel.filiais),
               ),
             ),
+          ),
         ],
       ),
     );

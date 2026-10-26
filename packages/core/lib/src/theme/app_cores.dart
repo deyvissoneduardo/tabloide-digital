@@ -1,6 +1,10 @@
 import 'package:flutter/painting.dart';
 
 abstract final class AppCores {
+  static const primaria = Color(0xFF1565C0);
+
+  static const secundaria = Color(0xFFFFB300);
+
   static const erro = Color(0xFFB3261E);
 
   static const sucesso = Color(0xFF2E7D32);
