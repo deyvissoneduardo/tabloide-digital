@@ -10,6 +10,9 @@ import 'package:tabloide_web/src/features/filiais/services/filial_service_web.da
 import 'package:tabloide_web/src/features/home/services/home_service_web.dart';
 import 'package:tabloide_web/src/features/login/login_controller.dart';
 import 'package:tabloide_web/src/features/login/services/auth_service_web.dart';
+import 'package:tabloide_web/src/features/panfletos/panfleto_form_controller.dart';
+import 'package:tabloide_web/src/features/panfletos/panfletos_controller.dart';
+import 'package:tabloide_web/src/features/panfletos/services/panfleto_service_web.dart';
 import 'package:tabloide_web/src/features/perfil/perfil_controller.dart';
 import 'package:tabloide_web/src/features/perfil/services/perfil_service_web.dart';
 
@@ -50,6 +53,17 @@ List<SingleChildWidget> providersWeb() => [
   ),
   ChangeNotifierProvider<PerfilController>(
     create: (context) => PerfilController(context.read<PerfilServiceWeb>()),
+  ),
+  Provider<PanfletoServiceWeb>(
+    create: (context) => PanfletoServiceWeb(context.read<PanfletoRepository>()),
+  ),
+  ChangeNotifierProvider<PanfletosController>(
+    create: (context) =>
+        PanfletosController(context.read<PanfletoServiceWeb>()),
+  ),
+  ChangeNotifierProvider<PanfletoFormController>(
+    create: (context) =>
+        PanfletoFormController(context.read<PanfletoServiceWeb>()),
   ),
   Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(

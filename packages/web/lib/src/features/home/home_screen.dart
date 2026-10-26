@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_web/src/features/filiais/widgets/secao_filiais.dart';
+import 'package:tabloide_web/src/features/panfletos/widgets/secao_panfletos.dart';
 import 'package:tabloide_web/src/features/perfil/perfil_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,6 +18,7 @@ class HomeScreen extends StatelessWidget {
     final classe = ClasseTamanho.de(context);
     final conteudo = switch (controller.secao) {
       SecaoPainel.filiais => const SecaoFiliais(),
+      SecaoPainel.panfletos => const SecaoPanfletos(),
       final secao => AppConteudoSecao(secao: secao),
     };
 

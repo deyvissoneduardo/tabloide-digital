@@ -34,6 +34,11 @@ void main() {
         expect(app.theme?.colorScheme.primary, marca.corPrimaria);
         expect(app.darkTheme, isNull);
         expect(app.themeMode, ThemeMode.light);
+        expect(app.locale, const Locale('pt', 'BR'));
+        expect(
+          Localizations.localeOf(tester.element(find.byType(Scaffold).first)),
+          const Locale('pt', 'BR'),
+        );
         expect(find.byType(LoginScreen), findsOneWidget);
       },
     );

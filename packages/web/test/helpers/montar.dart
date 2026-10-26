@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -54,6 +55,20 @@ PerfilController perfilControllerDeTeste({
   ),
 );
 
+PanfletosController panfletosControllerDeTeste({
+  PanfletoRepository? repository,
+}) => PanfletosController(
+  PanfletoServiceWeb(
+    repository ?? PanfletoRepositoryFake(panfletos: [panfletoFake]),
+  ),
+);
+
+PanfletoFormController panfletoFormControllerDeTeste({
+  PanfletoRepository? repository,
+}) => PanfletoFormController(
+  PanfletoServiceWeb(repository ?? PanfletoRepositoryFake()),
+);
+
 SingleChildWidget _notificador<T extends ChangeNotifier>(
   T? valor,
   T Function() criar,
@@ -73,11 +88,16 @@ Widget montarTela(
   FilialRepository? filialRepository,
   CepRepository? cepRepository,
   PerfilController? perfil,
+  PanfletosController? panfletos,
+  PanfletoFormController? panfletoForm,
+  PanfletoRepository? panfletoRepository,
   ImagePicker? seletorImagem,
 }) {
   final sessaoDaTela = sessao ?? sessaoDeTeste();
   final repository =
       filialRepository ?? FilialRepositoryFake(filiais: [filialFake]);
+  final panfletosDaTela =
+      panfletoRepository ?? PanfletoRepositoryFake(panfletos: [panfletoFake]);
   return MultiProvider(
     providers: [
       Provider<BrandConfig>.value(value: marca),
@@ -100,11 +120,22 @@ Widget montarTela(
         ),
       ),
       _notificador(perfil, perfilControllerDeTeste),
+      _notificador(
+        panfletos,
+        () => panfletosControllerDeTeste(repository: panfletosDaTela),
+      ),
+      _notificador(
+        panfletoForm,
+        () => panfletoFormControllerDeTeste(repository: panfletosDaTela),
+      ),
       Provider<ImagePicker>.value(value: seletorImagem ?? ImagePicker()),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.claro(marca),
+      locale: const Locale('pt', 'BR'),
+      supportedLocales: const [Locale('pt', 'BR')],
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
       home: tela,
     ),
   );
