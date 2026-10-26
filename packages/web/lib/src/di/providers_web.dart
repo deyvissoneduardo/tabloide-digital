@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:tabloide_core/tabloide_core.dart';
@@ -7,6 +8,8 @@ import 'package:tabloide_web/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_web/src/features/filiais/filial_form_controller.dart';
 import 'package:tabloide_web/src/features/filiais/services/filial_service_web.dart';
 import 'package:tabloide_web/src/features/home/services/home_service_web.dart';
+import 'package:tabloide_web/src/features/identidade/identidade_controller.dart';
+import 'package:tabloide_web/src/features/identidade/services/identidade_service_web.dart';
 import 'package:tabloide_web/src/features/login/login_controller.dart';
 import 'package:tabloide_web/src/features/login/services/auth_service_web.dart';
 
@@ -39,6 +42,15 @@ List<SingleChildWidget> providersWeb() => [
   ChangeNotifierProvider<FilialFormController>(
     create: (context) => FilialFormController(context.read<FilialServiceWeb>()),
   ),
+  Provider<IdentidadeServiceWeb>(
+    create: (context) =>
+        IdentidadeServiceWeb(context.read<IdentidadeRepository>()),
+  ),
+  ChangeNotifierProvider<IdentidadeController>(
+    create: (context) =>
+        IdentidadeController(context.read<IdentidadeServiceWeb>()),
+  ),
+  Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(
     create: (context) => HomeServiceWeb(context.read<HomeRepository>()),
   ),

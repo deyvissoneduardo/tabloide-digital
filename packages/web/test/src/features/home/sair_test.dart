@@ -78,12 +78,17 @@ void main() {
       }
 
       Future<void> tocarSair(WidgetTester tester) async {
-        await tester.tap(find.byTooltip('Sair'));
+        await tester.tap(find.byTooltip('Identidade visual'));
+        await tester.pumpAndSettle();
+        expect(find.byType(IdentidadeScreen), findsOneWidget);
+        await tester.ensureVisible(find.text('Sair do painel'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Sair do painel'));
         await tester.pumpAndSettle();
       }
 
       testWidgets(
-        'Quando toco em Sair e cancelo, então continuo na home com a sessão',
+        'Quando abro a identidade visual, toco em Sair e cancelo, então continuo no painel com a sessão',
         (tester) async {
           await abrir(tester, const Size(390, 844));
 
@@ -92,13 +97,13 @@ void main() {
           await tester.tap(find.text('Cancelar'));
           await tester.pumpAndSettle();
 
-          expect(find.byType(HomeScreen), findsOneWidget);
+          expect(find.byType(IdentidadeScreen), findsOneWidget);
           expect(sessao.ativa, isTrue);
         },
       );
 
       testWidgets(
-        'Quando toco em Sair e confirmo, então vou para o login, sem a home na pilha, com sessão, cache e filiais limpos',
+        'Quando abro a identidade visual, toco em Sair e confirmo, então vou para o login, sem a home na pilha, com sessão, cache e filiais limpos',
         (tester) async {
           await abrir(tester, const Size(390, 844));
 
@@ -116,14 +121,14 @@ void main() {
       );
 
       testWidgets(
-        'Quando a tela é média, então "Sair" fica no rodapé do menu lateral',
+        'Quando a tela é média, então "Identidade visual" fica no rodapé do menu lateral',
         (tester) async {
           await abrir(tester, const Size(768, 1024));
 
           expect(
             find.descendant(
               of: find.byType(NavigationRail),
-              matching: find.byTooltip('Sair'),
+              matching: find.byTooltip('Identidade visual'),
             ),
             findsOneWidget,
           );
@@ -131,16 +136,20 @@ void main() {
       );
 
       testWidgets(
-        'Quando a tela é expandida, então "Sair" aparece com rótulo no menu lateral e funciona',
+        'Quando a tela é expandida, então "Identidade visual" aparece com rótulo no menu lateral e leva ao Sair',
         (tester) async {
           await abrir(tester, const Size(1440, 900));
 
           await tester.tap(
             find.descendant(
               of: find.byType(NavigationRail),
-              matching: find.text('Sair'),
+              matching: find.text('Identidade visual'),
             ),
           );
+          await tester.pumpAndSettle();
+          await tester.ensureVisible(find.text('Sair do painel'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Sair do painel'));
           await tester.pumpAndSettle();
           await tester.tap(find.widgetWithText(FilledButton, 'Sair'));
           await tester.pumpAndSettle();

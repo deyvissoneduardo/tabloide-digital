@@ -15,6 +15,7 @@ dependencies:
   brasil_fields: ^1.21.1
   tabloide_core:
   validatorless: ^1.3.2
+  image_picker: ^1.2.4
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_web/tabloide_web.dart';
 import 'package:tabloide_core/testing.dart';
@@ -20,6 +21,9 @@ void main() {
               ),
               Provider<FilialRepository>.value(value: FilialRepositoryFake()),
               Provider<CepRepository>.value(value: CepRepositoryFake()),
+              Provider<IdentidadeRepository>.value(
+                value: IdentidadeRepositoryFake(),
+              ),
               Provider<Sessao>.value(value: sessaoDeTeste()),
               ...providersWeb(),
             ],
@@ -49,6 +53,15 @@ void main() {
           contexto.read<FilialFormController>().estado,
           isA<FilialFormOcioso>(),
         );
+        expect(
+          contexto.read<IdentidadeServiceWeb>(),
+          isA<IdentidadeServiceWeb>(),
+        );
+        expect(
+          contexto.read<IdentidadeController>().estado,
+          isA<IdentidadeCarregando>(),
+        );
+        expect(contexto.read<ImagePicker>(), isA<ImagePicker>());
       },
     );
   });
