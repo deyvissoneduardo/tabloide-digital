@@ -29,4 +29,6 @@ abstract final class AppLayout {
   static const larguraMenuLateral = 220.0;
 
   static const alvoMinimo = 48.0;
+
+  static const alturaPreviaImagem = 320.0;
 }

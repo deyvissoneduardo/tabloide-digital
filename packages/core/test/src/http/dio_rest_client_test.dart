@@ -84,6 +84,38 @@ void main() {
         expect(arquivo.contentType?.mimeType, 'image/png');
       });
 
+      test('Quando envio um arquivo por POST com campos, então faço POST multipart com os campos e o arquivo', () async {
+        when(() => dio.post<Object?>('/panfletos', data: any(named: 'data')))
+            .thenAnswer((_) async => _resposta(201, {'ok': true}));
+
+        final resposta = await cliente.enviarArquivo(
+          '/panfletos',
+          campo: 'imagem',
+          bytes: [1, 2],
+          nomeArquivo: 'panfleto.jpg',
+          metodo: MetodoEnvio.post,
+          campos: {'dataLimite': '2026-12-31'},
+        );
+
+        expect(resposta.status, 201);
+        final dados =
+            verify(
+                  () => dio.post<Object?>(
+                    '/panfletos',
+                    data: captureAny(named: 'data'),
+                  ),
+                ).captured.single
+                as FormData;
+        expect(dados.fields.map((c) => (c.key, c.value)), [
+          ('dataLimite', '2026-12-31'),
+        ]);
+        final MapEntry(key: campo, value: arquivo) = dados.files.single;
+        expect(campo, 'imagem');
+        expect(arquivo.filename, 'panfleto.jpg');
+        expect(arquivo.contentType?.mimeType, 'image/jpeg');
+        verifyNever(() => dio.put<Object?>(any(), data: any(named: 'data')));
+      });
+
       test('Quando a API responde 401, então devolvo a resposta com o corpo de erro em vez de lançar', () async {
         when(() => dio.post<Object?>('/auth/login', data: any(named: 'data')))
             .thenAnswer(

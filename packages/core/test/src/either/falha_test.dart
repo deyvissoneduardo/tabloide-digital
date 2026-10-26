@@ -57,5 +57,24 @@ void main() {
         ),
       );
     });
+
+    test('Cenário: Dado falhas que só diferem nos detalhes, então são iguais (detalhes são só contexto)', () {
+      const comDetalhes = FalhaApi(
+        codigo: 'PANFLETO_PERIODO_SOBREPOSTO',
+        mensagem: 'm',
+        detalhes: {
+          'conflitoCom': {'id': 'p1'},
+        },
+      );
+
+      expect(
+        comDetalhes,
+        const FalhaApi(codigo: 'PANFLETO_PERIODO_SOBREPOSTO', mensagem: 'm'),
+      );
+      expect(comDetalhes.detalhes, {
+        'conflitoCom': {'id': 'p1'},
+      });
+      expect(const FalhaApi(codigo: 'X', mensagem: 'm').detalhes, isEmpty);
+    });
   });
 }

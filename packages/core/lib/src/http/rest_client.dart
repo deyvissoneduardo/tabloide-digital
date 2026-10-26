@@ -14,8 +14,12 @@ abstract interface class RestClient {
     required String campo,
     required List<int> bytes,
     required String nomeArquivo,
+    MetodoEnvio metodo = MetodoEnvio.put,
+    Map<String, String> campos = const {},
   });
 }
+
+enum MetodoEnvio { post, put }
 
 final class RestResposta {
   const RestResposta({required this.status, this.dados});

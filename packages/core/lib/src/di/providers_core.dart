@@ -17,6 +17,8 @@ import 'package:tabloide_core/src/features/identidade/repositories/identidade_re
 import 'package:tabloide_core/src/features/identidade/repositories/identidade_repository_api.dart';
 import 'package:tabloide_core/src/features/lojista/repositories/lojista_repository.dart';
 import 'package:tabloide_core/src/features/lojista/repositories/lojista_repository_api.dart';
+import 'package:tabloide_core/src/features/panfletos/repositories/panfleto_repository.dart';
+import 'package:tabloide_core/src/features/panfletos/repositories/panfleto_repository_api.dart';
 import 'package:tabloide_core/src/http/dio_rest_client.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 import 'package:tabloide_core/src/sessao/armazenamento_local.dart';
@@ -35,6 +37,7 @@ List<SingleChildWidget> providersCore({
   CepRepository? cepRepository,
   IdentidadeRepository? identidadeRepository,
   LojistaRepository? lojistaRepository,
+  PanfletoRepository? panfletoRepository,
   HomeRepository? homeRepository,
 }) => [
   Provider<BrandConfig>.value(value: marca),
@@ -73,6 +76,10 @@ List<SingleChildWidget> providersCore({
   Provider<LojistaRepository>(
     create: (context) =>
         lojistaRepository ?? LojistaRepositoryApi(context.read<RestClient>()),
+  ),
+  Provider<PanfletoRepository>(
+    create: (context) =>
+        panfletoRepository ?? PanfletoRepositoryApi(context.read<RestClient>()),
   ),
   Provider<HomeRepository>(
     create: (_) => homeRepository ?? const HomeRepositoryFake(),

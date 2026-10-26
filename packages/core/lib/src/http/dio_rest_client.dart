@@ -43,18 +43,22 @@ final class DioRestClient implements RestClient {
     required String campo,
     required List<int> bytes,
     required String nomeArquivo,
-  }) => _converter(
-    _dio.put<Object?>(
-      caminho,
-      data: FormData.fromMap({
-        campo: MultipartFile.fromBytes(
-          bytes,
-          filename: nomeArquivo,
-          contentType: MultipartFile.lookupMediaType(nomeArquivo),
-        ),
-      }),
-    ),
-  );
+    MetodoEnvio metodo = MetodoEnvio.put,
+    Map<String, String> campos = const {},
+  }) {
+    final dados = FormData.fromMap({
+      ...campos,
+      campo: MultipartFile.fromBytes(
+        bytes,
+        filename: nomeArquivo,
+        contentType: MultipartFile.lookupMediaType(nomeArquivo),
+      ),
+    });
+    return _converter(switch (metodo) {
+      MetodoEnvio.post => _dio.post<Object?>(caminho, data: dados),
+      MetodoEnvio.put => _dio.put<Object?>(caminho, data: dados),
+    });
+  }
 
   Future<RestResposta> _converter(Future<Response<Object?>> chamada) async {
     try {

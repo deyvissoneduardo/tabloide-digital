@@ -36,11 +36,14 @@ final class FalhaApi extends Falha {
     required this.codigo,
     required String mensagem,
     this.campos = const {},
+    this.detalhes = const {},
   }) : super(mensagem);
 
   final String codigo;
 
   final Map<String, List<String>> campos;
+
+  final Map<String, Object?> detalhes;
 
   @override
   bool operator ==(Object other) =>
