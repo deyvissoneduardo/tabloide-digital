@@ -68,13 +68,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(controller.secao, SecaoPainel.produtos);
-          expect(
-            find.descendant(
-              of: find.byType(Center),
-              matching: find.text('Produtos'),
-            ),
-            findsOneWidget,
-          );
+          expect(find.byType(SecaoProdutos), findsOneWidget);
         },
       );
 

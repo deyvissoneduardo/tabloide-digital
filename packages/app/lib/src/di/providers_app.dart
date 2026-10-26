@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:tabloide_app/src/features/cadastro/cadastro_controller.dart';
 import 'package:tabloide_app/src/features/cadastro/services/cadastro_service_app.dart';
+import 'package:tabloide_app/src/features/categorias/categoria_form_controller.dart';
+import 'package:tabloide_app/src/features/categorias/categorias_controller.dart';
+import 'package:tabloide_app/src/features/categorias/services/categoria_service_app.dart';
 import 'package:tabloide_app/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_app/src/features/filiais/filial_form_controller.dart';
 import 'package:tabloide_app/src/features/filiais/services/filial_service_app.dart';
@@ -14,6 +17,9 @@ import 'package:tabloide_app/src/features/panfletos/panfletos_controller.dart';
 import 'package:tabloide_app/src/features/panfletos/services/panfleto_service_app.dart';
 import 'package:tabloide_app/src/features/perfil/perfil_controller.dart';
 import 'package:tabloide_app/src/features/perfil/services/perfil_service_app.dart';
+import 'package:tabloide_app/src/features/produtos/produto_form_controller.dart';
+import 'package:tabloide_app/src/features/produtos/produtos_controller.dart';
+import 'package:tabloide_app/src/features/produtos/services/produto_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 List<SingleChildWidget> providersApp() => [
@@ -64,6 +70,28 @@ List<SingleChildWidget> providersApp() => [
   ChangeNotifierProvider<PanfletoFormController>(
     create: (context) =>
         PanfletoFormController(context.read<PanfletoServiceApp>()),
+  ),
+  Provider<CategoriaServiceApp>(
+    create: (context) =>
+        CategoriaServiceApp(context.read<CategoriaRepository>()),
+  ),
+  ChangeNotifierProvider<CategoriasController>(
+    create: (context) =>
+        CategoriasController(context.read<CategoriaServiceApp>()),
+  ),
+  ChangeNotifierProvider<CategoriaFormController>(
+    create: (context) =>
+        CategoriaFormController(context.read<CategoriaServiceApp>()),
+  ),
+  Provider<ProdutoServiceApp>(
+    create: (context) => ProdutoServiceApp(context.read<ProdutoRepository>()),
+  ),
+  ChangeNotifierProvider<ProdutosController>(
+    create: (context) => ProdutosController(context.read<ProdutoServiceApp>()),
+  ),
+  ChangeNotifierProvider<ProdutoFormController>(
+    create: (context) =>
+        ProdutoFormController(context.read<ProdutoServiceApp>()),
   ),
   Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(

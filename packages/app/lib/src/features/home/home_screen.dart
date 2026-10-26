@@ -4,6 +4,7 @@ import 'package:tabloide_app/src/features/filiais/widgets/secao_filiais.dart';
 import 'package:tabloide_app/src/features/home/widgets/resumo_inicio.dart';
 import 'package:tabloide_app/src/features/panfletos/widgets/secao_panfletos.dart';
 import 'package:tabloide_app/src/features/perfil/perfil_screen.dart';
+import 'package:tabloide_app/src/features/produtos/widgets/secao_produtos.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -32,7 +33,7 @@ class HomeScreen extends StatelessWidget {
         SecaoPainel.inicio => const ResumoInicio(),
         SecaoPainel.filiais => const SecaoFiliais(),
         SecaoPainel.panfletos => const SecaoPanfletos(),
-        _ => AppConteudoSecao(secao: secao),
+        SecaoPainel.produtos => const SecaoProdutos(),
       },
       bottomNavigationBar: NavigationBar(
         selectedIndex: secao.index,
