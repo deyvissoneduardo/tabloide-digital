@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:tabloide_app/tabloide_app.dart';
@@ -43,6 +44,12 @@ FilialFormController filialFormControllerDeTeste({
   ),
 );
 
+IdentidadeController identidadeControllerDeTeste({
+  IdentidadeRepository? repository,
+}) => IdentidadeController(
+  IdentidadeServiceApp(repository ?? IdentidadeRepositoryFake()),
+);
+
 SingleChildWidget _notificador<T extends ChangeNotifier>(
   T? valor,
   T Function() criar,
@@ -61,6 +68,8 @@ Widget montarTela(
   FilialFormController? filialForm,
   FilialRepository? filialRepository,
   CepRepository? cepRepository,
+  IdentidadeController? identidade,
+  ImagePicker? seletorImagem,
 }) {
   final sessaoDaTela = sessao ?? sessaoDeTeste();
   final repository =
@@ -86,6 +95,8 @@ Widget montarTela(
           cep: cepRepository,
         ),
       ),
+      _notificador(identidade, identidadeControllerDeTeste),
+      Provider<ImagePicker>.value(value: seletorImagem ?? ImagePicker()),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
