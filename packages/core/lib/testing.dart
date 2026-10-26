@@ -6,6 +6,7 @@ export 'src/features/cadastro/repositories/cadastro_repository_fake.dart';
 export 'src/features/categorias/repositories/categoria_repository_fake.dart';
 export 'src/features/cep/repositories/cep_repository_fake.dart';
 export 'src/features/filiais/repositories/filial_repository_fake.dart';
+export 'src/features/home/repositories/home_repository_fake.dart';
 export 'src/features/identidade/repositories/identidade_repository_fake.dart';
 export 'src/features/lojista/repositories/lojista_repository_fake.dart';
 export 'src/features/panfletos/repositories/panfleto_repository_fake.dart';

@@ -1,31 +1,28 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
+import 'package:tabloide_core/testing.dart';
 
 void main() {
   group('Funcionalidade: repository fake da home', () {
     test('Cenário: Dado o fake padrão, quando busco o resumo, então recebo Success com um ResumoPainel', () async {
       final resultado = await const HomeRepositoryFake(atraso: Duration.zero)
-          .buscarResumo();
+          .buscarResumo(const ['f1']);
 
       expect(
         resultado,
         const Success<Falha, ResumoPainel>(
-          ResumoPainel(filiais: 3, panfletosVigentes: 2, produtosVigentes: 48),
+          ResumoPainel(panfletosVigentes: 2, produtosVigentes: 48),
         ),
       );
     });
 
     test('Cenário: Dado um resumo configurado, quando busco, então recebo esse resumo', () async {
-      const resumo = ResumoPainel(
-        filiais: 1,
-        panfletosVigentes: 0,
-        produtosVigentes: 5,
-      );
+      const resumo = ResumoPainel(panfletosVigentes: 0, produtosVigentes: 5);
 
       final resultado = await const HomeRepositoryFake(
         resumo: resumo,
         atraso: Duration.zero,
-      ).buscarResumo();
+      ).buscarResumo(const ['f1']);
 
       expect(resultado, const Success<Falha, ResumoPainel>(resumo));
     });
@@ -34,7 +31,7 @@ void main() {
       final resultado = await const HomeRepositoryFake(
         atraso: Duration.zero,
         falhaSimulada: FalhaSemConexao(),
-      ).buscarResumo();
+      ).buscarResumo(const ['f1']);
 
       expect(resultado, const Failure<Falha, ResumoPainel>(FalhaSemConexao()));
     });

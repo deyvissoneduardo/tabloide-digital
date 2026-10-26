@@ -7,7 +7,6 @@ import 'package:tabloide_core/src/features/home/repositories/home_repository.dar
 final class HomeRepositoryFake implements HomeRepository {
   const HomeRepositoryFake({
     this.resumo = const ResumoPainel(
-      filiais: 3,
       panfletosVigentes: 2,
       produtosVigentes: 48,
     ),
@@ -22,7 +21,9 @@ final class HomeRepositoryFake implements HomeRepository {
   final Falha? falhaSimulada;
 
   @override
-  Future<Either<Falha, ResumoPainel>> buscarResumo() async {
+  Future<Either<Falha, ResumoPainel>> buscarResumo(
+    List<String> filialIds,
+  ) async {
     final falha = falhaSimulada;
     if (falha != null) {
       await Future<void>.delayed(atraso);

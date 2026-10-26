@@ -10,10 +10,13 @@ class HomeController extends ChangeNotifier {
 
   SecaoPainel _secao = SecaoPainel.inicio;
   ResumoEstado _resumo = const ResumoCarregando();
+  List<String>? _filialIds;
 
   SecaoPainel get secao => _secao;
 
   ResumoEstado get resumo => _resumo;
+
+  List<String>? get filialIds => _filialIds;
 
   void selecionar(SecaoPainel secao) {
     if (secao == _secao) return;
@@ -21,10 +24,13 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> carregarResumo() async {
+  Future<void> carregarResumo(List<String> filialIds) async {
+    final pedido = List<String>.unmodifiable(filialIds);
+    _filialIds = pedido;
     _resumo = const ResumoCarregando();
     notifyListeners();
-    final resultado = await _service.buscarResumo();
+    final resultado = await _service.buscarResumo(pedido);
+    if (!identical(pedido, _filialIds)) return;
     _resumo = switch (resultado) {
       Success(:final valor) => ResumoCarregado(valor),
       Failure(:final falha) => ResumoComFalha(falha),

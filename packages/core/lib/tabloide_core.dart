@@ -26,7 +26,7 @@ export 'src/features/home/home_controller.dart';
 export 'src/features/home/home_estado.dart';
 export 'src/features/home/models/resumo_painel.dart';
 export 'src/features/home/repositories/home_repository.dart';
-export 'src/features/home/repositories/home_repository_fake.dart';
+export 'src/features/home/repositories/home_repository_api.dart';
 export 'src/features/home/services/home_service.dart';
 export 'src/features/identidade/repositories/identidade_repository.dart';
 export 'src/features/identidade/repositories/identidade_repository_api.dart';

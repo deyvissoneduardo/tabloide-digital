@@ -10,8 +10,8 @@ final class _ServicoDeTeste implements HomeService {
   final HomeRepository _repository;
 
   @override
-  Future<Either<Falha, ResumoPainel>> buscarResumo() =>
-      _repository.buscarResumo();
+  Future<Either<Falha, ResumoPainel>> buscarResumo(List<String> filialIds) =>
+      _repository.buscarResumo(filialIds);
 }
 
 void main() {
@@ -20,11 +20,7 @@ void main() {
       'Cenário: Dado os providers do core com o service da plataforma, quando monto a árvore, então cada camada recebe a de baixo',
       (tester) async {
         const marca = MarcaFake(nome: 'Marca DI');
-        const resumo = ResumoPainel(
-          filiais: 9,
-          panfletosVigentes: 9,
-          produtosVigentes: 9,
-        );
+        const resumo = ResumoPainel(panfletosVigentes: 9, produtosVigentes: 9);
         late BuildContext contexto;
 
         await tester.pumpWidget(
@@ -56,17 +52,22 @@ void main() {
         expect(contexto.read<HomeService>(), isA<_ServicoDeTeste>());
 
         final controller = contexto.read<HomeController>();
-        await tester.pumpAndSettle();
+        expect(
+          controller.resumo,
+          isA<ResumoCarregando>(),
+          reason: 'o resumo depende das filiais, então espera a tela pedir',
+        );
+        await tester.runAsync(() => controller.carregarResumo(const ['f1']));
         expect(
           controller.resumo,
           isA<ResumoCarregado>().having((e) => e.resumo, 'resumo', resumo),
-          reason: 'o controller já carrega o resumo ao ser criado, passando por service e repository',
+          reason: 'o resumo passa por service e repository',
         );
       },
     );
 
     testWidgets(
-      'Cenário: Dado os providers sem repositories injetados, quando leio cada um, então recebo o padrão (fake da home, API no login e no cadastro)',
+      'Cenário: Dado os providers sem repositories injetados, quando leio cada um, então recebo o padrão (API em todos os repositories)',
       (tester) async {
         late BuildContext contexto;
         await tester.pumpWidget(
@@ -85,7 +86,7 @@ void main() {
           ),
         );
 
-        expect(contexto.read<HomeRepository>(), isA<HomeRepositoryFake>());
+        expect(contexto.read<HomeRepository>(), isA<HomeRepositoryApi>());
         expect(
           contexto.read<AuthRepository>(),
           isA<AuthRepositoryApi>(),

@@ -13,7 +13,7 @@ import 'package:tabloide_core/src/features/filiais/repositories/filial_repositor
 import 'package:tabloide_core/src/features/filiais/repositories/filial_repository_api.dart';
 import 'package:tabloide_core/src/features/home/home_controller.dart';
 import 'package:tabloide_core/src/features/home/repositories/home_repository.dart';
-import 'package:tabloide_core/src/features/home/repositories/home_repository_fake.dart';
+import 'package:tabloide_core/src/features/home/repositories/home_repository_api.dart';
 import 'package:tabloide_core/src/features/home/services/home_service.dart';
 import 'package:tabloide_core/src/features/identidade/repositories/identidade_repository.dart';
 import 'package:tabloide_core/src/features/identidade/repositories/identidade_repository_api.dart';
@@ -97,11 +97,11 @@ List<SingleChildWidget> providersCore({
         produtoRepository ?? ProdutoRepositoryApi(context.read<RestClient>()),
   ),
   Provider<HomeRepository>(
-    create: (_) => homeRepository ?? const HomeRepositoryFake(),
+    create: (context) =>
+        homeRepository ?? HomeRepositoryApi(context.read<RestClient>()),
   ),
   ...servicos,
   ChangeNotifierProvider<HomeController>(
-    create: (context) =>
-        HomeController(context.read<HomeService>())..carregarResumo(),
+    create: (context) => HomeController(context.read<HomeService>()),
   ),
 ];

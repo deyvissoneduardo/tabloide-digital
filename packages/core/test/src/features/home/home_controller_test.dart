@@ -1,14 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 class _HomeServiceMock extends Mock implements HomeService {}
 
-const _resumo = ResumoPainel(
-  filiais: 2,
-  panfletosVigentes: 1,
-  produtosVigentes: 10,
-);
+const _filiais = ['f1', 'f2'];
+
+const _resumo = ResumoPainel(panfletosVigentes: 1, produtosVigentes: 10);
 
 void main() {
   late _HomeServiceMock service;
@@ -53,24 +53,24 @@ void main() {
     );
 
     test('Cenário: Dado que o service responde Success, quando carrego, então o estado vira ResumoCarregado com os dados', () async {
-      when(() => service.buscarResumo())
+      when(() => service.buscarResumo(_filiais))
           .thenAnswer((_) async => const Success(_resumo));
 
-      await controller.carregarResumo();
+      await controller.carregarResumo(_filiais);
 
       expect(
         controller.resumo,
         isA<ResumoCarregado>().having((e) => e.resumo, 'resumo', _resumo),
       );
       expect(avisos, 2, reason: 'avisa ao começar e ao terminar');
-      verify(() => service.buscarResumo()).called(1);
+      verify(() => service.buscarResumo(_filiais)).called(1);
     });
 
     test('Cenário: Dado que o service responde Failure, quando carrego, então o estado vira ResumoComFalha', () async {
-      when(() => service.buscarResumo())
+      when(() => service.buscarResumo(_filiais))
           .thenAnswer((_) async => const Failure(FalhaSemConexao()));
 
-      await controller.carregarResumo();
+      await controller.carregarResumo(_filiais);
 
       expect(
         controller.resumo,
@@ -83,13 +83,13 @@ void main() {
     });
 
     test('Cenário: Dado uma falha, quando tento de novo e o service responde, então o estado vira carregado', () async {
-      when(() => service.buscarResumo())
+      when(() => service.buscarResumo(_filiais))
           .thenAnswer((_) async => const Failure(FalhaSemConexao()));
-      await controller.carregarResumo();
+      await controller.carregarResumo(_filiais);
 
-      when(() => service.buscarResumo())
+      when(() => service.buscarResumo(_filiais))
           .thenAnswer((_) async => const Success(_resumo));
-      final recarga = controller.carregarResumo();
+      final recarga = controller.carregarResumo(_filiais);
 
       expect(
         controller.resumo,
@@ -97,6 +97,22 @@ void main() {
         reason: 'volta a carregar durante a nova busca',
       );
       await recarga;
+      expect(controller.resumo, isA<ResumoCarregado>());
+    });
+
+    test('Cenário: Dado duas cargas seguidas, quando a primeira responde por último, então fico com o resultado da segunda', () async {
+      final primeira = Completer<Either<Falha, ResumoPainel>>();
+      when(() => service.buscarResumo(['f1']))
+          .thenAnswer((_) => primeira.future);
+      when(() => service.buscarResumo(_filiais))
+          .thenAnswer((_) async => const Success(_resumo));
+
+      final antiga = controller.carregarResumo(const ['f1']);
+      await controller.carregarResumo(_filiais);
+      primeira.complete(const Failure(FalhaSemConexao()));
+      await antiga;
+
+      expect(controller.filialIds, _filiais);
       expect(controller.resumo, isA<ResumoCarregado>());
     });
   });
