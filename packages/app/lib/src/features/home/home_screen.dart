@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/filiais/widgets/secao_filiais.dart';
 import 'package:tabloide_app/src/features/home/widgets/resumo_inicio.dart';
-import 'package:tabloide_app/src/features/identidade/identidade_screen.dart';
+import 'package:tabloide_app/src/features/perfil/perfil_screen.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<void> _abrirIdentidade(BuildContext context) => Navigator.of(context)
-      .push(MaterialPageRoute<void>(builder: (_) => const IdentidadeScreen()));
+  Future<void> _abrirPerfil(BuildContext context) =>
+      Navigator.of(context)
+          .push(MaterialPageRoute<void>(builder: (_) => const PerfilScreen()));
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +21,9 @@ class HomeScreen extends StatelessWidget {
         title: const AppMarcaCabecalho(),
         actions: [
           IconButton(
-            tooltip: 'Identidade visual',
-            icon: const Icon(Icons.palette_outlined),
-            onPressed: () => _abrirIdentidade(context),
+            tooltip: 'Perfil',
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => _abrirPerfil(context),
           ),
         ],
       ),

@@ -15,26 +15,36 @@ Finder _campo(String rotulo) => find.widgetWithText(TextFormField, rotulo);
 void main() {
   setUpAll(() => registerFallbackValue(ImageSource.gallery));
 
-  group('Funcionalidade: identidade visual no app', () {
-    late IdentidadeRepositoryFake repository;
+  group('Funcionalidade: perfil no app', () {
+    late LojistaRepositoryFake lojista;
+    late IdentidadeRepositoryFake identidade;
     late _ImagePickerMock seletor;
 
     setUp(() {
-      repository = IdentidadeRepositoryFake();
+      lojista = LojistaRepositoryFake();
+      identidade = IdentidadeRepositoryFake();
       seletor = _ImagePickerMock();
     });
 
     Future<void> abrir(WidgetTester tester) async {
-      tester.view.physicalSize = const Size(390, 1400);
+      tester.view.physicalSize = const Size(390, 2000);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
         montarTela(
-          const IdentidadeScreen(),
-          identidade: identidadeControllerDeTeste(repository: repository),
+          const PerfilScreen(),
+          perfil: perfilControllerDeTeste(
+            lojista: lojista,
+            identidade: identidade,
+          ),
           seletorImagem: seletor,
         ),
       );
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> salvar(WidgetTester tester) async {
+      await tester.tap(find.text('Salvar'));
       await tester.pumpAndSettle();
     }
 
@@ -47,100 +57,133 @@ void main() {
     ).thenAnswer((_) => resposta());
 
     testWidgets(
-      'Cenário: Dado a identidade na API, quando abro a tela, então os campos vêm preenchidos',
+      'Cenário: Dado lojista e identidade na API, quando abro o perfil, então os dados da loja vêm antes da identidade, com máscaras e e-mail só leitura',
       (tester) async {
         await abrir(tester);
 
-        expect(find.text('Identidade visual'), findsOneWidget);
+        expect(find.text('Perfil'), findsOneWidget);
+        expect(find.text('ana@bompreco.com.br'), findsOneWidget);
+        expect(tester.widget<TextFormField>(_campo('E-mail')).enabled, isFalse);
         expect(find.text('Mercado Bom Preço'), findsOneWidget);
+        expect(find.text('Ana Souza'), findsOneWidget);
+        expect(find.text('(11) 98765-4321'), findsOneWidget);
+        expect(find.text('77.343.168/0001-24'), findsOneWidget);
         expect(find.text('#C8102E'), findsOneWidget);
         expect(find.text('#FFD100'), findsOneWidget);
-        expect(find.byType(AppLogoIdentidade), findsOneWidget);
+        expect(
+          tester.getTopLeft(_campo('CNPJ')).dy,
+          lessThan(tester.getTopLeft(find.byType(AppLogoIdentidade)).dy),
+        );
       },
     );
 
     testWidgets(
       'Cenário: Dado a API fora do ar, quando abro e tento de novo com ela de volta, então os campos aparecem',
       (tester) async {
-        repository.falhaSimulada = const FalhaSemConexao();
+        lojista.falhaSimulada = const FalhaSemConexao();
         await abrir(tester);
 
         expect(find.byType(EstadoFalha), findsOneWidget);
-        repository.falhaSimulada = null;
+        lojista.falhaSimulada = null;
         await tester.tap(find.text('Tentar de novo'));
         await tester.pumpAndSettle();
 
-        expect(find.text('Mercado Bom Preço'), findsOneWidget);
+        expect(find.text('Ana Souza'), findsOneWidget);
       },
     );
 
     testWidgets(
-      'Cenário: Dado nome e cores alterados, quando salvo, então envio o pedido e aviso que salvou',
+      'Cenário: Dado os dados alterados, quando salvo, então envio os dois PATCH com o mesmo nome fantasia e aviso que salvou',
       (tester) async {
         await abrir(tester);
 
         await tester.enterText(_campo('Nome fantasia'), 'Mercado Novo');
+        await tester.enterText(_campo('Nome do responsável'), 'Bia');
         await tester.enterText(_campo('Cor secundária'), '');
-        await tester.tap(find.text('Salvar'));
-        await tester.pumpAndSettle();
+        await salvar(tester);
 
         expect(
-          repository.pedidos.single,
+          lojista.pedidos.single,
+          const LojistaRequest(
+            nomeFantasia: 'Mercado Novo',
+            nomeResponsavel: 'Bia',
+            whatsapp: '11987654321',
+            cnpj: '77343168000124',
+          ),
+        );
+        expect(
+          identidade.pedidos.single,
           const IdentidadeRequest(
             nomeFantasia: 'Mercado Novo',
             corPrimaria: '#C8102E',
           ),
         );
-        expect(find.text('Identidade visual salva.'), findsOneWidget);
+        expect(find.text('Perfil salvo.'), findsOneWidget);
       },
     );
 
     testWidgets(
-      'Cenário: Dado nome vazio e cor incompleta, quando salvo, então mostro os erros nos campos e não chamo a API',
+      'Cenário: Dado campos obrigatórios vazios e cor incompleta, quando salvo, então mostro os erros nos campos e não chamo a API',
       (tester) async {
         await abrir(tester);
 
         await tester.enterText(_campo('Nome fantasia'), '');
+        await tester.enterText(_campo('Nome do responsável'), '');
+        await tester.enterText(_campo('WhatsApp (com DDD)'), '');
+        await tester.enterText(_campo('CNPJ'), '');
         await tester.enterText(_campo('Cor primária'), '#C81');
-        await tester.tap(find.text('Salvar'));
-        await tester.pumpAndSettle();
+        await salvar(tester);
 
         expect(find.text('Informe o nome fantasia.'), findsOneWidget);
+        expect(find.text('Informe o nome do responsável.'), findsOneWidget);
+        expect(find.text('Informe o WhatsApp.'), findsOneWidget);
+        expect(find.text('Informe o CNPJ.'), findsOneWidget);
         expect(find.text('Informe a cor no formato #RRGGBB.'), findsOneWidget);
-        expect(repository.pedidos, isEmpty);
+        expect(lojista.pedidos, isEmpty);
+        expect(identidade.pedidos, isEmpty);
       },
     );
 
     testWidgets(
-      'Cenário: Dado a API recusando a cor, quando salvo, então o erro aparece no campo sem aviso',
+      'Cenário: Dado a API recusando o WhatsApp, quando salvo, então o erro aparece no campo sem aviso',
       (tester) async {
         await abrir(tester);
-        repository.falhaSimulada = const FalhaApi(
+        lojista.falhaSimulada = const FalhaApi(
           codigo: 'VALIDACAO_INVALIDA',
           mensagem: 'Dados inválidos.',
           campos: {
-            'corPrimaria': ['Informe a cor no formato #RRGGBB.'],
+            'whatsapp': ['Informe um WhatsApp válido com DDD.'],
           },
         );
 
-        await tester.tap(find.text('Salvar'));
-        await tester.pumpAndSettle();
+        await salvar(tester);
 
-        expect(find.text('Informe a cor no formato #RRGGBB.'), findsOneWidget);
+        expect(
+          find.text('Informe um WhatsApp válido com DDD.'),
+          findsOneWidget,
+        );
         expect(find.text('Dados inválidos.'), findsNothing);
       },
     );
 
     testWidgets(
-      'Cenário: Dado a API sem conexão, quando salvo, então aviso a falha',
+      'Cenário: Dado a conta desativada, quando salvo, então aviso a mensagem da API',
       (tester) async {
         await abrir(tester);
-        repository.falhaSimulada = const FalhaSemConexao();
+        lojista.falhaSimulada = const FalhaApi(
+          codigo: 'LOJISTA_DESATIVADO',
+          mensagem: 'Sua conta está desativada. O painel está disponível só para consulta.',
+        );
 
-        await tester.tap(find.text('Salvar'));
-        await tester.pumpAndSettle();
+        await salvar(tester);
 
-        expect(find.text(const FalhaSemConexao().mensagem), findsOneWidget);
+        expect(
+          find.text(
+            'Sua conta está desativada. O painel está disponível só para consulta.',
+          ),
+          findsOneWidget,
+        );
+        expect(identidade.pedidos, isEmpty);
       },
     );
 
@@ -159,7 +202,7 @@ void main() {
         await tester.tap(find.text('Trocar logo'));
         await tester.pumpAndSettle();
 
-        expect(repository.logosEnviados, ['logo.png']);
+        expect(identidade.logosEnviados, ['logo.png']);
         expect(find.text('Logo atualizado.'), findsOneWidget);
       },
     );
@@ -173,7 +216,7 @@ void main() {
         await tester.tap(find.text('Trocar logo'));
         await tester.pumpAndSettle();
 
-        expect(repository.logosEnviados, isEmpty);
+        expect(identidade.logosEnviados, isEmpty);
         expect(find.byType(SnackBar), findsNothing);
       },
     );
@@ -189,7 +232,7 @@ void main() {
           ),
         );
         await abrir(tester);
-        repository.falhaSimulada = const FalhaApi(
+        identidade.falhaSimulada = const FalhaApi(
           codigo: 'IMAGEM_INVALIDA',
           mensagem: 'Envie uma imagem JPEG, PNG ou WebP válida.',
         );

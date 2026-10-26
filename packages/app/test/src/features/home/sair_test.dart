@@ -78,9 +78,9 @@ void main() {
       }
 
       Future<void> tocarSair(WidgetTester tester) async {
-        await tester.tap(find.byTooltip('Identidade visual'));
+        await tester.tap(find.byTooltip('Perfil'));
         await tester.pumpAndSettle();
-        expect(find.byType(IdentidadeScreen), findsOneWidget);
+        expect(find.byType(PerfilScreen), findsOneWidget);
         await tester.ensureVisible(find.text('Sair do painel'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Sair do painel'));
@@ -88,7 +88,7 @@ void main() {
       }
 
       testWidgets(
-        'Quando abro a identidade visual, toco em Sair e cancelo, então continuo no painel com a sessão',
+        'Quando abro o perfil, toco em Sair e cancelo, então continuo no painel com a sessão',
         (tester) async {
           await abrir(tester, const Size(390, 844));
 
@@ -97,13 +97,13 @@ void main() {
           await tester.tap(find.text('Cancelar'));
           await tester.pumpAndSettle();
 
-          expect(find.byType(IdentidadeScreen), findsOneWidget);
+          expect(find.byType(PerfilScreen), findsOneWidget);
           expect(sessao.ativa, isTrue);
         },
       );
 
       testWidgets(
-        'Quando abro a identidade visual, toco em Sair e confirmo, então vou para o login, sem a home na pilha, com sessão, cache e filiais limpos',
+        'Quando abro o perfil, toco em Sair e confirmo, então vou para o login, sem a home na pilha, com sessão, cache e filiais limpos',
         (tester) async {
           await abrir(tester, const Size(390, 844));
 

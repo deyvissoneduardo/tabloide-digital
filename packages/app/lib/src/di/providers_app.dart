@@ -7,10 +7,10 @@ import 'package:tabloide_app/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_app/src/features/filiais/filial_form_controller.dart';
 import 'package:tabloide_app/src/features/filiais/services/filial_service_app.dart';
 import 'package:tabloide_app/src/features/home/services/home_service_app.dart';
-import 'package:tabloide_app/src/features/identidade/identidade_controller.dart';
-import 'package:tabloide_app/src/features/identidade/services/identidade_service_app.dart';
 import 'package:tabloide_app/src/features/login/login_controller.dart';
 import 'package:tabloide_app/src/features/login/services/auth_service_app.dart';
+import 'package:tabloide_app/src/features/perfil/perfil_controller.dart';
+import 'package:tabloide_app/src/features/perfil/services/perfil_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 List<SingleChildWidget> providersApp() => [
@@ -42,13 +42,14 @@ List<SingleChildWidget> providersApp() => [
   ChangeNotifierProvider<FilialFormController>(
     create: (context) => FilialFormController(context.read<FilialServiceApp>()),
   ),
-  Provider<IdentidadeServiceApp>(
-    create: (context) =>
-        IdentidadeServiceApp(context.read<IdentidadeRepository>()),
+  Provider<PerfilServiceApp>(
+    create: (context) => PerfilServiceApp(
+      context.read<LojistaRepository>(),
+      context.read<IdentidadeRepository>(),
+    ),
   ),
-  ChangeNotifierProvider<IdentidadeController>(
-    create: (context) =>
-        IdentidadeController(context.read<IdentidadeServiceApp>()),
+  ChangeNotifierProvider<PerfilController>(
+    create: (context) => PerfilController(context.read<PerfilServiceApp>()),
   ),
   Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(

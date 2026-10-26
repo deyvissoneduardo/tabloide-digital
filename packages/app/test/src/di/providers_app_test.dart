@@ -24,6 +24,7 @@ void main() {
               Provider<IdentidadeRepository>.value(
                 value: IdentidadeRepositoryFake(),
               ),
+              Provider<LojistaRepository>.value(value: LojistaRepositoryFake()),
               Provider<Sessao>.value(value: sessaoDeTeste()),
               ...providersApp(),
             ],
@@ -53,13 +54,10 @@ void main() {
           contexto.read<FilialFormController>().estado,
           isA<FilialFormOcioso>(),
         );
+        expect(contexto.read<PerfilServiceApp>(), isA<PerfilServiceApp>());
         expect(
-          contexto.read<IdentidadeServiceApp>(),
-          isA<IdentidadeServiceApp>(),
-        );
-        expect(
-          contexto.read<IdentidadeController>().estado,
-          isA<IdentidadeCarregando>(),
+          contexto.read<PerfilController>().estado,
+          isA<PerfilCarregando>(),
         );
         expect(contexto.read<ImagePicker>(), isA<ImagePicker>());
       },

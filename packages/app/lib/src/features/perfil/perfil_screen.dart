@@ -1,15 +1,19 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/filiais/filiais_controller.dart';
-import 'package:tabloide_app/src/features/identidade/identidade_controller.dart';
-import 'package:tabloide_app/src/features/identidade/identidade_estado.dart';
 import 'package:tabloide_app/src/features/login/login_controller.dart';
 import 'package:tabloide_app/src/features/login/login_screen.dart';
+import 'package:tabloide_app/src/features/perfil/perfil_controller.dart';
+import 'package:tabloide_app/src/features/perfil/perfil_estado.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:validatorless/validatorless.dart';
 
 final _corHex = RegExp(r'^#[0-9A-F]{6}$');
+
+final _naoDigito = RegExp(r'\D');
 
 const _ladoMaximoLogo = 1024.0;
 
@@ -18,48 +22,81 @@ String? _validarCor(String? valor) =>
     ? null
     : 'Informe a cor no formato #RRGGBB.';
 
-class IdentidadeScreen extends StatefulWidget {
-  const IdentidadeScreen({super.key});
+String _mascarar(String texto, TextInputFormatter formatador) => formatador
+    .formatEditUpdate(TextEditingValue.empty, TextEditingValue(text: texto))
+    .text;
 
-  @override
-  State<IdentidadeScreen> createState() => _IdentidadeScreenState();
+String _whatsappSemDdi(String whatsapp) {
+  final digitos = whatsapp.replaceAll(_naoDigito, '');
+  return digitos.length > 11 && digitos.startsWith('55')
+      ? digitos.substring(2)
+      : digitos;
 }
 
-class _IdentidadeScreenState extends State<IdentidadeScreen> {
+class PerfilScreen extends StatefulWidget {
+  const PerfilScreen({super.key});
+
+  @override
+  State<PerfilScreen> createState() => _PerfilScreenState();
+}
+
+class _PerfilScreenState extends State<PerfilScreen> {
   final _formulario = GlobalKey<FormState>();
+  final _email = TextEditingController();
   final _nome = TextEditingController();
+  final _responsavel = TextEditingController();
+  final _whatsapp = TextEditingController();
+  final _cnpj = TextEditingController();
   final _corPrimaria = TextEditingController();
   final _corSecundaria = TextEditingController();
 
-  late final IdentidadeController _controller;
+  late final PerfilController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = context.read<IdentidadeController>();
+    _controller = context.read<PerfilController>();
     WidgetsBinding.instance.addPostFrameCallback((_) => _carregar());
   }
 
   @override
   void dispose() {
-    _nome.dispose();
-    _corPrimaria.dispose();
-    _corSecundaria.dispose();
+    for (final campo in [
+      _email,
+      _nome,
+      _responsavel,
+      _whatsapp,
+      _cnpj,
+      _corPrimaria,
+      _corSecundaria,
+    ]) {
+      campo.dispose();
+    }
     super.dispose();
   }
 
   Future<void> _carregar() async {
     await _controller.carregar();
     if (!mounted) return;
-    if (_controller.estado case IdentidadeCarregada(:final identidade)) {
-      _preencher(identidade);
-    }
+    _preencher();
   }
 
-  void _preencher(IdentidadeResponse identidade) {
-    _nome.text = identidade.nomeFantasia;
-    _corPrimaria.text = identidade.corPrimaria ?? '';
-    _corSecundaria.text = identidade.corSecundaria ?? '';
+  void _preencher() {
+    if (_controller.estado case PerfilCarregado(
+      :final lojista,
+      :final identidade,
+    )) {
+      _email.text = lojista.email;
+      _nome.text = lojista.nomeFantasia;
+      _responsavel.text = lojista.nomeResponsavel;
+      _whatsapp.text = _mascarar(
+        _whatsappSemDdi(lojista.whatsapp),
+        CelularInputFormatter(),
+      );
+      _cnpj.text = _mascarar(lojista.cnpj, CnpjAlfanumericoInputFormatter());
+      _corPrimaria.text = identidade.corPrimaria ?? '';
+      _corSecundaria.text = identidade.corSecundaria ?? '';
+    }
   }
 
   Future<void> _trocarLogo() async {
@@ -97,14 +134,17 @@ class _IdentidadeScreenState extends State<IdentidadeScreen> {
     if (!(_formulario.currentState?.validate() ?? false)) return;
     final resultado = await _controller.salvar(
       nomeFantasia: _nome.text,
+      nomeResponsavel: _responsavel.text,
+      whatsapp: _whatsapp.text,
+      cnpj: _cnpj.text,
       corPrimaria: _corPrimaria.text,
       corSecundaria: _corSecundaria.text,
     );
     if (!mounted) return;
     switch (resultado) {
-      case Success(:final valor):
-        _preencher(valor);
-        mostrarAviso(context, 'Identidade visual salva.');
+      case Success():
+        _preencher();
+        mostrarAviso(context, 'Perfil salvo.');
       case Failure(falha: FalhaApi(:final campos)) when campos.isNotEmpty:
         break;
       case Failure(:final falha):
@@ -134,29 +174,101 @@ class _IdentidadeScreenState extends State<IdentidadeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<IdentidadeController>();
+    final controller = context.watch<PerfilController>();
     final tema = Theme.of(context);
     final ocupado = controller.salvando || controller.enviandoLogo;
     return Scaffold(
-      appBar: AppBar(title: const Text('Identidade visual')),
+      appBar: AppBar(title: const Text('Perfil')),
       body: switch (controller.estado) {
-        IdentidadeCarregando() => const EsqueletoLista(),
-        IdentidadeComFalha(:final falha) => EstadoFalha(
+        PerfilCarregando() => const EsqueletoLista(),
+        PerfilComFalha(:final falha) => EstadoFalha(
           mensagem: falha.mensagem,
           aoTentarDeNovo: _carregar,
         ),
-        IdentidadeCarregada(:final identidade) => AppFormulario(
+        PerfilCarregado(:final lojista, :final identidade) => AppFormulario(
           chave: _formulario,
           children: [
+            Text('Dados da loja', style: tema.textTheme.titleMedium),
+            const SizedBox(height: AppEspacamentos.md),
+            AppCampoTexto(
+              controller: _email,
+              rotulo: 'E-mail',
+              icone: Icons.email_outlined,
+              habilitado: false,
+            ),
+            const SizedBox(height: AppEspacamentos.md),
+            AppCampoTexto(
+              controller: _nome,
+              rotulo: 'Nome fantasia',
+              icone: Icons.storefront_outlined,
+              habilitado: !ocupado,
+              erro: controller.erroDoCampo('nomeFantasia'),
+              aoMudar: (_) => controller.limparErroDoCampo('nomeFantasia'),
+              validador: Validatorless.multiple([
+                Validatorless.required('Informe o nome fantasia.'),
+                Validatorless.min(2, 'Mínimo de 2 caracteres.'),
+                Validatorless.max(120, 'Máximo de 120 caracteres.'),
+              ]),
+            ),
+            const SizedBox(height: AppEspacamentos.md),
+            AppCampoTexto(
+              controller: _responsavel,
+              rotulo: 'Nome do responsável',
+              icone: Icons.person_outline,
+              habilitado: !ocupado,
+              autofill: const [AutofillHints.name],
+              erro: controller.erroDoCampo('nomeResponsavel'),
+              aoMudar: (_) => controller.limparErroDoCampo('nomeResponsavel'),
+              validador: Validatorless.multiple([
+                Validatorless.required('Informe o nome do responsável.'),
+                Validatorless.min(2, 'Mínimo de 2 caracteres.'),
+                Validatorless.max(120, 'Máximo de 120 caracteres.'),
+              ]),
+            ),
+            const SizedBox(height: AppEspacamentos.md),
+            AppCampoTexto(
+              controller: _whatsapp,
+              rotulo: 'WhatsApp (com DDD)',
+              icone: Icons.phone_outlined,
+              habilitado: !ocupado,
+              teclado: TextInputType.phone,
+              autofill: const [AutofillHints.telephoneNumber],
+              erro: controller.erroDoCampo('whatsapp'),
+              aoMudar: (_) => controller.limparErroDoCampo('whatsapp'),
+              validador: Validatorless.required('Informe o WhatsApp.'),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                CelularInputFormatter(),
+              ],
+            ),
+            const SizedBox(height: AppEspacamentos.md),
+            AppCampoTexto(
+              controller: _cnpj,
+              rotulo: 'CNPJ',
+              icone: Icons.badge_outlined,
+              habilitado: !ocupado,
+              erro: controller.erroDoCampo('cnpj'),
+              aoMudar: (_) => controller.limparErroDoCampo('cnpj'),
+              validador: Validatorless.required('Informe o CNPJ.'),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp('[0-9a-zA-Z]')),
+                CnpjAlfanumericoInputFormatter(),
+              ],
+            ),
+            const SizedBox(height: AppEspacamentos.xl),
+            Text('Identidade visual', style: tema.textTheme.titleMedium),
+            const SizedBox(height: AppEspacamentos.xs),
             Text(
               'Vale para todas as filiais: o mesmo nome, logo e cores aparecem em todos os panfletos.',
-              style: tema.textTheme.bodyLarge,
+              style: tema.textTheme.bodyMedium?.copyWith(
+                color: tema.colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: AppEspacamentos.lg),
             Center(
               child: AppLogoIdentidade(
                 url: identidade.urlLogo,
-                nome: identidade.nomeFantasia,
+                nome: lojista.nomeFantasia,
               ),
             ),
             const SizedBox(height: AppEspacamentos.sm),
@@ -185,20 +297,6 @@ class _IdentidadeScreenState extends State<IdentidadeScreen> {
               ),
             ),
             const SizedBox(height: AppEspacamentos.lg),
-            AppCampoTexto(
-              controller: _nome,
-              rotulo: 'Nome fantasia',
-              icone: Icons.storefront_outlined,
-              habilitado: !ocupado,
-              erro: controller.erroDoCampo('nomeFantasia'),
-              aoMudar: (_) => controller.limparErroDoCampo('nomeFantasia'),
-              validador: Validatorless.multiple([
-                Validatorless.required('Informe o nome fantasia.'),
-                Validatorless.min(2, 'Mínimo de 2 caracteres.'),
-                Validatorless.max(120, 'Máximo de 120 caracteres.'),
-              ]),
-            ),
-            const SizedBox(height: AppEspacamentos.md),
             AppSeletorCor(
               controller: _corPrimaria,
               rotulo: 'Cor primária',

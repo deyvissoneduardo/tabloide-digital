@@ -44,10 +44,14 @@ FilialFormController filialFormControllerDeTeste({
   ),
 );
 
-IdentidadeController identidadeControllerDeTeste({
-  IdentidadeRepository? repository,
-}) => IdentidadeController(
-  IdentidadeServiceApp(repository ?? IdentidadeRepositoryFake()),
+PerfilController perfilControllerDeTeste({
+  LojistaRepository? lojista,
+  IdentidadeRepository? identidade,
+}) => PerfilController(
+  PerfilServiceApp(
+    lojista ?? LojistaRepositoryFake(),
+    identidade ?? IdentidadeRepositoryFake(),
+  ),
 );
 
 SingleChildWidget _notificador<T extends ChangeNotifier>(
@@ -68,7 +72,7 @@ Widget montarTela(
   FilialFormController? filialForm,
   FilialRepository? filialRepository,
   CepRepository? cepRepository,
-  IdentidadeController? identidade,
+  PerfilController? perfil,
   ImagePicker? seletorImagem,
 }) {
   final sessaoDaTela = sessao ?? sessaoDeTeste();
@@ -95,7 +99,7 @@ Widget montarTela(
           cep: cepRepository,
         ),
       ),
-      _notificador(identidade, identidadeControllerDeTeste),
+      _notificador(perfil, perfilControllerDeTeste),
       Provider<ImagePicker>.value(value: seletorImagem ?? ImagePicker()),
     ],
     child: MaterialApp(
