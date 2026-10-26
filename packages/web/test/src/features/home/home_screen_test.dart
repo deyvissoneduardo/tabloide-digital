@@ -20,6 +20,7 @@ void main() {
           controller: controller,
         ),
       );
+      await tester.pumpAndSettle();
     }
 
     group('Cenário: Dado uma tela de desktop (1440×900)', () {

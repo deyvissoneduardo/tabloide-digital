@@ -6,6 +6,6 @@ final class HomeServiceWeb implements HomeService {
   final HomeRepository _repository;
 
   @override
-  Future<Either<Falha, ResumoPainel>> buscarResumo() =>
-      _repository.buscarResumo();
+  Future<Either<Falha, ResumoPainel>> buscarResumo(List<String> filialIds) =>
+      _repository.buscarResumo(filialIds);
 }
