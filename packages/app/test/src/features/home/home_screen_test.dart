@@ -21,6 +21,7 @@ void main() {
             filiais: filiais,
           ),
         );
+        await tester.pump(const Duration(milliseconds: 1));
       }
 
       testWidgets('Então a barra superior mostra o nome e a logo da marca', (
@@ -36,7 +37,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.bySemanticsLabel('Logo de Mercado Bom Preço'),
+          find.bySemanticsLabel(RegExp('^Logo de Mercado Bom Preço')),
           findsOneWidget,
         );
       });

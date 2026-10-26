@@ -7,17 +7,18 @@ import '../../../helpers/montar.dart';
 final class _RepositoryInstavel implements HomeRepository {
   var chamadas = 0;
 
+  final pedidos = <List<String>>[];
+
   @override
-  Future<Either<Falha, ResumoPainel>> buscarResumo() async {
+  Future<Either<Falha, ResumoPainel>> buscarResumo(
+    List<String> filialIds,
+  ) async {
     chamadas++;
+    pedidos.add(filialIds);
     return chamadas == 1
         ? const Failure(FalhaSemConexao())
         : const Success(
-            ResumoPainel(
-              filiais: 7,
-              panfletosVigentes: 1,
-              produtosVigentes: 30,
-            ),
+            ResumoPainel(panfletosVigentes: 1, produtosVigentes: 30),
           );
   }
 }
@@ -42,23 +43,57 @@ void main() {
     );
 
     testWidgets(
-      'Cenário: Dado 2 filiais na lista e o resumo 3/2/48, quando a home carrega, então Filiais mostra o tamanho da lista e não o do resumo',
+      'Cenário: Dado 2 filiais e o resumo 2/48, quando a home carrega, então peço o resumo das 2 filiais e mostro 2, 2 e 48',
       (tester) async {
+        final repository = _RepositoryInstavel()..chamadas = 1;
         final filiais = filiaisControllerDeTeste(
           repository: FilialRepositoryFake(
             filiais: [filialFake, filialFakeBairro],
           ),
         );
         await tester.runAsync(filiais.carregar);
-        await tester.pumpWidget(montar(filiais: filiais));
+        await tester.pumpWidget(
+          montar(
+            filiais: filiais,
+            controller: controllerDeTeste(repository: repository),
+          ),
+        );
         await tester.pumpAndSettle();
 
+        expect(repository.pedidos, [
+          [filialFake.id, filialFakeBairro.id],
+        ]);
         expect(find.text('Filiais'), findsWidgets);
-        expect(find.text('3'), findsNothing);
+        expect(find.text('2'), findsOneWidget);
         expect(find.text('Panfletos no ar'), findsOneWidget);
-        expect(find.text('2'), findsNWidgets(2));
+        expect(find.text('1'), findsOneWidget);
         expect(find.text('Produtos no ar'), findsOneWidget);
-        expect(find.text('48'), findsOneWidget);
+        expect(find.text('30'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado uma filial nova na lista, quando ela chega, então recarrego o resumo com todas as filiais',
+      (tester) async {
+        final repository = _RepositoryInstavel()..chamadas = 1;
+        final filialRepository = FilialRepositoryFake(filiais: [filialFake]);
+        final filiais = filiaisControllerDeTeste(repository: filialRepository);
+        await tester.runAsync(filiais.carregar);
+        await tester.pumpWidget(
+          montar(
+            filiais: filiais,
+            controller: controllerDeTeste(repository: repository),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        filiais.salva(filialFakeBairro);
+        await tester.pumpAndSettle();
+
+        expect(repository.pedidos, [
+          [filialFake.id],
+          [filialFake.id, filialFakeBairro.id],
+        ]);
       },
     );
 

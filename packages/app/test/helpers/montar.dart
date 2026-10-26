@@ -8,7 +8,7 @@ import 'package:tabloide_core/testing.dart';
 
 HomeController controllerDeTeste({
   HomeRepository repository = const HomeRepositoryFake(atraso: Duration.zero),
-}) => HomeController(HomeServiceApp(repository))..carregarResumo();
+}) => HomeController(HomeServiceApp(repository));
 
 LoginController loginControllerDeTeste({
   AuthRepository? repository,
