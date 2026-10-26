@@ -5,6 +5,8 @@ import 'package:tabloide_core/src/features/auth/repositories/auth_repository.dar
 import 'package:tabloide_core/src/features/auth/repositories/auth_repository_api.dart';
 import 'package:tabloide_core/src/features/cadastro/repositories/cadastro_repository.dart';
 import 'package:tabloide_core/src/features/cadastro/repositories/cadastro_repository_api.dart';
+import 'package:tabloide_core/src/features/categorias/repositories/categoria_repository.dart';
+import 'package:tabloide_core/src/features/categorias/repositories/categoria_repository_api.dart';
 import 'package:tabloide_core/src/features/cep/repositories/cep_repository.dart';
 import 'package:tabloide_core/src/features/cep/repositories/cep_repository_via_cep.dart';
 import 'package:tabloide_core/src/features/filiais/repositories/filial_repository.dart';
@@ -19,6 +21,8 @@ import 'package:tabloide_core/src/features/lojista/repositories/lojista_reposito
 import 'package:tabloide_core/src/features/lojista/repositories/lojista_repository_api.dart';
 import 'package:tabloide_core/src/features/panfletos/repositories/panfleto_repository.dart';
 import 'package:tabloide_core/src/features/panfletos/repositories/panfleto_repository_api.dart';
+import 'package:tabloide_core/src/features/produtos/repositories/produto_repository.dart';
+import 'package:tabloide_core/src/features/produtos/repositories/produto_repository_api.dart';
 import 'package:tabloide_core/src/http/dio_rest_client.dart';
 import 'package:tabloide_core/src/http/rest_client.dart';
 import 'package:tabloide_core/src/sessao/armazenamento_local.dart';
@@ -38,6 +42,8 @@ List<SingleChildWidget> providersCore({
   IdentidadeRepository? identidadeRepository,
   LojistaRepository? lojistaRepository,
   PanfletoRepository? panfletoRepository,
+  CategoriaRepository? categoriaRepository,
+  ProdutoRepository? produtoRepository,
   HomeRepository? homeRepository,
 }) => [
   Provider<BrandConfig>.value(value: marca),
@@ -80,6 +86,15 @@ List<SingleChildWidget> providersCore({
   Provider<PanfletoRepository>(
     create: (context) =>
         panfletoRepository ?? PanfletoRepositoryApi(context.read<RestClient>()),
+  ),
+  Provider<CategoriaRepository>(
+    create: (context) =>
+        categoriaRepository ??
+        CategoriaRepositoryApi(context.read<RestClient>()),
+  ),
+  Provider<ProdutoRepository>(
+    create: (context) =>
+        produtoRepository ?? ProdutoRepositoryApi(context.read<RestClient>()),
   ),
   Provider<HomeRepository>(
     create: (_) => homeRepository ?? const HomeRepositoryFake(),

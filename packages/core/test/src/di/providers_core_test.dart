@@ -107,6 +107,11 @@ void main() {
           contexto.read<PanfletoRepository>(),
           isA<PanfletoRepositoryApi>(),
         );
+        expect(
+          contexto.read<CategoriaRepository>(),
+          isA<CategoriaRepositoryApi>(),
+        );
+        expect(contexto.read<ProdutoRepository>(), isA<ProdutoRepositoryApi>());
         expect(contexto.read<Sessao>().ativa, isFalse);
       },
     );

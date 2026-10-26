@@ -14,6 +14,7 @@ class AppCampoImagem extends StatelessWidget {
     this.bytes,
     this.url,
     this.aoEscolher,
+    this.aoRemover,
     this.carregando = false,
     this.erro,
     this.ajuda,
@@ -25,6 +26,7 @@ class AppCampoImagem extends StatelessWidget {
   final Uint8List? bytes;
   final String? url;
   final VoidCallback? aoEscolher;
+  final VoidCallback? aoRemover;
   final bool carregando;
   final String? erro;
   final String? ajuda;
@@ -42,6 +44,7 @@ class AppCampoImagem extends StatelessWidget {
     );
     final erro = this.erro;
     final ajuda = this.ajuda;
+    final aoRemover = this.aoRemover;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -91,25 +94,35 @@ class AppCampoImagem extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppEspacamentos.sm),
-        Center(
-          child: OutlinedButton.icon(
-            onPressed: carregando ? null : aoEscolher,
-            icon: carregando
-                ? const SizedBox.square(
-                    dimension: AppIcones.pequeno,
-                    child: CircularProgressIndicator(
-                      semanticsLabel: 'Enviando imagem',
-                    ),
-                  )
-                : const Icon(Icons.upload_outlined),
-            label: Text(
-              carregando
-                  ? 'Enviando imagem'
-                  : temImagem
-                  ? 'Trocar imagem'
-                  : 'Escolher imagem',
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: AppEspacamentos.sm,
+          children: [
+            OutlinedButton.icon(
+              onPressed: carregando ? null : aoEscolher,
+              icon: carregando
+                  ? const SizedBox.square(
+                      dimension: AppIcones.pequeno,
+                      child: CircularProgressIndicator(
+                        semanticsLabel: 'Enviando imagem',
+                      ),
+                    )
+                  : const Icon(Icons.upload_outlined),
+              label: Text(
+                carregando
+                    ? 'Enviando imagem'
+                    : temImagem
+                    ? 'Trocar imagem'
+                    : 'Escolher imagem',
+              ),
             ),
-          ),
+            if (temImagem && aoRemover != null)
+              TextButton.icon(
+                onPressed: carregando ? null : aoRemover,
+                icon: const Icon(Icons.delete_outline),
+                label: const Text('Remover imagem'),
+              ),
+          ],
         ),
         if (erro != null) ...[
           const SizedBox(height: AppEspacamentos.xs),

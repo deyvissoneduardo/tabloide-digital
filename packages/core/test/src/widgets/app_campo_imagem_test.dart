@@ -93,5 +93,45 @@ void main() {
 
       expect(find.text('Escolha a imagem do panfleto.'), findsOneWidget);
     });
+
+    testWidgets(
+      'Cenário: Dado uma imagem salva e a ação de remover, quando toco "Remover imagem", então repasso a ação',
+      (tester) async {
+        var remocoes = 0;
+        await tester.pumpWidget(
+          montarComMarca(
+            AppCampoImagem(
+              rotulo: 'Foto do produto',
+              descricao: 'Foto do produto',
+              url: 'https://midia.fake/produto/arroz.webp',
+              aoEscolher: () {},
+              aoRemover: () => remocoes++,
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Remover imagem'));
+
+        expect(remocoes, 1);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado nenhuma imagem, então "Remover imagem" não aparece mesmo com a ação',
+      (tester) async {
+        await tester.pumpWidget(
+          montarComMarca(
+            AppCampoImagem(
+              rotulo: 'Foto do produto',
+              descricao: 'Foto do produto',
+              aoEscolher: () {},
+              aoRemover: () {},
+            ),
+          ),
+        );
+
+        expect(find.text('Remover imagem'), findsNothing);
+      },
+    );
   });
 }
