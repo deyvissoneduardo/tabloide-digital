@@ -102,6 +102,7 @@ void main() {
           contexto.read<IdentidadeRepository>(),
           isA<IdentidadeRepositoryApi>(),
         );
+        expect(contexto.read<LojistaRepository>(), isA<LojistaRepositoryApi>());
         expect(contexto.read<Sessao>().ativa, isFalse);
       },
     );
