@@ -1,21 +1,20 @@
 # Tabloide Digital — Painel do Lojista
 
-> Painel do lojista do Tabloide Digital — um único código Flutter, white-label, para app mobile e web.
+> Painel do lojista do Tabloide Digital — um único código Flutter para app mobile e web.
 
-![Home do painel nas marcas Tabloide e Mercado Exemplo](packages/app/test/src/features/home/goldens/ci/home_screen_app_light.png)
+![Home do painel mobile](packages/app/test/src/features/home/goldens/ci/home_screen_app_light.png)
 
-*Golden de CI da home mobile: a mesma tela nas duas marcas cadastradas (texto renderizado como blocos).*
+*Golden de CI da home mobile, uma coluna por seção (texto renderizado como blocos).*
 
 ## Sobre
 
-O painel é onde o lojista acompanha filiais, panfletos e produtos vigentes. Um mesmo código atende vários clientes: cada marca (nome, cores, logo e CNPJ) é escolhida no build, sem fork do projeto.
+O painel é onde o lojista acompanha filiais, panfletos e produtos vigentes.
 
-O repositório é um [Pub Workspace](https://dart.dev/tools/pub/workspaces) com quatro pacotes, e o app raiz (`lib/`) só faz o bootstrap da plataforma certa:
+O repositório é um [Pub Workspace](https://dart.dev/tools/pub/workspaces) com três pacotes, e o app raiz (`lib/`) só faz o bootstrap da plataforma certa:
 
 | Pacote | Papel | Depende de |
 |---|---|---|
-| [`packages/core`](packages/core) (`tabloide_core`) | Contrato de marca, tema, HTTP (Dio), `Either`/`Falha`, controllers e repositórios | — |
-| [`packages/brands`](packages/brands) (`tabloide_brands`) | Uma classe `BrandConfig` + assets por cliente | core |
+| [`packages/core`](packages/core) (`tabloide_core`) | Identidade (nome e logo), tema, HTTP (Dio), `Either`/`Falha`, controllers e repositórios | — |
 | [`packages/app`](packages/app) (`tabloide_app`) | Telas do painel mobile (Android/iOS) | core |
 | [`packages/web`](packages/web) (`tabloide_web`) | Telas do painel web | core |
 
@@ -25,8 +24,8 @@ Essas dependências são verificadas por teste (`packages/core/test/arquitetura/
 
 - Home com navegação entre **Início**, **Filiais**, **Panfletos** e **Produtos**.
 - Resumo de início com filiais, panfletos vigentes e produtos vigentes.
-- Marca e URL da API definidas no build via `--dart-define`.
-- Tema claro e escuro derivado das cores da marca.
+- URL da API definida no build via `--dart-define`.
+- Tema claro único com as cores do Tabloide Digital.
 
 > Os dados do resumo ainda vêm de `HomeRepositoryFake` (em memória); a integração com a API ainda não existe.
 
@@ -40,39 +39,25 @@ Essas dependências são verificadas por teste (`packages/core/test/arquitetura/
 
 ```bash
 flutter pub get
-flutter run -d chrome --dart-define-from-file=config/marcas/tabloide.json
+flutter run -d chrome --dart-define=API_URL=https://tabloide-api.vercel.app/v1
 ```
 
-Para outra marca ou outro dispositivo, troque o arquivo de config e o `-d`:
-
-```bash
-flutter run --dart-define-from-file=config/marcas/mercado_exemplo.json
-```
+Para outro dispositivo, troque o `-d` (ou omita para escolher na hora).
 
 ## Configuração
 
-Os valores são lidos com `String.fromEnvironment` em `lib/main.dart`. Já existe um arquivo pronto por marca em [`config/marcas/`](config/marcas).
+O valor é lido com `String.fromEnvironment` em `lib/main.dart`.
 
 | Variável | Default | Descrição |
 |---|---|---|
-| `MARCA` | `tabloide` | Id da marca registrada em `registrarMarcas`. Se o id não existir, o app não sobe (`MarcaNaoRegistrada`). |
 | `API_URL` | `http://localhost:3000/v1` | URL base da API do Tabloide. |
-
-### Adicionando uma marca
-
-1. Crie `packages/brands/lib/src/<marca>/<marca>_brand.dart` implementando `BrandConfig`.
-2. Coloque o logo em `packages/brands/assets/<marca>/` e declare a pasta em `flutter.assets` no `packages/brands/pubspec.yaml`.
-3. Registre a marca em `packages/brands/lib/src/registrar_marcas.dart`.
-4. Crie `config/marcas/<marca>.json` com `MARCA` e `API_URL`.
-
-Use `MercadoExemploBrand` como referência.
 
 ## Build
 
 ```bash
-flutter build web --dart-define-from-file=config/marcas/tabloide.json
-flutter build apk --dart-define-from-file=config/marcas/tabloide.json
-flutter build ios --dart-define-from-file=config/marcas/tabloide.json
+flutter build web --dart-define=API_URL=https://tabloide-api.vercel.app/v1
+flutter build apk --dart-define=API_URL=https://tabloide-api.vercel.app/v1
+flutter build ios --dart-define=API_URL=https://tabloide-api.vercel.app/v1
 ```
 
 ## Testes
