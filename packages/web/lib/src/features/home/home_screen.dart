@@ -4,6 +4,7 @@ import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_web/src/features/filiais/widgets/secao_filiais.dart';
 import 'package:tabloide_web/src/features/panfletos/widgets/secao_panfletos.dart';
 import 'package:tabloide_web/src/features/perfil/perfil_screen.dart';
+import 'package:tabloide_web/src/features/produtos/widgets/secao_produtos.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,6 +20,7 @@ class HomeScreen extends StatelessWidget {
     final conteudo = switch (controller.secao) {
       SecaoPainel.filiais => const SecaoFiliais(),
       SecaoPainel.panfletos => const SecaoPanfletos(),
+      SecaoPainel.produtos => const SecaoProdutos(),
       final secao => AppConteudoSecao(secao: secao),
     };
 

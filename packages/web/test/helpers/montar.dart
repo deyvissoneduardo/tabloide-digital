@@ -69,6 +69,33 @@ PanfletoFormController panfletoFormControllerDeTeste({
   PanfletoServiceWeb(repository ?? PanfletoRepositoryFake()),
 );
 
+CategoriasController categoriasControllerDeTeste({
+  CategoriaRepository? repository,
+}) => CategoriasController(
+  CategoriaServiceWeb(
+    repository ?? CategoriaRepositoryFake(categorias: [categoriaFake]),
+  ),
+);
+
+CategoriaFormController categoriaFormControllerDeTeste({
+  CategoriaRepository? repository,
+}) => CategoriaFormController(
+  CategoriaServiceWeb(repository ?? CategoriaRepositoryFake()),
+);
+
+ProdutosController produtosControllerDeTeste({ProdutoRepository? repository}) =>
+    ProdutosController(
+      ProdutoServiceWeb(
+        repository ?? ProdutoRepositoryFake(produtos: [produtoFake]),
+      ),
+    );
+
+ProdutoFormController produtoFormControllerDeTeste({
+  ProdutoRepository? repository,
+}) => ProdutoFormController(
+  ProdutoServiceWeb(repository ?? ProdutoRepositoryFake()),
+);
+
 SingleChildWidget _notificador<T extends ChangeNotifier>(
   T? valor,
   T Function() criar,
@@ -91,6 +118,12 @@ Widget montarTela(
   PanfletosController? panfletos,
   PanfletoFormController? panfletoForm,
   PanfletoRepository? panfletoRepository,
+  CategoriasController? categorias,
+  CategoriaFormController? categoriaForm,
+  CategoriaRepository? categoriaRepository,
+  ProdutosController? produtos,
+  ProdutoFormController? produtoForm,
+  ProdutoRepository? produtoRepository,
   ImagePicker? seletorImagem,
 }) {
   final sessaoDaTela = sessao ?? sessaoDeTeste();
@@ -98,6 +131,12 @@ Widget montarTela(
       filialRepository ?? FilialRepositoryFake(filiais: [filialFake]);
   final panfletosDaTela =
       panfletoRepository ?? PanfletoRepositoryFake(panfletos: [panfletoFake]);
+  final categoriasDaTela =
+      categoriaRepository ??
+      CategoriaRepositoryFake(categorias: [categoriaFake, categoriaFakeVazia]);
+  final produtosDaTela =
+      produtoRepository ??
+      ProdutoRepositoryFake(produtos: [produtoFake, produtoFakeAgendado]);
   return MultiProvider(
     providers: [
       Provider<BrandConfig>.value(value: marca),
@@ -127,6 +166,22 @@ Widget montarTela(
       _notificador(
         panfletoForm,
         () => panfletoFormControllerDeTeste(repository: panfletosDaTela),
+      ),
+      _notificador(
+        categorias,
+        () => categoriasControllerDeTeste(repository: categoriasDaTela),
+      ),
+      _notificador(
+        categoriaForm,
+        () => categoriaFormControllerDeTeste(repository: categoriasDaTela),
+      ),
+      _notificador(
+        produtos,
+        () => produtosControllerDeTeste(repository: produtosDaTela),
+      ),
+      _notificador(
+        produtoForm,
+        () => produtoFormControllerDeTeste(repository: produtosDaTela),
       ),
       Provider<ImagePicker>.value(value: seletorImagem ?? ImagePicker()),
     ],

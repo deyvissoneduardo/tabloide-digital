@@ -4,6 +4,9 @@ import 'package:provider/single_child_widget.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_web/src/features/cadastro/cadastro_controller.dart';
 import 'package:tabloide_web/src/features/cadastro/services/cadastro_service_web.dart';
+import 'package:tabloide_web/src/features/categorias/categoria_form_controller.dart';
+import 'package:tabloide_web/src/features/categorias/categorias_controller.dart';
+import 'package:tabloide_web/src/features/categorias/services/categoria_service_web.dart';
 import 'package:tabloide_web/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_web/src/features/filiais/filial_form_controller.dart';
 import 'package:tabloide_web/src/features/filiais/services/filial_service_web.dart';
@@ -15,6 +18,9 @@ import 'package:tabloide_web/src/features/panfletos/panfletos_controller.dart';
 import 'package:tabloide_web/src/features/panfletos/services/panfleto_service_web.dart';
 import 'package:tabloide_web/src/features/perfil/perfil_controller.dart';
 import 'package:tabloide_web/src/features/perfil/services/perfil_service_web.dart';
+import 'package:tabloide_web/src/features/produtos/produto_form_controller.dart';
+import 'package:tabloide_web/src/features/produtos/produtos_controller.dart';
+import 'package:tabloide_web/src/features/produtos/services/produto_service_web.dart';
 
 List<SingleChildWidget> providersWeb() => [
   Provider<CadastroServiceWeb>(
@@ -64,6 +70,28 @@ List<SingleChildWidget> providersWeb() => [
   ChangeNotifierProvider<PanfletoFormController>(
     create: (context) =>
         PanfletoFormController(context.read<PanfletoServiceWeb>()),
+  ),
+  Provider<CategoriaServiceWeb>(
+    create: (context) =>
+        CategoriaServiceWeb(context.read<CategoriaRepository>()),
+  ),
+  ChangeNotifierProvider<CategoriasController>(
+    create: (context) =>
+        CategoriasController(context.read<CategoriaServiceWeb>()),
+  ),
+  ChangeNotifierProvider<CategoriaFormController>(
+    create: (context) =>
+        CategoriaFormController(context.read<CategoriaServiceWeb>()),
+  ),
+  Provider<ProdutoServiceWeb>(
+    create: (context) => ProdutoServiceWeb(context.read<ProdutoRepository>()),
+  ),
+  ChangeNotifierProvider<ProdutosController>(
+    create: (context) => ProdutosController(context.read<ProdutoServiceWeb>()),
+  ),
+  ChangeNotifierProvider<ProdutoFormController>(
+    create: (context) =>
+        ProdutoFormController(context.read<ProdutoServiceWeb>()),
   ),
   Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(
