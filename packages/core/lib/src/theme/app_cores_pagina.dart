@@ -17,6 +17,37 @@ final class AppCoresPagina {
         corDeTexto(corSecundaria, AppCores.secundaria),
       );
 
+  /// Texto sobre a primária/secundária (cabeçalho e selo de desconto): o
+  /// contraste ≥ 4,5 com branco já é garantido por [corDeTexto].
+  static const sobreCor = _branco;
+
+  /// Fundo da página, atrás dos cartões brancos.
+  static const fundo = Color(0xFFF3F4F6);
+
+  /// Sombra dos cartões de produto.
+  static const sombraCartao = [
+    BoxShadow(color: Color(0x0F000000), offset: Offset(0, 1), blurRadius: 2),
+    BoxShadow(color: Color(0x0F000000), offset: Offset(0, 4), blurRadius: 12),
+  ];
+
+  /// Sombra do panfleto.
+  static const sombraPanfleto = [
+    BoxShadow(color: Color(0x0F000000), offset: Offset(0, 1), blurRadius: 2),
+    BoxShadow(color: Color(0x1A000000), offset: Offset(0, 6), blurRadius: 20),
+  ];
+
+  /// Sombra do bloco do logo no cabeçalho.
+  static const sombraLogo = [
+    BoxShadow(color: Color(0x2E000000), offset: Offset(0, 4), blurRadius: 12),
+  ];
+
+  /// Brilho no canto superior direito do cabeçalho.
+  static const brilhoCabecalho = RadialGradient(
+    center: Alignment.topRight,
+    radius: 1.1,
+    colors: [Color(0x1FFFFFFF), Color(0x00FFFFFF)],
+  );
+
   /// Nome do produto, preço e nome da categoria.
   final Color primaria;
 
