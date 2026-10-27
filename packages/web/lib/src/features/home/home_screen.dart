@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_web/src/features/filiais/widgets/secao_filiais.dart';
 import 'package:tabloide_web/src/features/home/widgets/resumo_inicio.dart';
+import 'package:tabloide_web/src/features/pagina/pagina_controller.dart';
+import 'package:tabloide_web/src/features/pagina/widgets/secao_pagina.dart';
 import 'package:tabloide_web/src/features/panfletos/widgets/secao_panfletos.dart';
 import 'package:tabloide_web/src/features/perfil/perfil_screen.dart';
 import 'package:tabloide_web/src/features/produtos/widgets/secao_produtos.dart';
@@ -10,9 +12,30 @@ import 'package:tabloide_web/src/features/produtos/widgets/secao_produtos.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<void> _abrirPerfil(BuildContext context) =>
-      Navigator.of(context)
-          .push(MaterialPageRoute<void>(builder: (_) => const PerfilScreen()));
+  /// D11: sair da seção Página com a ordem não publicada pede confirmação.
+  /// `true` = pode sair (sem mudanças ou descartadas).
+  Future<bool> _podeSairDaPagina(BuildContext context) async {
+    final home = context.read<HomeController>();
+    final pagina = context.read<PaginaController>();
+    if (home.secao != SecaoPainel.pagina || !pagina.temMudancas) return true;
+    final descartar = await confirmar(
+      context,
+      titulo: 'Descartar as mudanças?',
+      mensagem: 'A nova ordem ainda não foi publicada.',
+      rotuloConfirmar: 'Descartar',
+      rotuloCancelar: 'Continuar editando',
+    );
+    if (descartar) pagina.descartar();
+    return descartar;
+  }
+
+  Future<void> _abrirPerfil(BuildContext context) async {
+    final navegador = Navigator.of(context);
+    if (!await _podeSairDaPagina(context)) return;
+    await navegador.push(
+      MaterialPageRoute<void>(builder: (_) => const PerfilScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +46,7 @@ class HomeScreen extends StatelessWidget {
       SecaoPainel.filiais => const SecaoFiliais(),
       SecaoPainel.panfletos => const SecaoPanfletos(),
       SecaoPainel.produtos => const SecaoProdutos(),
+      SecaoPainel.pagina => const SecaoPagina(),
     };
 
     if (classe == ClasseTamanho.compacto) {
@@ -113,6 +137,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  ValueChanged<int> _selecionar(BuildContext context) =>
-      (i) => context.read<HomeController>().selecionar(SecaoPainel.values[i]);
+  ValueChanged<int> _selecionar(BuildContext context) => (i) async {
+    final home = context.read<HomeController>();
+    final destino = SecaoPainel.values[i];
+    if (destino != SecaoPainel.pagina && !await _podeSairDaPagina(context)) {
+      return;
+    }
+    home.selecionar(destino);
+  };
 }

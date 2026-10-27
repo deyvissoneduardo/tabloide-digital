@@ -14,7 +14,10 @@ const _pedidoLojista = LojistaRequest(
   cnpj: '77343168000124',
 );
 
-const _pedidoIdentidade = IdentidadeRequest(nomeFantasia: 'Mercado Bom Preço');
+const _pedidoIdentidade = IdentidadeRequest(
+  nomeFantasia: 'Mercado Bom Preço',
+  sePanfleto: false,
+);
 
 void main() {
   group('Funcionalidade: service de perfil na web', () {

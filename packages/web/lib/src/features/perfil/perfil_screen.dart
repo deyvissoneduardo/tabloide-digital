@@ -52,6 +52,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
   late final PerfilController _controller;
 
+  bool _sePanfleto = false;
+
   @override
   void initState() {
     super.initState();
@@ -96,6 +98,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
       _cnpj.text = _mascarar(lojista.cnpj, CnpjAlfanumericoInputFormatter());
       _corPrimaria.text = identidade.corPrimaria ?? '';
       _corSecundaria.text = identidade.corSecundaria ?? '';
+      setState(() => _sePanfleto = identidade.sePanfleto);
     }
   }
 
@@ -139,6 +142,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
       cnpj: _cnpj.text,
       corPrimaria: _corPrimaria.text,
       corSecundaria: _corSecundaria.text,
+      sePanfleto: _sePanfleto,
     );
     if (!mounted) return;
     switch (resultado) {
@@ -313,6 +317,18 @@ class _PerfilScreenState extends State<PerfilScreen> {
               erro: controller.erroDoCampo('corSecundaria'),
               aoMudar: (_) => controller.limparErroDoCampo('corSecundaria'),
               validador: _validarCor,
+            ),
+            const SizedBox(height: AppEspacamentos.md),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Mostrar só o panfleto na página'),
+              subtitle: const Text(
+                'Vale para todas as filiais. Filial sem panfleto vigente mostra os produtos.',
+              ),
+              value: _sePanfleto,
+              onChanged: ocupado
+                  ? null
+                  : (valor) => setState(() => _sePanfleto = valor),
             ),
             const SizedBox(height: AppEspacamentos.lg),
             AppBotaoPrincipal(

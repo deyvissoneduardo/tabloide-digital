@@ -14,7 +14,10 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(montar(controller: controller));
-      await tester.pumpAndSettle();
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pumpAndSettle();
+      }
     }
 
     group('Cenário: Dado uma tela de desktop (1440×900)', () {

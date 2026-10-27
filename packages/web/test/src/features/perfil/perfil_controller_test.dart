@@ -32,6 +32,7 @@ void main() {
       cnpj: '11.222.333/0001-81',
       corPrimaria: '#00ff00',
       corSecundaria: '',
+      sePanfleto: true,
     );
 
     test('Cenário: Dado as duas APIs respondendo, quando carrego, então tenho lojista e identidade', () async {
@@ -93,6 +94,7 @@ void main() {
         const IdentidadeRequest(
           nomeFantasia: 'Mercado Novo',
           corPrimaria: '#00FF00',
+          sePanfleto: true,
         ),
       );
       final carregado = controller.estado as PerfilCarregado;

@@ -116,6 +116,7 @@ void main() {
           const IdentidadeRequest(
             nomeFantasia: 'Mercado Novo',
             corPrimaria: '#C8102E',
+            sePanfleto: false,
           ),
         );
         expect(find.text('Perfil salvo.'), findsOneWidget);

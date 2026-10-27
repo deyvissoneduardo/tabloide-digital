@@ -63,6 +63,7 @@ class PerfilController extends ChangeNotifier {
     required String cnpj,
     required String corPrimaria,
     required String corSecundaria,
+    required bool sePanfleto,
   }) async {
     _salvando = true;
     _errosDosCampos = const {};
@@ -83,6 +84,7 @@ class PerfilController extends ChangeNotifier {
           nomeFantasia: nome,
           corPrimaria: _corOuNula(corPrimaria),
           corSecundaria: _corOuNula(corSecundaria),
+          sePanfleto: sePanfleto,
         ),
       )).map((i) => PerfilCarregado(lojista: l, identidade: i)),
     };

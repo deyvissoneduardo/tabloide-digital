@@ -268,7 +268,8 @@ void main() {
         final comDatas = PanfletoResponse(
           id: panfletoFake.id,
           filialId: panfletoFake.filialId,
-          urlImagem: panfletoFake.urlImagem,
+          tipo: panfletoFake.tipo,
+          urlArquivo: panfletoFake.urlArquivo,
           largura: panfletoFake.largura,
           altura: panfletoFake.altura,
           vigencia: Vigencia(
@@ -294,7 +295,7 @@ void main() {
         final panfletos = panfletosControllerDeTeste(repository: mock);
         await tester.runAsync(() => panfletos.carregar(filialFake.id));
         final form = panfletoFormControllerDeTeste(repository: mock)
-          ..escolherImagem(Uint8List.fromList([1]), 'novo.png');
+          ..escolherArquivo(Uint8List.fromList([1]), 'novo.png');
         tester.view.physicalSize = const Size(390, 1400);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
@@ -377,7 +378,7 @@ void main() {
         expect(repository.imagensEnviadas, ['novo.png']);
         expect(repository.pedidos, isEmpty);
         expect(
-          panfletos.panfletos.single.urlImagem,
+          panfletos.panfletos.single.urlArquivo,
           'https://midia.fake/panfleto/novo.png',
         );
         expect(find.byType(PanfletoFormScreen), findsNothing);

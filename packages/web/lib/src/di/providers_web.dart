@@ -10,12 +10,18 @@ import 'package:tabloide_web/src/features/categorias/services/categoria_service_
 import 'package:tabloide_web/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_web/src/features/filiais/filial_form_controller.dart';
 import 'package:tabloide_web/src/features/filiais/services/filial_service_web.dart';
+import 'package:tabloide_web/src/features/home/paginas_publicadas_controller.dart';
 import 'package:tabloide_web/src/features/home/services/home_service_web.dart';
+import 'package:tabloide_web/src/features/home/plataforma/link_service_web.dart';
+import 'package:tabloide_web/src/features/home/services/paginas_publicadas_service_web.dart';
 import 'package:tabloide_web/src/features/login/login_controller.dart';
 import 'package:tabloide_web/src/features/login/services/auth_service_web.dart';
+import 'package:tabloide_web/src/features/pagina/pagina_controller.dart';
+import 'package:tabloide_web/src/features/pagina/services/pagina_service_web.dart';
 import 'package:tabloide_web/src/features/panfletos/panfleto_form_controller.dart';
 import 'package:tabloide_web/src/features/panfletos/panfletos_controller.dart';
 import 'package:tabloide_web/src/features/panfletos/services/panfleto_service_web.dart';
+import 'package:tabloide_web/src/features/panfletos/plataforma/seletor_pdf.dart';
 import 'package:tabloide_web/src/features/perfil/perfil_controller.dart';
 import 'package:tabloide_web/src/features/perfil/services/perfil_service_web.dart';
 import 'package:tabloide_web/src/features/produtos/produto_form_controller.dart';
@@ -93,6 +99,30 @@ List<SingleChildWidget> providersWeb() => [
     create: (context) =>
         ProdutoFormController(context.read<ProdutoServiceWeb>()),
   ),
+  Provider<PaginaServiceWeb>(
+    create: (context) => PaginaServiceWeb(
+      context.read<EstruturaRepository>(),
+      context.read<IdentidadeRepository>(),
+      context.read<PanfletoRepository>(),
+    ),
+  ),
+  ChangeNotifierProvider<PaginaController>(
+    create: (context) => PaginaController(context.read<PaginaServiceWeb>()),
+  ),
+  Provider<PaginasPublicadasServiceWeb>(
+    create: (context) => PaginasPublicadasServiceWeb(
+      context.read<IdentidadeRepository>(),
+      context.read<LojistaRepository>(),
+      context.read<FilialRepository>(),
+    ),
+  ),
+  ChangeNotifierProvider<PaginasPublicadasController>(
+    create: (context) => PaginasPublicadasController(
+      context.read<PaginasPublicadasServiceWeb>(),
+    ),
+  ),
+  Provider<LinkServiceWeb>(create: (_) => LinkServiceWeb()),
+  Provider<SeletorPdf>(create: (_) => const SeletorPdf()),
   Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(
     create: (context) => HomeServiceWeb(context.read<HomeRepository>()),
