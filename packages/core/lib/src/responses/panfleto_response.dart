@@ -1,10 +1,12 @@
+import 'package:tabloide_core/src/features/panfletos/models/tipo_arquivo_panfleto.dart';
 import 'package:tabloide_core/src/features/vigencia/models/vigencia.dart';
 
 final class PanfletoResponse {
   const PanfletoResponse({
     required this.id,
     required this.filialId,
-    required this.urlImagem,
+    required this.tipo,
+    required this.urlArquivo,
     required this.largura,
     required this.altura,
     required this.vigencia,
@@ -16,7 +18,8 @@ final class PanfletoResponse {
     {
       'id': final String id,
       'filialId': final String filialId,
-      'urlImagem': final String urlImagem,
+      'tipo': final String codigoTipo,
+      'urlArquivo': final String urlArquivo,
       'largura': final int largura,
       'altura': final int altura,
       'criadoEm': final String criadoEm,
@@ -25,7 +28,14 @@ final class PanfletoResponse {
       PanfletoResponse(
         id: id,
         filialId: filialId,
-        urlImagem: urlImagem,
+        tipo: switch (TipoArquivoPanfleto.doCodigo(codigoTipo)) {
+          final tipo? => tipo,
+          null => throw FormatException(
+            'Tipo de panfleto desconhecido',
+            codigoTipo,
+          ),
+        },
+        urlArquivo: urlArquivo,
         largura: largura,
         altura: altura,
         vigencia: Vigencia.fromJson(json),
@@ -39,7 +49,17 @@ final class PanfletoResponse {
 
   final String filialId;
 
-  final String urlImagem;
+  final TipoArquivoPanfleto tipo;
+
+  /// Imagem ou PDF original (a API ainda manda `urlImagem` com o mesmo valor,
+  /// só para apps antigos; o painel ignora).
+  final String urlArquivo;
+
+  /// Último segmento de [urlArquivo] (ex.: `0192f0c0.pdf`).
+  String get nomeArquivo {
+    final caminho = Uri.tryParse(urlArquivo)?.pathSegments ?? const [];
+    return caminho.isEmpty ? urlArquivo : caminho.last;
+  }
 
   final int largura;
 
@@ -56,7 +76,8 @@ final class PanfletoResponse {
       other is PanfletoResponse &&
       other.id == id &&
       other.filialId == filialId &&
-      other.urlImagem == urlImagem &&
+      other.tipo == tipo &&
+      other.urlArquivo == urlArquivo &&
       other.largura == largura &&
       other.altura == altura &&
       other.vigencia == vigencia &&
@@ -67,7 +88,8 @@ final class PanfletoResponse {
   int get hashCode => Object.hash(
     id,
     filialId,
-    urlImagem,
+    tipo,
+    urlArquivo,
     largura,
     altura,
     vigencia,

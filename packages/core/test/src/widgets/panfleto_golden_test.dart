@@ -14,6 +14,7 @@ class _ComponentesPanfleto extends StatelessWidget {
     children: [
       AppCartaoPanfleto(panfleto: panfletoFake, aoEscolherAcao: (_) {}),
       AppCartaoPanfleto(panfleto: panfletoFakeAgendado, aoEscolherAcao: (_) {}),
+      AppCartaoPanfleto(panfleto: panfletoFakePdf, aoEscolherAcao: (_) {}),
       const SizedBox(height: AppEspacamentos.md),
       AppCampoImagem(
         rotulo: 'Imagem do panfleto',
@@ -21,6 +22,15 @@ class _ComponentesPanfleto extends StatelessWidget {
         aoEscolher: () {},
         erro: 'Escolha a imagem do panfleto.',
         ajuda: 'JPEG, PNG ou WebP de até 10 MB.',
+      ),
+      const SizedBox(height: AppEspacamentos.md),
+      AppCampoImagem(
+        rotulo: 'Imagem ou PDF do panfleto',
+        descricao: 'Imagem do panfleto',
+        nomePdf: 'ofertas-da-semana.pdf',
+        aoEscolher: () {},
+        aoEscolherPdf: () {},
+        ajuda: 'JPEG, PNG ou WebP até 10 MB, ou PDF de 1 página até 2 MB.',
       ),
       const SizedBox(height: AppEspacamentos.md),
       AppCampoData(
@@ -47,13 +57,14 @@ class _ComponentesPanfleto extends StatelessWidget {
 
 void main() {
   goldenTest(
-    'Cenário: Dado os componentes de panfleto, então cartões, imagem e datas seguem o tema',
+    'Cenário: Dado os componentes de panfleto, então cartões (imagem e PDF), campo de imagem, campo com PDF e datas seguem o tema',
     fileName: 'panfleto_componentes',
     builder: () => GoldenTestGroup(
       children: [
         GoldenTestScenario(
-          name: 'Vigente, agendado, imagem com erro e datas',
-          constraints: const BoxConstraints.tightFor(width: 360, height: 900),
+          name:
+              'Vigente, agendado, PDF, imagem com erro, campo com PDF e datas',
+          constraints: const BoxConstraints.tightFor(width: 360, height: 1500),
           child: montarComMarca(
             const SizedBox.expand(child: _ComponentesPanfleto()),
           ),

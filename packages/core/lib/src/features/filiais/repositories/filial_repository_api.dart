@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:tabloide_core/src/either/either.dart';
 import 'package:tabloide_core/src/either/falha.dart';
 import 'package:tabloide_core/src/either/nada.dart';
@@ -47,6 +49,15 @@ final class FilialRepositoryApi implements FilialRepository {
   @override
   Future<Either<Falha, Nada>> excluir(String id) =>
       _chamar(() => _client.delete('$_caminho/$id'), (_) => const Nada());
+
+  @override
+  Future<Either<Falha, Uint8List>> qrCode(String id) => _chamar(
+    () => _client.baixar(
+      '$_caminho/$id/qrcode',
+      query: {'formato': 'png', 'tamanho': 512},
+    ),
+    (dados) => dados! as Uint8List,
+  );
 
   Future<Either<Falha, T>> _chamar<T>(
     Future<RestResposta> Function() requisicao,

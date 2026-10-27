@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tabloide_core/tabloide_core.dart';
@@ -229,5 +231,43 @@ void main() {
         expect(falhaDe(await repository.listar()), const FalhaSemConexao());
       },
     );
+    test('Cenário: Dado o QR Code da filial, quando peço, então baixo o PNG de 512 px e recebo os bytes', () async {
+      final png = Uint8List.fromList([137, 80, 78, 71]);
+      when(
+        () => client.baixar(
+          '/painel/filiais/$_id/qrcode',
+          query: {'formato': 'png', 'tamanho': 512},
+        ),
+      ).thenAnswer((_) async => resposta(200, png));
+
+      final resultado = await repository.qrCode(_id);
+
+      expect(resultado.fold((_) => null, (bytes) => bytes), png);
+    });
+
+    test('Cenário: Dado uma filial de outro lojista (404), quando peço o QR Code, então recebo FalhaApi RECURSO_NAO_ENCONTRADO', () async {
+      when(() => client.baixar(any(), query: any(named: 'query'))).thenAnswer(
+        (_) async => resposta(
+          404,
+          _erro('RECURSO_NAO_ENCONTRADO', 'Recurso não encontrado.'),
+        ),
+      );
+
+      expect(
+        falhaDe(await repository.qrCode(_id)),
+        isA<FalhaApi>().having(
+          (f) => f.codigo,
+          'codigo',
+          'RECURSO_NAO_ENCONTRADO',
+        ),
+      );
+    });
+
+    test('Cenário: Dado sem conexão, quando peço o QR Code, então recebo FalhaSemConexao', () async {
+      when(() => client.baixar(any(), query: any(named: 'query')))
+          .thenThrow(const ErroSemConexao());
+
+      expect(falhaDe(await repository.qrCode(_id)), const FalhaSemConexao());
+    });
   });
 }

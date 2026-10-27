@@ -40,6 +40,7 @@ Future<bool> confirmar(
   required String titulo,
   required String mensagem,
   required String rotuloConfirmar,
+  String rotuloCancelar = 'Cancelar',
 }) async {
   final confirmou = await showDialog<bool>(
     context: context,
@@ -49,7 +50,7 @@ Future<bool> confirmar(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Cancelar'),
+          child: Text(rotuloCancelar),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),

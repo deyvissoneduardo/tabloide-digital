@@ -8,11 +8,13 @@ Map<String, Object?> corpoIdentidade({
   Object? urlLogo =
       'https://xyz.supabase.co/storage/v1/object/public/midia/'
       '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01/logo/0192f0e0.webp',
+  bool sePanfleto = false,
 }) => {
   'nomeFantasia': 'Mercado Bom Preço',
   'corPrimaria': corPrimaria,
   'corSecundaria': corSecundaria,
   'urlLogo': urlLogo,
+  'sePanfleto': sePanfleto,
 };
 
 void main() {
@@ -42,6 +44,7 @@ void main() {
     test('Cenário: Dado um pedido sem cor secundária, quando gero o JSON, então envio null para remover a cor', () {
       const pedido = IdentidadeRequest(
         nomeFantasia: 'Mercado Bom Preço',
+        sePanfleto: false,
         corPrimaria: '#C8102E',
       );
 
@@ -49,7 +52,34 @@ void main() {
         'nomeFantasia': 'Mercado Bom Preço',
         'corPrimaria': '#C8102E',
         'corSecundaria': null,
+        'sePanfleto': false,
       });
+    });
+
+    test('Cenário: Dado sePanfleto true no corpo, quando leio, então a identidade liga a chave (RN44)', () {
+      expect(
+        IdentidadeResponse.fromJson(corpoIdentidade(sePanfleto: true))
+            .sePanfleto,
+        isTrue,
+      );
+    });
+
+    test('Cenário: Dado um corpo sem sePanfleto, quando leio, então lanço FormatException', () {
+      expect(
+        () => IdentidadeResponse.fromJson(
+          {...corpoIdentidade()}..remove('sePanfleto'),
+        ),
+        throwsFormatException,
+      );
+    });
+
+    test('Cenário: Dado a chave ligada no pedido, quando gero o JSON, então envio sePanfleto true', () {
+      const pedido = IdentidadeRequest(
+        nomeFantasia: 'Mercado Bom Preço',
+        sePanfleto: true,
+      );
+
+      expect(pedido.toJson()['sePanfleto'], isTrue);
     });
   });
 }

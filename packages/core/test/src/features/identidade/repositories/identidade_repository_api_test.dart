@@ -11,6 +11,7 @@ const _caminho = '/painel/lojista/identidade';
 
 const _pedido = IdentidadeRequest(
   nomeFantasia: 'Mercado Bom Preço',
+  sePanfleto: true,
   corPrimaria: '#C8102E',
   corSecundaria: '#ffd100',
 );

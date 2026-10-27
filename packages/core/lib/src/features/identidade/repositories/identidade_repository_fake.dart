@@ -11,6 +11,7 @@ const identidadeFake = IdentidadeResponse(
   urlLogo:
       'https://xyz.supabase.co/storage/v1/object/public/midia/'
       '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01/logo/0192f0e0.webp',
+  sePanfleto: false,
 );
 
 final class IdentidadeRepositoryFake implements IdentidadeRepository {
@@ -43,6 +44,7 @@ final class IdentidadeRepositoryFake implements IdentidadeRepository {
         corPrimaria: request.corPrimaria?.toUpperCase(),
         corSecundaria: request.corSecundaria?.toUpperCase(),
         urlLogo: identidade.urlLogo,
+        sePanfleto: request.sePanfleto,
       ),
     );
   }
@@ -59,6 +61,7 @@ final class IdentidadeRepositoryFake implements IdentidadeRepository {
         corPrimaria: identidade.corPrimaria,
         corSecundaria: identidade.corSecundaria,
         urlLogo: 'https://midia.fake/logo/$nomeArquivo',
+        sePanfleto: identidade.sePanfleto,
       ),
     );
   }

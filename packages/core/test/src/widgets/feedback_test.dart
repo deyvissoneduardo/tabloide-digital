@@ -42,7 +42,47 @@ class _Confirmar extends StatelessWidget {
   );
 }
 
+class _Descartar extends StatelessWidget {
+  const _Descartar({required this.aoResponder});
+
+  final ValueChanged<bool> aoResponder;
+
+  @override
+  Widget build(BuildContext context) => TextButton(
+    onPressed: () async => aoResponder(
+      await confirmar(
+        context,
+        titulo: 'Descartar as mudanças?',
+        mensagem: 'A nova ordem ainda não foi publicada.',
+        rotuloConfirmar: 'Descartar',
+        rotuloCancelar: 'Continuar editando',
+      ),
+    ),
+    child: const Text('Abrir'),
+  );
+}
+
 void main() {
+  group('Funcionalidade: confirmação com rótulo de cancelar próprio', () {
+    testWidgets(
+      'Cenário: Dado rotuloCancelar, quando toco nele, então o texto aparece no lugar de "Cancelar" e a resposta é false',
+      (tester) async {
+        bool? resposta;
+        await tester.pumpWidget(
+          montarComMarca(_Descartar(aoResponder: (r) => resposta = r)),
+        );
+        await tester.tap(find.text('Abrir'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Cancelar'), findsNothing);
+        await tester.tap(find.text('Continuar editando'));
+        await tester.pumpAndSettle();
+
+        expect(resposta, isFalse);
+      },
+    );
+  });
+
   group('Funcionalidade: confirmação de ação não destrutiva', () {
     for (final (botao, esperado) in [('Sair', true), ('Cancelar', false)]) {
       testWidgets(

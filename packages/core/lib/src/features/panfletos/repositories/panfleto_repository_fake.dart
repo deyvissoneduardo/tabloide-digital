@@ -1,6 +1,7 @@
 import 'package:tabloide_core/src/either/either.dart';
 import 'package:tabloide_core/src/either/falha.dart';
 import 'package:tabloide_core/src/either/nada.dart';
+import 'package:tabloide_core/src/features/panfletos/models/tipo_arquivo_panfleto.dart';
 import 'package:tabloide_core/src/features/panfletos/repositories/panfleto_repository.dart';
 import 'package:tabloide_core/src/features/vigencia/models/data_dia.dart';
 import 'package:tabloide_core/src/features/vigencia/models/situacao_vigencia.dart';
@@ -11,7 +12,8 @@ import 'package:tabloide_core/src/responses/panfleto_response.dart';
 final panfletoFake = PanfletoResponse(
   id: '0192f0c0-8e40-7d32-9f5c-3e4f5a6b7c03',
   filialId: '0192f0b4-7d3f-7c21-8e4b-2d3e4f5a6b02',
-  urlImagem:
+  tipo: TipoArquivoPanfleto.imagem,
+  urlArquivo:
       'https://xyz.supabase.co/storage/v1/object/public/midia/'
       '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01/panfleto/0192f0c0.webp',
   largura: 1600,
@@ -28,7 +30,8 @@ final panfletoFake = PanfletoResponse(
 final panfletoFakeAgendado = PanfletoResponse(
   id: '0192f0c0-8e40-7d32-9f5c-3e4f5a6b7c04',
   filialId: '0192f0b4-7d3f-7c21-8e4b-2d3e4f5a6b02',
-  urlImagem:
+  tipo: TipoArquivoPanfleto.imagem,
+  urlArquivo:
       'https://xyz.supabase.co/storage/v1/object/public/midia/'
       '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01/panfleto/0192f0c1.webp',
   largura: 1600,
@@ -40,6 +43,29 @@ final panfletoFakeAgendado = PanfletoResponse(
   ),
   criadoEm: DateTime.utc(2026, 10, 19, 9),
 );
+
+final panfletoFakePdf = PanfletoResponse(
+  id: '0192f0c0-8e40-7d32-9f5c-3e4f5a6b7c05',
+  filialId: '0192f0b4-7d3f-7c21-8e4b-2d3e4f5a6b02',
+  tipo: TipoArquivoPanfleto.pdf,
+  urlArquivo:
+      'https://xyz.supabase.co/storage/v1/object/public/midia/'
+      '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01/panfleto/0192f0c2.pdf',
+  largura: 595,
+  altura: 842,
+  vigencia: Vigencia(
+    dataInicio: DateTime(2026, 10, 18),
+    dataLimite: DateTime(2026, 10, 31),
+    situacao: SituacaoVigencia.vigente,
+    editavel: true,
+  ),
+  criadoEm: DateTime.utc(2026, 10, 18, 13, 10),
+);
+
+TipoArquivoPanfleto _tipoDe(String nomeArquivo) =>
+    nomeArquivo.toLowerCase().endsWith('.pdf')
+    ? TipoArquivoPanfleto.pdf
+    : TipoArquivoPanfleto.imagem;
 
 final class PanfletoRepositoryFake implements PanfletoRepository {
   PanfletoRepositoryFake({
@@ -92,7 +118,8 @@ final class PanfletoRepositoryFake implements PanfletoRepository {
       final panfleto = PanfletoResponse(
         id: 'panfleto-fake-${panfletos.length + 1}',
         filialId: filialId,
-        urlImagem: 'https://midia.fake/panfleto/$nomeArquivo',
+        tipo: _tipoDe(nomeArquivo),
+        urlArquivo: 'https://midia.fake/panfleto/$nomeArquivo',
         largura: 1600,
         altura: 2263,
         vigencia: Vigencia(
@@ -146,7 +173,8 @@ final class PanfletoRepositoryFake implements PanfletoRepository {
         id,
         (atual) => _copiar(
           atual,
-          urlImagem: 'https://midia.fake/panfleto/$nomeArquivo',
+          tipo: _tipoDe(nomeArquivo),
+          urlArquivo: 'https://midia.fake/panfleto/$nomeArquivo',
         ),
       ),
     );
@@ -171,12 +199,14 @@ final class PanfletoRepositoryFake implements PanfletoRepository {
 
   PanfletoResponse _copiar(
     PanfletoResponse atual, {
-    String? urlImagem,
+    TipoArquivoPanfleto? tipo,
+    String? urlArquivo,
     Vigencia? vigencia,
   }) => PanfletoResponse(
     id: atual.id,
     filialId: atual.filialId,
-    urlImagem: urlImagem ?? atual.urlImagem,
+    tipo: tipo ?? atual.tipo,
+    urlArquivo: urlArquivo ?? atual.urlArquivo,
     largura: atual.largura,
     altura: atual.altura,
     vigencia: vigencia ?? atual.vigencia,

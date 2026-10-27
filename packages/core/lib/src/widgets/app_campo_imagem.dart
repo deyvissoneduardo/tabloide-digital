@@ -19,6 +19,8 @@ class AppCampoImagem extends StatelessWidget {
     this.erro,
     this.ajuda,
     this.proporcao = 3 / 4,
+    this.nomePdf,
+    this.aoEscolherPdf,
   });
 
   final String rotulo;
@@ -32,11 +34,19 @@ class AppCampoImagem extends StatelessWidget {
   final String? ajuda;
   final double proporcao;
 
+  /// PDF escolhido (ainda não enviado) ou já salvo: mostra o estado "PDF" no
+  /// lugar da prévia. Vence `bytes`/`url`.
+  final String? nomePdf;
+
+  /// Com valor, aparece o botão "Escolher PDF".
+  final VoidCallback? aoEscolherPdf;
+
   @override
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
     final cores = tema.colorScheme;
-    final temImagem = bytes != null || url != null;
+    final nomePdf = this.nomePdf;
+    final temImagem = nomePdf != null || bytes != null || url != null;
     final quebrada = Icon(
       Icons.broken_image_outlined,
       size: AppIcones.destaque,
@@ -58,8 +68,12 @@ class AppCampoImagem extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: proporcao,
               child: Semantics(
-                label: temImagem ? descricao : 'Nenhuma imagem escolhida',
-                image: true,
+                label: nomePdf != null
+                    ? 'PDF escolhido: $nomePdf'
+                    : temImagem
+                    ? descricao
+                    : 'Nenhuma imagem escolhida',
+                image: nomePdf == null,
                 child: Container(
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
@@ -70,6 +84,7 @@ class AppCampoImagem extends StatelessWidget {
                     ),
                   ),
                   child: switch ((bytes, url)) {
+                    _ when nomePdf != null => _EstadoPdf(nome: nomePdf),
                     (final bytes?, _) => Image.memory(
                       bytes,
                       fit: BoxFit.contain,
@@ -97,6 +112,7 @@ class AppCampoImagem extends StatelessWidget {
         Wrap(
           alignment: WrapAlignment.center,
           spacing: AppEspacamentos.sm,
+          runSpacing: aoEscolherPdf == null ? 0 : AppEspacamentos.sm,
           children: [
             OutlinedButton.icon(
               onPressed: carregando ? null : aoEscolher,
@@ -116,6 +132,12 @@ class AppCampoImagem extends StatelessWidget {
                     : 'Escolher imagem',
               ),
             ),
+            if (aoEscolherPdf case final aoEscolherPdf?)
+              OutlinedButton.icon(
+                onPressed: carregando ? null : aoEscolherPdf,
+                icon: const Icon(Icons.picture_as_pdf_outlined),
+                label: const Text('Escolher PDF'),
+              ),
             if (temImagem && aoRemover != null)
               TextButton.icon(
                 onPressed: carregando ? null : aoRemover,
@@ -143,6 +165,46 @@ class AppCampoImagem extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+class _EstadoPdf extends StatelessWidget {
+  const _EstadoPdf({required this.nome});
+
+  final String nome;
+
+  @override
+  Widget build(BuildContext context) {
+    final tema = Theme.of(context);
+    return ExcludeSemantics(
+      child: Padding(
+        padding: const EdgeInsets.all(AppEspacamentos.md),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.picture_as_pdf_outlined,
+              size: AppIcones.destaque,
+              color: tema.colorScheme.primary,
+            ),
+            const SizedBox(height: AppEspacamentos.sm),
+            Text(
+              nome,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: tema.textTheme.bodyMedium,
+            ),
+            Text(
+              'PDF de 1 página',
+              style: tema.textTheme.bodySmall?.copyWith(
+                color: tema.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

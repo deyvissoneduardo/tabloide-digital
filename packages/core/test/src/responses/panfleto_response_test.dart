@@ -7,12 +7,16 @@ Map<String, Object?> corpoPanfleto({
   String dataInicio = '2026-10-18',
   String? dataLimite = '2026-10-31',
   String situacao = 'VIGENTE',
+  String tipo = 'IMAGEM',
+  String url =
+      'https://xyz.supabase.co/storage/v1/object/public/midia/'
+      '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01/panfleto/0192f0c0.webp',
 }) => {
   'id': id,
   'filialId': '0192f0b4-7d3f-7c21-8e4b-2d3e4f5a6b02',
-  'urlImagem':
-      'https://xyz.supabase.co/storage/v1/object/public/midia/'
-      '0192f0a1-6c2e-7b10-9f3a-1c2d3e4f5a01/panfleto/0192f0c0.webp',
+  'tipo': tipo,
+  'urlArquivo': url,
+  'urlImagem': url,
   'largura': 1600,
   'altura': 2263,
   'dataInicio': dataInicio,
@@ -46,13 +50,38 @@ void main() {
     test('Cenário: Dado um corpo sem campo obrigatório, quando leio, então lança FormatException', () {
       expect(
         () => PanfletoResponse.fromJson(
-          {...corpoPanfleto()}..remove('urlImagem'),
+          {...corpoPanfleto()}..remove('urlArquivo'),
         ),
         throwsFormatException,
       );
       expect(
         () =>
             PanfletoResponse.fromJson({...corpoPanfleto()}..remove('editavel')),
+        throwsFormatException,
+      );
+    });
+
+    test('Cenário: Dado um panfleto em PDF, quando leio, então o tipo é PDF e urlArquivo aponta para o .pdf', () {
+      final panfleto = PanfletoResponse.fromJson(
+        corpoPanfleto(
+          id: panfletoFakePdf.id,
+          tipo: 'PDF',
+          url: panfletoFakePdf.urlArquivo,
+        )..addAll({'largura': 595, 'altura': 842}),
+      );
+
+      expect(panfleto, panfletoFakePdf);
+      expect(panfleto.tipo, TipoArquivoPanfleto.pdf);
+      expect(panfleto.nomeArquivo, '0192f0c2.pdf');
+    });
+
+    test('Cenário: Dado um tipo desconhecido, quando leio, então lança FormatException', () {
+      expect(
+        () => PanfletoResponse.fromJson(corpoPanfleto(tipo: 'VIDEO')),
+        throwsFormatException,
+      );
+      expect(
+        () => PanfletoResponse.fromJson({...corpoPanfleto()}..remove('tipo')),
         throwsFormatException,
       );
     });

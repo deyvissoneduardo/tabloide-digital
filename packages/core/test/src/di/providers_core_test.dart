@@ -19,7 +19,17 @@ void main() {
     testWidgets(
       'Cenário: Dado os providers do core com o service da plataforma, quando monto a árvore, então cada camada recebe a de baixo',
       (tester) async {
-        const resumo = ResumoPainel(panfletosVigentes: 9, produtosVigentes: 9);
+        const resumo = ResumoPainel(
+          panfletosVigentes: 9,
+          produtosVigentes: 9,
+          porFilial: [
+            ResumoFilial(
+              filialId: 'f1',
+              panfletosVigentes: 9,
+              produtosVigentes: 9,
+            ),
+          ],
+        );
         late BuildContext contexto;
 
         await tester.pumpWidget(
@@ -106,6 +116,11 @@ void main() {
           isA<CategoriaRepositoryApi>(),
         );
         expect(contexto.read<ProdutoRepository>(), isA<ProdutoRepositoryApi>());
+        expect(
+          contexto.read<EstruturaRepository>(),
+          isA<EstruturaRepositoryApi>(),
+          reason: 'a seção Página fala com a API de verdade',
+        );
         expect(contexto.read<Sessao>().ativa, isFalse);
       },
     );

@@ -8,7 +8,8 @@ import '../../helpers/montar.dart';
 PanfletoResponse _naoEditavel() => PanfletoResponse(
   id: panfletoFake.id,
   filialId: panfletoFake.filialId,
-  urlImagem: panfletoFake.urlImagem,
+  tipo: panfletoFake.tipo,
+  urlArquivo: panfletoFake.urlArquivo,
   largura: panfletoFake.largura,
   altura: panfletoFake.altura,
   vigencia: Vigencia(

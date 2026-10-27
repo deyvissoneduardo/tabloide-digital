@@ -57,7 +57,8 @@ void main() {
       final atual = repository.panfletos.single;
       expect(atual.vigencia.dataLimite, DateTime(2027, 1, 15));
       expect(atual.vigencia.dataInicio, panfletoFake.vigencia.dataInicio);
-      expect(atual.urlImagem, 'https://midia.fake/panfleto/novo.png');
+      expect(atual.urlArquivo, 'https://midia.fake/panfleto/novo.png');
+      expect(atual.tipo, TipoArquivoPanfleto.imagem);
     });
 
     test('Cenário: Dado uma falha simulada, quando listo, obtenho ou excluo, então recebo a falha', () async {

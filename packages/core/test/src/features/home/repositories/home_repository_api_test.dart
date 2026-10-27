@@ -38,9 +38,25 @@ void main() {
       expect(
         resultado,
         const Success<Falha, ResumoPainel>(
-          ResumoPainel(panfletosVigentes: 1, produtosVigentes: 42),
+          ResumoPainel(
+            panfletosVigentes: 1,
+            produtosVigentes: 42,
+            porFilial: [
+              ResumoFilial(
+                filialId: 'f1',
+                panfletosVigentes: 1,
+                produtosVigentes: 12,
+              ),
+              ResumoFilial(
+                filialId: 'f2',
+                panfletosVigentes: 0,
+                produtosVigentes: 30,
+              ),
+            ],
+          ),
         ),
       );
+      verify(() => client.get(any(), query: _query)).called(4);
     });
 
     test('Cenário: Dado nenhuma filial, quando busco o resumo, então recebo zeros sem chamar a API', () async {

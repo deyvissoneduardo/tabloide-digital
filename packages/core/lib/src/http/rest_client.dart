@@ -9,6 +9,10 @@ abstract interface class RestClient {
 
   Future<RestResposta> delete(String caminho);
 
+  /// Baixa um arquivo (ex.: PNG do QR Code). Em 2xx, `dados` é `Uint8List`;
+  /// em erro HTTP, `dados` é o JSON de erro da API decodificado (ou null).
+  Future<RestResposta> baixar(String caminho, {Map<String, dynamic>? query});
+
   Future<RestResposta> enviarArquivo(
     String caminho, {
     required String campo,

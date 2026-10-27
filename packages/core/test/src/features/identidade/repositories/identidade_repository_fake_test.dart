@@ -8,6 +8,7 @@ void main() {
       final fake = IdentidadeRepositoryFake();
       const pedido = IdentidadeRequest(
         nomeFantasia: 'Mercado Novo',
+        sePanfleto: true,
         corPrimaria: '#00ff00',
       );
 
@@ -20,6 +21,7 @@ void main() {
           nomeFantasia: 'Mercado Novo',
           corPrimaria: '#00FF00',
           urlLogo: 'https://midia.fake/logo/novo.png',
+          sePanfleto: true,
         ),
       );
       expect(fake.pedidos, [pedido]);
@@ -36,8 +38,9 @@ void main() {
         const Failure<Falha, IdentidadeResponse>(FalhaSemConexao()),
       );
       expect(
-        (await fake.editar(const IdentidadeRequest(nomeFantasia: 'x')))
-            .isFailure,
+        (await fake.editar(
+          const IdentidadeRequest(nomeFantasia: 'x', sePanfleto: false),
+        )).isFailure,
         isTrue,
       );
       expect(

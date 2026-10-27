@@ -1,6 +1,7 @@
 final class IdentidadeRequest {
   const IdentidadeRequest({
     required this.nomeFantasia,
+    required this.sePanfleto,
     this.corPrimaria,
     this.corSecundaria,
   });
@@ -11,10 +12,13 @@ final class IdentidadeRequest {
 
   final String? corSecundaria;
 
+  final bool sePanfleto;
+
   Map<String, Object?> toJson() => {
     'nomeFantasia': nomeFantasia,
     'corPrimaria': corPrimaria,
     'corSecundaria': corSecundaria,
+    'sePanfleto': sePanfleto,
   };
 
   @override
@@ -22,13 +26,16 @@ final class IdentidadeRequest {
       other is IdentidadeRequest &&
       other.nomeFantasia == nomeFantasia &&
       other.corPrimaria == corPrimaria &&
-      other.corSecundaria == corSecundaria;
+      other.corSecundaria == corSecundaria &&
+      other.sePanfleto == sePanfleto;
 
   @override
-  int get hashCode => Object.hash(nomeFantasia, corPrimaria, corSecundaria);
+  int get hashCode =>
+      Object.hash(nomeFantasia, corPrimaria, corSecundaria, sePanfleto);
 
   @override
   String toString() =>
       'IdentidadeRequest(nomeFantasia: $nomeFantasia, '
-      'corPrimaria: $corPrimaria, corSecundaria: $corSecundaria)';
+      'corPrimaria: $corPrimaria, corSecundaria: $corSecundaria, '
+      'sePanfleto: $sePanfleto)';
 }

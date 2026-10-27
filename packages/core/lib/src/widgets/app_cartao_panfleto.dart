@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tabloide_core/src/features/panfletos/models/tipo_arquivo_panfleto.dart';
 import 'package:tabloide_core/src/features/vigencia/models/data_dia.dart';
 import 'package:tabloide_core/src/features/vigencia/models/situacao_vigencia.dart';
 import 'package:tabloide_core/src/responses/panfleto_response.dart';
@@ -30,19 +31,28 @@ class AppCartaoPanfleto extends StatelessWidget {
         onTap: aoTocar,
         leading: ClipRRect(
           borderRadius: AppRaios.bordaSm,
-          child: Image.network(
-            panfleto.urlImagem,
-            width: AppIcones.destaque,
-            height: AppIcones.destaque,
-            fit: BoxFit.cover,
-            semanticLabel:
-                'Panfleto ${vigencia.situacao.rotulo.toLowerCase()} de $inicio',
-            errorBuilder: (_, _, _) => Icon(
-              Icons.broken_image_outlined,
+          child: switch (panfleto.tipo) {
+            TipoArquivoPanfleto.pdf => Icon(
+              Icons.picture_as_pdf_outlined,
               size: AppIcones.destaque,
-              color: cores.onSurfaceVariant,
+              color: cores.primary,
+              semanticLabel:
+                  'Panfleto em PDF ${vigencia.situacao.rotulo.toLowerCase()} de $inicio',
             ),
-          ),
+            TipoArquivoPanfleto.imagem => Image.network(
+              panfleto.urlArquivo,
+              width: AppIcones.destaque,
+              height: AppIcones.destaque,
+              fit: BoxFit.cover,
+              semanticLabel:
+                  'Panfleto ${vigencia.situacao.rotulo.toLowerCase()} de $inicio',
+              errorBuilder: (_, _, _) => Icon(
+                Icons.broken_image_outlined,
+                size: AppIcones.destaque,
+                color: cores.onSurfaceVariant,
+              ),
+            ),
+          },
         ),
         title: Text(switch (vigencia.situacao) {
           SituacaoVigencia.vigente => 'Vigente desde $inicio',

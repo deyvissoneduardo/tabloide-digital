@@ -8,6 +8,8 @@ import 'package:tabloide_core/src/features/categorias/repositories/categoria_rep
 import 'package:tabloide_core/src/features/categorias/repositories/categoria_repository_api.dart';
 import 'package:tabloide_core/src/features/cep/repositories/cep_repository.dart';
 import 'package:tabloide_core/src/features/cep/repositories/cep_repository_via_cep.dart';
+import 'package:tabloide_core/src/features/estrutura/repositories/estrutura_repository.dart';
+import 'package:tabloide_core/src/features/estrutura/repositories/estrutura_repository_api.dart';
 import 'package:tabloide_core/src/features/filiais/repositories/filial_repository.dart';
 import 'package:tabloide_core/src/features/filiais/repositories/filial_repository_api.dart';
 import 'package:tabloide_core/src/features/home/home_controller.dart';
@@ -43,6 +45,7 @@ List<SingleChildWidget> providersCore({
   CategoriaRepository? categoriaRepository,
   ProdutoRepository? produtoRepository,
   HomeRepository? homeRepository,
+  EstruturaRepository? estruturaRepository,
 }) => [
   Provider<Sessao>(
     create: (_) => Sessao(armazenamento ?? ArmazenamentoPreferencias()),
@@ -96,6 +99,11 @@ List<SingleChildWidget> providersCore({
   Provider<HomeRepository>(
     create: (context) =>
         homeRepository ?? HomeRepositoryApi(context.read<RestClient>()),
+  ),
+  Provider<EstruturaRepository>(
+    create: (context) =>
+        estruturaRepository ??
+        EstruturaRepositoryApi(context.read<RestClient>()),
   ),
   ...servicos,
   ChangeNotifierProvider<HomeController>(

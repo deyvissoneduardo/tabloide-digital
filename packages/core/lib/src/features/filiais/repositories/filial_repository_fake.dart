@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:tabloide_core/src/either/either.dart';
 import 'package:tabloide_core/src/either/falha.dart';
 import 'package:tabloide_core/src/either/nada.dart';
@@ -43,6 +46,12 @@ final filialFakeBairro = FilialResponse(
   atualizadaEm: DateTime.utc(2026, 10, 19, 9),
 );
 
+/// PNG 1×1 usado como QR Code nos testes.
+final pngQrCodeFake = base64Decode(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGNgAAAAAgABSK+kcQ'
+  'AAAABJRU5ErkJggg==',
+);
+
 final class FilialRepositoryFake implements FilialRepository {
   FilialRepositoryFake({
     List<FilialResponse>? filiais,
@@ -59,6 +68,11 @@ final class FilialRepositoryFake implements FilialRepository {
   final pedidos = <FilialRequest>[];
 
   final excluidas = <String>[];
+
+  final qrCodesPedidos = <String>[];
+
+  /// Filiais cujo QR Code falha (o resto responde normalmente).
+  final qrCodesComFalha = <String>{};
 
   @override
   Future<Either<Falha, List<FilialResponse>>> listar() =>
@@ -105,6 +119,16 @@ final class FilialRepositoryFake implements FilialRepository {
       filiais.removeWhere((f) => f.id == id);
       return const Nada();
     });
+  }
+
+  @override
+  Future<Either<Falha, Uint8List>> qrCode(String id) async {
+    qrCodesPedidos.add(id);
+    if (qrCodesComFalha.contains(id)) {
+      await Future<void>.delayed(atraso);
+      return const Failure(_naoEncontrada);
+    }
+    return _responder(() => pngQrCodeFake);
   }
 
   Future<Either<Falha, T>> _responder<T>(T Function() acao) async {

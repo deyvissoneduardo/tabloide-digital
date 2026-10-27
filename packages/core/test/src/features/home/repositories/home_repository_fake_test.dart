@@ -11,13 +11,47 @@ void main() {
       expect(
         resultado,
         const Success<Falha, ResumoPainel>(
-          ResumoPainel(panfletosVigentes: 2, produtosVigentes: 48),
+          ResumoPainel(
+            panfletosVigentes: 2,
+            produtosVigentes: 48,
+            porFilial: [
+              ResumoFilial(
+                filialId: 'f1',
+                panfletosVigentes: 2,
+                produtosVigentes: 48,
+              ),
+            ],
+          ),
         ),
       );
     });
 
+    test('Cenário: Dado duas filiais e um resumo sem porFilial, quando busco, então há um item por filial e a 1ª leva os totais', () async {
+      final resultado = await const HomeRepositoryFake(atraso: Duration.zero)
+          .buscarResumo(const ['f1', 'f2']);
+
+      expect(resultado.fold((_) => null, (r) => r.porFilial), const [
+        ResumoFilial(
+          filialId: 'f1',
+          panfletosVigentes: 2,
+          produtosVigentes: 48,
+        ),
+        ResumoFilial(filialId: 'f2', panfletosVigentes: 0, produtosVigentes: 0),
+      ]);
+    });
+
     test('Cenário: Dado um resumo configurado, quando busco, então recebo esse resumo', () async {
-      const resumo = ResumoPainel(panfletosVigentes: 0, produtosVigentes: 5);
+      const resumo = ResumoPainel(
+        panfletosVigentes: 0,
+        produtosVigentes: 5,
+        porFilial: [
+          ResumoFilial(
+            filialId: 'f1',
+            panfletosVigentes: 0,
+            produtosVigentes: 5,
+          ),
+        ],
+      );
 
       final resultado = await const HomeRepositoryFake(
         resumo: resumo,

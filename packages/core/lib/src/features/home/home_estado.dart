@@ -9,7 +9,9 @@ enum SecaoPainel {
 
   panfletos('Panfletos', Icons.photo_library_outlined, Icons.photo_library),
 
-  produtos('Produtos', Icons.sell_outlined, Icons.sell);
+  produtos('Produtos', Icons.sell_outlined, Icons.sell),
+
+  pagina('Página', Icons.web_outlined, Icons.web);
 
   const SecaoPainel(this.titulo, this.icone, this.iconeSelecionado);
 
