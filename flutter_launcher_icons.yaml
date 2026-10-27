@@ -1,0 +1,15 @@
+# Gera os ícones do app e da web a partir de assets/marca/.
+# Rode: dart run flutter_launcher_icons (passos pós-geração em assets/marca/README.md)
+flutter_launcher_icons:
+  image_path: assets/marca/icone.png
+  android: true
+  adaptive_icon_background: "#1565C0"
+  adaptive_icon_foreground: assets/marca/icone_frente.png
+  adaptive_icon_monochrome: assets/marca/icone_monocromatico.png
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: assets/marca/icone.png
+    background_color: "#FFFFFF"
+    theme_color: "#1565C0"

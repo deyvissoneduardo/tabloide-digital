@@ -1,0 +1,11 @@
+# Gera o splash do app e da web a partir de assets/marca/.
+# Rode: dart run flutter_native_splash:create (passos pós-geração em assets/marca/README.md)
+# Só tema claro: não defina as chaves *_dark.
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/marca/splash.png
+  android_12:
+    image: assets/marca/splash_android12.png
+    color: "#FFFFFF"
+  web: true
+  web_image_mode: center
