@@ -7,6 +7,9 @@ abstract final class AppRaios {
 
   static const lg = 16.0;
 
+  /// Base do cabeçalho da prévia da página (igual à página pública).
+  static const xl = 24.0;
+
   static const pilula = 999.0;
 
   static const bordaSm = BorderRadius.all(Radius.circular(sm));

@@ -170,6 +170,54 @@ void main() {
     );
 
     testWidgets(
+      'Cenário: Dado preço original maior, quando desenho, então o selo mostra o desconto arredondado',
+      (tester) async {
+        await _desenhar(tester, _dados());
+
+        expect(find.text('-29%'), findsOneWidget);
+      },
+    );
+
+    test('Cenário: Dado preço original ausente, igual ou menor, quando calculo, então sem desconto', () {
+      expect(AppPreviaProduto.percentualDesconto(499, 699), 29);
+      expect(AppPreviaProduto.percentualDesconto(499, null), isNull);
+      expect(AppPreviaProduto.percentualDesconto(499, 499), isNull);
+      expect(AppPreviaProduto.percentualDesconto(499, 300), isNull);
+      expect(AppPreviaProduto.percentualDesconto(1000, 1001), isNull);
+    });
+
+    test('Cenário: Dado nomes de tamanhos diferentes, quando calculo as iniciais, então até 2 letras', () {
+      expect(AppPreviaCabecalho.iniciais('Mercado Bom Preço'), 'MP');
+      expect(AppPreviaCabecalho.iniciais('  atacadão '), 'A');
+      expect(AppPreviaCabecalho.iniciais(''), '');
+    });
+
+    testWidgets(
+      'Cenário: Dado identidade sem logo, quando desenho, então as iniciais no cabeçalho',
+      (tester) async {
+        await _desenhar(tester, _dados());
+
+        expect(find.text('MP'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado categorias, quando desenho, então o total de ofertas de cada uma',
+      (tester) async {
+        final dados = _dados();
+        await _desenhar(tester, dados);
+
+        for (final categoria in dados.estrutura.categorias) {
+          final total = categoria.produtos.length;
+          expect(
+            find.text(total == 1 ? '1 oferta' : '$total ofertas'),
+            findsWidgets,
+          );
+        }
+      },
+    );
+
+    testWidgets(
       'Cenário: Dado panfleto PDF, quando toco em "Abrir PDF", então aoAbrirPdf é chamado',
       (tester) async {
         var aberturas = 0;

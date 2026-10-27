@@ -35,6 +35,9 @@ abstract final class AppLayout {
   /// Largura máxima da prévia da página (simula um celular).
   static const larguraPrevia = 420.0;
 
+  /// Bloco branco do logo no cabeçalho da prévia.
+  static const ladoLogoPrevia = 64.0;
+
   /// Cartão de produto no carrossel da prévia.
   static const larguraCartaoProdutoPrevia = 156.0;
 
