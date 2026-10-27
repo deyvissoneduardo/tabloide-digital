@@ -9,7 +9,8 @@ const _filial = '0192f0b4-7d3f-7c21-8e4b-2d3e4f5a6b02';
 PanfletoResponse _semLimite() => PanfletoResponse(
   id: panfletoFake.id,
   filialId: panfletoFake.filialId,
-  urlImagem: panfletoFake.urlImagem,
+  tipo: panfletoFake.tipo,
+  urlArquivo: panfletoFake.urlArquivo,
   largura: panfletoFake.largura,
   altura: panfletoFake.altura,
   vigencia: Vigencia(

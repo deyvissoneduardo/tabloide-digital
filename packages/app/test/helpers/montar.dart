@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tabloide_app/tabloide_app.dart';
 import 'package:tabloide_core/testing.dart';
 
@@ -97,6 +98,72 @@ ProdutoFormController produtoFormControllerDeTeste({
   ProdutoServiceApp(repository ?? ProdutoRepositoryFake()),
 );
 
+PaginaController paginaControllerDeTeste({
+  EstruturaRepository? estrutura,
+  IdentidadeRepository? identidade,
+  PanfletoRepository? panfletos,
+}) => PaginaController(
+  PaginaServiceApp(
+    estrutura ?? EstruturaRepositoryFake(),
+    identidade ?? IdentidadeRepositoryFake(),
+    panfletos ?? PanfletoRepositoryFake(panfletos: [panfletoFake]),
+  ),
+);
+
+PaginasPublicadasController paginasPublicadasControllerDeTeste({
+  IdentidadeRepository? identidade,
+  LojistaRepository? lojista,
+  FilialRepository? filiais,
+}) => PaginasPublicadasController(
+  PaginasPublicadasServiceApp(
+    identidade ?? IdentidadeRepositoryFake(),
+    lojista ?? LojistaRepositoryFake(),
+    filiais ?? FilialRepositoryFake(filiais: [filialFake]),
+  ),
+);
+
+/// LinkService sem plugins: registra o que foi aberto, copiado e compartilhado.
+class LinkServiceDeTeste extends LinkServiceApp {
+  LinkServiceDeTeste({this.abre = true})
+    : super(
+        abrirUrl: (_) async => abre,
+        compartilharNoSistema: (_) async => ShareResult.unavailable,
+      );
+
+  final bool abre;
+
+  final abertos = <String>[];
+
+  final copiados = <String>[];
+
+  final compartilhados = <String>[];
+
+  @override
+  Future<bool> abrir(String url) {
+    abertos.add(url);
+    return super.abrir(url);
+  }
+
+  @override
+  Future<void> copiar(String url) async => copiados.add(url);
+
+  @override
+  Future<ResultadoCompartilhar> compartilhar(String texto, String url) {
+    compartilhados.add(texto);
+    return super.compartilhar(texto, url);
+  }
+}
+
+/// Seletor de PDF que devolve o arquivo configurado (null = cancelado).
+class SeletorPdfDeTeste extends SeletorPdf {
+  const SeletorPdfDeTeste([this.arquivo]);
+
+  final ArquivoEscolhido? arquivo;
+
+  @override
+  Future<ArquivoEscolhido?> escolher() async => arquivo;
+}
+
 SingleChildWidget _notificador<T extends ChangeNotifier>(
   T? valor,
   T Function() criar,
@@ -125,6 +192,10 @@ Widget montarTela(
   ProdutoFormController? produtoForm,
   ProdutoRepository? produtoRepository,
   ImagePicker? seletorImagem,
+  SeletorPdf? seletorPdf,
+  PaginaController? pagina,
+  PaginasPublicadasController? paginasPublicadas,
+  LinkServiceApp? linkService,
 }) {
   final sessaoDaTela = sessao ?? sessaoDeTeste();
   final repository =
@@ -181,6 +252,17 @@ Widget montarTela(
       _notificador(
         produtoForm,
         () => produtoFormControllerDeTeste(repository: produtosDaTela),
+      ),
+      _notificador(pagina, paginaControllerDeTeste),
+      _notificador(
+        paginasPublicadas,
+        () => paginasPublicadasControllerDeTeste(filiais: repository),
+      ),
+      Provider<LinkServiceApp>.value(
+        value: linkService ?? LinkServiceDeTeste(),
+      ),
+      Provider<SeletorPdf>.value(
+        value: seletorPdf ?? const SeletorPdfDeTeste(),
       ),
       Provider<ImagePicker>.value(value: seletorImagem ?? ImagePicker()),
     ],

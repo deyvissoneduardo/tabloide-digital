@@ -3,9 +3,14 @@ import 'package:tabloide_app/src/features/panfletos/panfleto_form_estado.dart';
 import 'package:tabloide_app/src/features/panfletos/services/panfleto_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-const maxBytesPanfleto = 10 * 1024 * 1024;
+const maxBytesImagemPanfleto = 10 * 1024 * 1024;
 
-typedef ImagemEscolhida = ({Uint8List bytes, String nome});
+/// Limite do PDF do panfleto (plano D4).
+const maxBytesPdfPanfleto = 2 * 1024 * 1024;
+
+typedef ArquivoEscolhido = ({Uint8List bytes, String nome});
+
+bool _ehPdf(String nome) => nome.toLowerCase().endsWith('.pdf');
 
 class PanfletoFormController extends ChangeNotifier {
   PanfletoFormController(this._service);
@@ -14,12 +19,18 @@ class PanfletoFormController extends ChangeNotifier {
 
   PanfletoFormEstado _estado = const PanfletoFormOcioso();
   Map<String, List<String>> _errosDosCampos = const {};
-  ImagemEscolhida? _imagem;
+  ArquivoEscolhido? _imagem;
   PanfletoResponse? _datasSalvas;
 
   PanfletoFormEstado get estado => _estado;
 
-  ImagemEscolhida? get imagem => _imagem;
+  ArquivoEscolhido? get imagem => _imagem;
+
+  /// O arquivo escolhido (ou, sem escolha, o do panfleto em edição) é PDF.
+  bool arquivoEhPdf([PanfletoResponse? emEdicao]) => switch (_imagem) {
+    (:final nome, bytes: _) => _ehPdf(nome),
+    null => emEdicao?.tipo == TipoArquivoPanfleto.pdf,
+  };
 
   void reiniciar() {
     _estado = const PanfletoFormOcioso();
@@ -36,11 +47,17 @@ class PanfletoFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void escolherImagem(Uint8List bytes, String nome) {
-    if (bytes.length > maxBytesPanfleto) {
+  /// Imagem ou PDF (pelo nome). O tamanho é conferido antes do envio (RNF05).
+  void escolherArquivo(Uint8List bytes, String nome) {
+    final pdf = _ehPdf(nome);
+    if (bytes.length > (pdf ? maxBytesPdfPanfleto : maxBytesImagemPanfleto)) {
       _errosDosCampos = {
         ..._errosDosCampos,
-        'imagem': ['A imagem passa de 10 MB. Escolha uma menor.'],
+        'imagem': [
+          pdf
+              ? 'O PDF pode ter até 2 MB. Exporte o PDF otimizado para web e tente de novo.'
+              : 'A imagem passa de 10 MB. Escolha uma menor.',
+        ],
       };
     } else {
       _imagem = (bytes: bytes, nome: nome);
@@ -96,7 +113,8 @@ class PanfletoFormController extends ChangeNotifier {
         )) {
           _errosDosCampos = {
             ...campos,
-            if (codigo.startsWith('IMAGEM_')) 'imagem': [mensagem],
+            if (codigo.startsWith('IMAGEM_') || codigo.startsWith('PDF_'))
+              'imagem': [mensagem],
           };
         }
     }
@@ -105,7 +123,7 @@ class PanfletoFormController extends ChangeNotifier {
 
   Future<Either<Falha, PanfletoResponse>> _editar(
     PanfletoResponse panfleto,
-    ImagemEscolhida? imagem, {
+    ArquivoEscolhido? imagem, {
     DateTime? dataInicio,
     DateTime? dataLimite,
   }) async {

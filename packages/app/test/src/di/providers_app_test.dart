@@ -25,6 +25,12 @@ void main() {
                 value: IdentidadeRepositoryFake(),
               ),
               Provider<LojistaRepository>.value(value: LojistaRepositoryFake()),
+              Provider<PanfletoRepository>.value(
+                value: PanfletoRepositoryFake(),
+              ),
+              Provider<EstruturaRepository>.value(
+                value: EstruturaRepositoryFake(),
+              ),
               Provider<Sessao>.value(value: sessaoDeTeste()),
               ...providersApp(),
             ],
@@ -60,6 +66,17 @@ void main() {
           isA<PerfilCarregando>(),
         );
         expect(contexto.read<ImagePicker>(), isA<ImagePicker>());
+        expect(contexto.read<PaginaServiceApp>(), isA<PaginaServiceApp>());
+        expect(
+          contexto.read<PaginaController>().estado,
+          isA<PaginaCarregando>(),
+        );
+        expect(
+          contexto.read<PaginasPublicadasController>().estado,
+          isA<PaginasCarregando>(),
+        );
+        expect(contexto.read<LinkServiceApp>(), isA<LinkServiceApp>());
+        expect(contexto.read<SeletorPdf>(), isA<SeletorPdf>());
       },
     );
   });

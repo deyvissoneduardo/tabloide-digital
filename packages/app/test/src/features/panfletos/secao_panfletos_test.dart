@@ -13,7 +13,8 @@ class _ImagePickerMock extends Mock implements ImagePicker {}
 PanfletoResponse _semLimite() => PanfletoResponse(
   id: panfletoFake.id,
   filialId: panfletoFake.filialId,
-  urlImagem: panfletoFake.urlImagem,
+  tipo: panfletoFake.tipo,
+  urlArquivo: panfletoFake.urlArquivo,
   largura: panfletoFake.largura,
   altura: panfletoFake.altura,
   vigencia: Vigencia(

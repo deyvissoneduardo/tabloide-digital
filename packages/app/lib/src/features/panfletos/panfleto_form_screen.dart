@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/panfletos/panfleto_form_controller.dart';
 import 'package:tabloide_app/src/features/panfletos/panfleto_form_estado.dart';
 import 'package:tabloide_app/src/features/panfletos/panfletos_controller.dart';
+import 'package:tabloide_app/src/features/panfletos/plataforma/seletor_pdf.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 const _ladoMaximoPanfleto = 2400.0;
@@ -91,7 +92,25 @@ class _PanfletoFormScreenState extends State<PanfletoFormScreen> {
       return;
     }
     if (arquivo == null) return;
-    _controller.escolherImagem(await arquivo.readAsBytes(), arquivo.name);
+    _controller.escolherArquivo(await arquivo.readAsBytes(), arquivo.name);
+  }
+
+  Future<void> _escolherPdf() async {
+    if (_controller.estado is PanfletoFormEnviando) return;
+    final ArquivoEscolhido? arquivo;
+    try {
+      arquivo = await context.read<SeletorPdf>().escolher();
+    } on Exception {
+      if (!mounted) return;
+      mostrarAviso(
+        context,
+        'Não conseguimos abrir seus arquivos. Verifique a permissão e tente de novo.',
+        tipo: TipoAviso.erro,
+      );
+      return;
+    }
+    if (arquivo == null) return;
+    _controller.escolherArquivo(arquivo.bytes, arquivo.nome);
   }
 
   Future<void> _salvar() async {
@@ -163,16 +182,25 @@ class _PanfletoFormScreenState extends State<PanfletoFormScreen> {
         chave: _formulario,
         children: [
           AppCampoImagem(
-            rotulo: 'Imagem do panfleto',
+            rotulo: 'Imagem ou PDF do panfleto',
             descricao: 'Imagem do panfleto',
             bytes: controller.imagem?.bytes,
-            url: panfleto?.urlImagem,
+            url: panfleto?.urlArquivo,
+            nomePdf: switch ((controller.imagem, panfleto)) {
+              (final escolhido?, _) when controller.arquivoEhPdf() =>
+                escolhido.nome,
+              (null, final panfleto?)
+                  when panfleto.tipo == TipoArquivoPanfleto.pdf =>
+                panfleto.nomeArquivo,
+              _ => null,
+            },
             proporcao: panfleto == null
                 ? 3 / 4
                 : panfleto.largura / panfleto.altura,
             aoEscolher: enviando ? null : _escolherImagem,
+            aoEscolherPdf: _escolherPdf,
             erro: controller.erroDoCampo('imagem'),
-            ajuda: 'JPEG, PNG ou WebP de até 10 MB.',
+            ajuda: 'JPEG, PNG ou WebP até 10 MB, ou PDF de 1 página até 2 MB.',
           ),
           const SizedBox(height: AppEspacamentos.lg),
           AppCampoData(

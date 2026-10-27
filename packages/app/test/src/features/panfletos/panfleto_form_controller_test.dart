@@ -36,7 +36,10 @@ void main() {
     });
 
     test('Cenário: Dado uma imagem acima de 10 MB, quando escolho, então recuso no campo antes do envio (RNF05)', () {
-      controller.escolherImagem(Uint8List(maxBytesPanfleto + 1), 'grande.jpg');
+      controller.escolherArquivo(
+        Uint8List(maxBytesImagemPanfleto + 1),
+        'grande.jpg',
+      );
 
       expect(controller.imagem, isNull);
       expect(
@@ -44,7 +47,7 @@ void main() {
         'A imagem passa de 10 MB. Escolha uma menor.',
       );
 
-      controller.escolherImagem(_bytes, 'ok.jpg');
+      controller.escolherArquivo(_bytes, 'ok.jpg');
 
       expect(controller.imagem?.nome, 'ok.jpg');
       expect(controller.erroDoCampo('imagem'), isNull);
@@ -53,7 +56,7 @@ void main() {
     test('Cenário: Dado imagem e datas, quando publico, então envio tudo junto e concluo com o panfleto', () async {
       final inicio = DataDia.hoje().add(const Duration(days: 10));
       final limite = inicio.add(const Duration(days: 7));
-      controller.escolherImagem(_bytes, 'folheto.jpg');
+      controller.escolherArquivo(_bytes, 'folheto.jpg');
 
       await controller.salvar(
         filialId: _filial,
@@ -102,7 +105,7 @@ void main() {
     });
 
     test('Cenário: Dado nada alterado além da imagem, quando salvo, então não faço PATCH e troco só a imagem', () async {
-      controller.escolherImagem(_bytes, 'novo.png');
+      controller.escolherArquivo(_bytes, 'novo.png');
 
       await controller.salvar(
         filialId: _filial,
@@ -116,7 +119,7 @@ void main() {
       expect(
         controller.estado,
         isA<PanfletoFormConcluido>().having(
-          (e) => e.panfleto.urlImagem,
+          (e) => e.panfleto.urlArquivo,
           'url',
           'https://midia.fake/panfleto/novo.png',
         ),
@@ -128,7 +131,8 @@ void main() {
       final comDatas = PanfletoResponse(
         id: panfletoFake.id,
         filialId: panfletoFake.filialId,
-        urlImagem: panfletoFake.urlImagem,
+        tipo: panfletoFake.tipo,
+        urlArquivo: panfletoFake.urlArquivo,
         largura: panfletoFake.largura,
         altura: panfletoFake.altura,
         vigencia: Vigencia(
@@ -150,7 +154,7 @@ void main() {
         ),
       ).thenAnswer((_) async => const Failure(FalhaSemConexao()));
       controller = panfletoFormControllerDeTeste(repository: mock)
-        ..escolherImagem(_bytes, 'novo.png');
+        ..escolherArquivo(_bytes, 'novo.png');
 
       await controller.salvar(
         filialId: _filial,
@@ -168,7 +172,7 @@ void main() {
 
     test('Cenário: Dado só a troca de imagem falhando, quando salvo, então a falha não leva panfleto atualizado', () async {
       repository.falhaSimulada = const FalhaSemConexao();
-      controller.escolherImagem(_bytes, 'novo.png');
+      controller.escolherArquivo(_bytes, 'novo.png');
 
       await controller.salvar(
         filialId: _filial,
@@ -197,7 +201,7 @@ void main() {
           'dataLimite': [mensagem],
         },
       );
-      controller.escolherImagem(_bytes, 'p.jpg');
+      controller.escolherArquivo(_bytes, 'p.jpg');
 
       await controller.salvar(filialId: _filial, dataLimite: DateTime(2026));
 
@@ -213,7 +217,7 @@ void main() {
         codigo: 'IMAGEM_INVALIDA',
         mensagem: 'Envie uma imagem JPEG, PNG ou WebP válida.',
       );
-      controller.escolherImagem(_bytes, 'animacao.gif');
+      controller.escolherArquivo(_bytes, 'animacao.gif');
 
       await controller.salvar(filialId: _filial);
 
@@ -225,7 +229,7 @@ void main() {
 
     test('Cenário: Dado o formulário usado, quando reinicio, então volta ao estado inicial sem imagem nem erros', () async {
       await controller.salvar(filialId: _filial);
-      controller.escolherImagem(_bytes, 'p.jpg');
+      controller.escolherArquivo(_bytes, 'p.jpg');
 
       controller.reiniciar();
 

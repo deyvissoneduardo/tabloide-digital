@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_app/src/features/filiais/filiais_estado.dart';
+import 'package:tabloide_app/src/features/home/widgets/secao_paginas_publicadas.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 class ResumoInicio extends StatefulWidget {
@@ -55,6 +56,7 @@ class _ResumoInicioState extends State<ResumoInicio> {
             rotulo: 'Produtos no ar',
             valor: resumo.produtosVigentes,
           ),
+          SecaoPaginasPublicadas(resumo: resumo),
         ],
       ),
     };

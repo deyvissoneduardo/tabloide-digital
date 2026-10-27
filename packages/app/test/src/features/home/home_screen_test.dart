@@ -17,6 +17,7 @@ void main() {
           montar(controller: controller, filiais: filiais),
         );
         await tester.pump(const Duration(milliseconds: 1));
+        await tester.pumpAndSettle();
       }
 
       testWidgets('Então a barra superior mostra o nome e a logo da marca', (

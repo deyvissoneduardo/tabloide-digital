@@ -10,7 +10,10 @@ void main() {
     fileName: 'home_screen_app_light',
     pumpBeforeTest: (tester) async {
       await precarregarLogo(tester);
-      await tester.pumpAndSettle();
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pumpAndSettle();
+      }
     },
     builder: () => GoldenTestGroup(
       columns: SecaoPainel.values.length,
