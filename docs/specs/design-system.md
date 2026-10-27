@@ -40,7 +40,7 @@ A cor é a do **Tabloide Digital**: o esquema é derivado de `AppCores.primaria`
 
 **Cores da página do lojista (prévia)**: `AppCoresPagina` (`app_cores_pagina.dart`) calcula as cores de **texto** da prévia a partir de `corPrimaria`/`corSecundaria` da identidade (padrões `AppCores.primaria`/`secundaria`), escurecendo pelo L do HSL até contraste ≥ 4,5 com branco — algoritmo idêntico ao da página pública React (`plano_pagina_publica/plano.md` §4.7, tabela de 9 casos testada em `app_cores_pagina_test.dart`). Nome, preço e categoria na primária; o resto na secundária. Só a prévia usa essas cores; o painel continua no tema. A prévia reproduz o visual da página pública com tokens próprios em `AppCoresPagina`: `fundo` (#F3F4F6, atrás dos cartões), `sobreCor` (branco sobre primária/secundária), `brilhoCabecalho` e as sombras `sombraCartao`, `sombraPanfleto` e `sombraLogo` — **única exceção** à regra "nada tem sombra" (§2.4), restrita à prévia.
 
-**Identidade**: `AppMarca.nome` (`'Tabloide Digital'`) e `AppMarca.logo` (`packages/core/assets/logo.png`, com 2.0x/3.0x) em `app_marca.dart`. Na tela, use `MarcaLogo`/`MarcaNome`.
+**Identidade**: `AppMarca.nome` (`'Tabloide Digital'`) e `AppMarca.logo` (`packages/core/assets/logo.png`, com 2.0x/3.0x) em `app_marca.dart`. Na tela, use `MarcaLogo`/`MarcaNome`. Ícones (app/web), favicon e splash saem da arte em `assets/marca/` (raiz) via `flutter_launcher_icons`/`flutter_native_splash`; ver `assets/marca/README.md`. A arte atual é provisória.
 
 ### 2.2 Tipografia
 
