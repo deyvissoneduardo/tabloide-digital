@@ -14,7 +14,11 @@
       "type": "dart",
       "program": "lib/main.dart",
       "deviceId": "chrome",
-      "args": ["--dart-define=API_URL=https://tabloide-api.vercel.app/v1"]
+      "args": [
+        "--dart-define=API_URL=https://tabloide-api.vercel.app/v1",
+        "--web-hostname=localhost",
+        "--web-port=5173"
+      ]
     }
   ]
 }
