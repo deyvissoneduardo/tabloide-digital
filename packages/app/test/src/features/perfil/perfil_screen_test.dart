@@ -68,8 +68,8 @@ void main() {
         expect(find.text('Ana Souza'), findsOneWidget);
         expect(find.text('(11) 98765-4321'), findsOneWidget);
         expect(find.text('77.343.168/0001-24'), findsOneWidget);
-        expect(find.text('#C8102E'), findsOneWidget);
-        expect(find.text('#FFD100'), findsOneWidget);
+        expect(find.byType(AppSeletorCor), findsNothing, reason: 'U15');
+        expect(find.text('Cor primária'), findsNothing);
         expect(
           tester.getTopLeft(_campo('CNPJ')).dy,
           lessThan(tester.getTopLeft(find.byType(AppLogoIdentidade)).dy),
@@ -99,7 +99,6 @@ void main() {
 
         await tester.enterText(_campo('Nome fantasia'), 'Mercado Novo');
         await tester.enterText(_campo('Nome do responsável'), 'Bia');
-        await tester.enterText(_campo('Cor secundária'), '');
         await salvar(tester);
 
         expect(
@@ -115,7 +114,6 @@ void main() {
           identidade.pedidos.single,
           const IdentidadeRequest(
             nomeFantasia: 'Mercado Novo',
-            corPrimaria: '#C8102E',
             sePanfleto: false,
           ),
         );
@@ -124,7 +122,7 @@ void main() {
     );
 
     testWidgets(
-      'Cenário: Dado campos obrigatórios vazios e cor incompleta, quando salvo, então mostro os erros nos campos e não chamo a API',
+      'Cenário: Dado campos obrigatórios vazios, quando salvo, então mostro os erros nos campos e não chamo a API',
       (tester) async {
         await abrir(tester);
 
@@ -132,14 +130,12 @@ void main() {
         await tester.enterText(_campo('Nome do responsável'), '');
         await tester.enterText(_campo('WhatsApp (com DDD)'), '');
         await tester.enterText(_campo('CNPJ'), '');
-        await tester.enterText(_campo('Cor primária'), '#C81');
         await salvar(tester);
 
         expect(find.text('Informe o nome fantasia.'), findsOneWidget);
         expect(find.text('Informe o nome do responsável.'), findsOneWidget);
         expect(find.text('Informe o WhatsApp.'), findsOneWidget);
         expect(find.text('Informe o CNPJ.'), findsOneWidget);
-        expect(find.text('Informe a cor no formato #RRGGBB.'), findsOneWidget);
         expect(lojista.pedidos, isEmpty);
         expect(identidade.pedidos, isEmpty);
       },

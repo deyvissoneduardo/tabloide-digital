@@ -104,6 +104,7 @@ List<SingleChildWidget> providersWeb() => [
       context.read<EstruturaRepository>(),
       context.read<IdentidadeRepository>(),
       context.read<PanfletoRepository>(),
+      context.read<ConfiguracaoPaginaRepository>(),
     ),
   ),
   ChangeNotifierProvider<PaginaController>(

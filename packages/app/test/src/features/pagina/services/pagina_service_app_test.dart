@@ -32,7 +32,12 @@ void main() {
       final estrutura = EstruturaRepositoryFake();
       final identidade = _IdentidadeLenta();
       final panfletos = PanfletoRepositoryFake(panfletos: [panfletoFake]);
-      final service = PaginaServiceApp(estrutura, identidade, panfletos);
+      final service = PaginaServiceApp(
+        estrutura,
+        identidade,
+        panfletos,
+        ConfiguracaoPaginaRepositoryFake(),
+      );
 
       final carregando = service.carregar('f1');
       await identidade.pedido.future;
@@ -50,6 +55,7 @@ void main() {
           EstruturaRepositoryFake(),
           IdentidadeRepositoryFake(),
           PanfletoRepositoryFake(falhaSimulada: const FalhaSemConexao()),
+          ConfiguracaoPaginaRepositoryFake(),
         );
 
         expect(
@@ -64,6 +70,7 @@ void main() {
         EstruturaRepositoryFake(falha: const FalhaSemConexao()),
         IdentidadeRepositoryFake(falhaSimulada: const FalhaInesperada('x')),
         PanfletoRepositoryFake(),
+        ConfiguracaoPaginaRepositoryFake(),
       );
 
       expect(
@@ -77,12 +84,14 @@ void main() {
         EstruturaRepositoryFake(),
         IdentidadeRepositoryFake(),
         PanfletoRepositoryFake(panfletos: [panfletoFakeAgendado, panfletoFake]),
+        ConfiguracaoPaginaRepositoryFake(configuracao: configuracaoPaginaFake),
       );
 
       final dados = (await service.carregar('f1')).fold((_) => null, (d) => d)!;
 
       expect(dados.panfletoVigente, panfletoFake);
       expect(dados.estrutura, estruturaFake);
+      expect(dados.configuracao, configuracaoPaginaFake);
     });
 
     test('Cenário: Dado só um agendado, quando carrego, então não há panfleto vigente', () async {
@@ -90,6 +99,7 @@ void main() {
         EstruturaRepositoryFake(),
         IdentidadeRepositoryFake(),
         PanfletoRepositoryFake(panfletos: [panfletoFakeAgendado]),
+        ConfiguracaoPaginaRepositoryFake(),
       );
 
       final dados = (await service.carregar('f1')).fold((_) => null, (d) => d)!;
@@ -103,12 +113,59 @@ void main() {
         estrutura,
         IdentidadeRepositoryFake(),
         PanfletoRepositoryFake(),
+        ConfiguracaoPaginaRepositoryFake(),
       );
       const pedido = EstruturaRequest([]);
 
       await service.publicar('f1', pedido);
 
       expect(estrutura.pedidos, [pedido]);
+    });
+
+    test(
+      'Cenário: Dado falha na aparência, quando carrego, então recebo a falha',
+      () async {
+        final service = PaginaServiceApp(
+          EstruturaRepositoryFake(),
+          IdentidadeRepositoryFake(),
+          PanfletoRepositoryFake(),
+          ConfiguracaoPaginaRepositoryFake(falha: const FalhaSemConexao()),
+        );
+
+        expect(
+          await service.carregar('f1'),
+          const Failure<Falha, DadosPagina>(FalhaSemConexao()),
+        );
+      },
+    );
+
+    test('Cenário: Dado a aparência, quando edito e envio/removo imagens do banner, então repasso ao repository', () async {
+      final configuracao = ConfiguracaoPaginaRepositoryFake();
+      final service = PaginaServiceApp(
+        EstruturaRepositoryFake(),
+        IdentidadeRepositoryFake(),
+        PanfletoRepositoryFake(),
+        configuracao,
+      );
+      final pedido = ConfiguracaoPaginaRequest.entre(
+        ConfiguracaoPaginaResponse.padrao,
+        const ConfiguracaoPaginaResponse(exibirNomeCategoria: false),
+      );
+
+      await service.enviarLogoBanner(bytes: [1], nomeArquivo: 'l.png');
+      await service.enviarFotoBanner(bytes: [1], nomeArquivo: 'f.png');
+      await service.editarAparencia(pedido);
+      await service.removerFotoBanner();
+      await service.removerLogoBanner();
+
+      expect(configuracao.chamadas, [
+        'PUT logo',
+        'PUT foto',
+        'PATCH',
+        'DELETE foto',
+        'DELETE logo',
+      ]);
+      expect(configuracao.pedidos, [pedido]);
     });
   });
 }

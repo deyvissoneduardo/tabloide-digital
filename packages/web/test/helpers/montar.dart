@@ -102,11 +102,13 @@ PaginaController paginaControllerDeTeste({
   EstruturaRepository? estrutura,
   IdentidadeRepository? identidade,
   PanfletoRepository? panfletos,
+  ConfiguracaoPaginaRepository? configuracao,
 }) => PaginaController(
   PaginaServiceWeb(
     estrutura ?? EstruturaRepositoryFake(),
     identidade ?? IdentidadeRepositoryFake(),
     panfletos ?? PanfletoRepositoryFake(panfletos: [panfletoFake]),
+    configuracao ?? ConfiguracaoPaginaRepositoryFake(),
   ),
 );
 
@@ -254,6 +256,9 @@ Widget montarTela(
       _notificador(
         produtoForm,
         () => produtoFormControllerDeTeste(repository: produtosDaTela),
+      ),
+      Provider<ProdutoServiceWeb>.value(
+        value: ProdutoServiceWeb(produtosDaTela),
       ),
       _notificador(pagina, paginaControllerDeTeste),
       _notificador(

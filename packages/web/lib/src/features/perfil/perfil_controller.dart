@@ -61,8 +61,6 @@ class PerfilController extends ChangeNotifier {
     required String nomeResponsavel,
     required String whatsapp,
     required String cnpj,
-    required String corPrimaria,
-    required String corSecundaria,
     required bool sePanfleto,
   }) async {
     _salvando = true;
@@ -80,12 +78,7 @@ class PerfilController extends ChangeNotifier {
     final resultado = switch (lojista) {
       Failure(:final falha) => Failure<Falha, PerfilCarregado>(falha),
       Success(valor: final l) => (await _service.editarIdentidade(
-        IdentidadeRequest(
-          nomeFantasia: nome,
-          corPrimaria: _corOuNula(corPrimaria),
-          corSecundaria: _corOuNula(corSecundaria),
-          sePanfleto: sePanfleto,
-        ),
+        IdentidadeRequest(nomeFantasia: nome, sePanfleto: sePanfleto),
       )).map((i) => PerfilCarregado(lojista: l, identidade: i)),
     };
     _salvando = false;
@@ -121,10 +114,5 @@ class PerfilController extends ChangeNotifier {
     }
     notifyListeners();
     return resultado;
-  }
-
-  String? _corOuNula(String cor) {
-    final limpa = cor.trim().toUpperCase();
-    return limpa.isEmpty ? null : limpa;
   }
 }

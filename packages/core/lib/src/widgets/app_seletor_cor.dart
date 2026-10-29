@@ -18,6 +18,7 @@ class AppSeletorCor extends StatelessWidget {
     this.erro,
     this.habilitado = true,
     this.aoMudar,
+    this.ajuda,
   });
 
   final TextEditingController controller;
@@ -26,6 +27,9 @@ class AppSeletorCor extends StatelessWidget {
   final String? erro;
   final bool habilitado;
   final ValueChanged<String>? aoMudar;
+
+  /// Texto de apoio abaixo do campo (ex.: a cor padrão).
+  final String? ajuda;
 
   Future<void> _escolher(BuildContext context) async {
     final escolhida = await showDialog<Color>(
@@ -54,6 +58,8 @@ class AppSeletorCor extends StatelessWidget {
       decoration: InputDecoration(
         labelText: rotulo,
         hintText: '#RRGGBB',
+        helperText: ajuda,
+        helperMaxLines: 2,
         prefixIcon: _AmostraCor(controller: controller),
         suffixIcon: IconButton(
           tooltip: 'Escolher $rotulo',

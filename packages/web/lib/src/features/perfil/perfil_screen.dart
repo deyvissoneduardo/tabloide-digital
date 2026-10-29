@@ -11,16 +11,9 @@ import 'package:tabloide_web/src/features/perfil/perfil_estado.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:validatorless/validatorless.dart';
 
-final _corHex = RegExp(r'^#[0-9A-F]{6}$');
-
 final _naoDigito = RegExp(r'\D');
 
 const _ladoMaximoLogo = 1024.0;
-
-String? _validarCor(String? valor) =>
-    (valor ?? '').isEmpty || _corHex.hasMatch(valor!)
-    ? null
-    : 'Informe a cor no formato #RRGGBB.';
 
 String _mascarar(String texto, TextInputFormatter formatador) => formatador
     .formatEditUpdate(TextEditingValue.empty, TextEditingValue(text: texto))
@@ -47,8 +40,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
   final _responsavel = TextEditingController();
   final _whatsapp = TextEditingController();
   final _cnpj = TextEditingController();
-  final _corPrimaria = TextEditingController();
-  final _corSecundaria = TextEditingController();
 
   late final PerfilController _controller;
 
@@ -63,15 +54,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
   @override
   void dispose() {
-    for (final campo in [
-      _email,
-      _nome,
-      _responsavel,
-      _whatsapp,
-      _cnpj,
-      _corPrimaria,
-      _corSecundaria,
-    ]) {
+    for (final campo in [_email, _nome, _responsavel, _whatsapp, _cnpj]) {
       campo.dispose();
     }
     super.dispose();
@@ -96,8 +79,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
         CelularInputFormatter(),
       );
       _cnpj.text = _mascarar(lojista.cnpj, CnpjAlfanumericoInputFormatter());
-      _corPrimaria.text = identidade.corPrimaria ?? '';
-      _corSecundaria.text = identidade.corSecundaria ?? '';
       setState(() => _sePanfleto = identidade.sePanfleto);
     }
   }
@@ -140,8 +121,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
       nomeResponsavel: _responsavel.text,
       whatsapp: _whatsapp.text,
       cnpj: _cnpj.text,
-      corPrimaria: _corPrimaria.text,
-      corSecundaria: _corSecundaria.text,
       sePanfleto: _sePanfleto,
     );
     if (!mounted) return;
@@ -263,7 +242,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
             Text('Identidade visual', style: tema.textTheme.titleMedium),
             const SizedBox(height: AppEspacamentos.xs),
             Text(
-              'Vale para todas as filiais: o mesmo nome, logo e cores aparecem em todos os panfletos.',
+              'Vale para todas as filiais: o mesmo nome e logo aparecem em todas as páginas. As cores ficam na seção Página, aba Aparência.',
               style: tema.textTheme.bodyMedium?.copyWith(
                 color: tema.colorScheme.onSurfaceVariant,
               ),
@@ -299,24 +278,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
               style: tema.textTheme.bodySmall?.copyWith(
                 color: tema.colorScheme.onSurfaceVariant,
               ),
-            ),
-            const SizedBox(height: AppEspacamentos.lg),
-            AppSeletorCor(
-              controller: _corPrimaria,
-              rotulo: 'Cor primária',
-              habilitado: !ocupado,
-              erro: controller.erroDoCampo('corPrimaria'),
-              aoMudar: (_) => controller.limparErroDoCampo('corPrimaria'),
-              validador: _validarCor,
-            ),
-            const SizedBox(height: AppEspacamentos.md),
-            AppSeletorCor(
-              controller: _corSecundaria,
-              rotulo: 'Cor secundária',
-              habilitado: !ocupado,
-              erro: controller.erroDoCampo('corSecundaria'),
-              aoMudar: (_) => controller.limparErroDoCampo('corSecundaria'),
-              validador: _validarCor,
             ),
             const SizedBox(height: AppEspacamentos.md),
             SwitchListTile(

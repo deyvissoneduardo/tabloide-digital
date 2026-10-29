@@ -7,9 +7,9 @@ import 'package:tabloide_core/src/theme/app_espacamentos.dart';
 import 'package:tabloide_core/src/theme/app_icones.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 
-/// Panfleto na prévia, igual ao da página pública: cartão branco com sombra,
-/// validade em etiqueta e "Abrir PDF" na primária. O Flutter não desenha o
-/// PDF: mostra o arquivo no cartão (D13).
+/// Panfleto na prévia, igual ao da página pública: cartão `fundoCartao` com
+/// sombra, validade em etiqueta e "Abrir PDF" na primária. O Flutter não
+/// desenha o PDF: mostra o arquivo no cartão (D13).
 class AppPreviaPanfleto extends StatelessWidget {
   const AppPreviaPanfleto({
     super.key,
@@ -27,12 +27,11 @@ class AppPreviaPanfleto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
-    final esquema = tema.colorScheme;
     final quebrada = Center(
       child: Icon(
         Icons.broken_image_outlined,
         size: AppIcones.destaque,
-        color: esquema.onSurfaceVariant,
+        color: cores.textoSuave,
       ),
     );
     return Padding(
@@ -49,7 +48,7 @@ class AppPreviaPanfleto extends StatelessWidget {
             width: double.infinity,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: esquema.surface,
+              color: cores.fundoCartao,
               borderRadius: AppRaios.bordaLg,
               boxShadow: AppCoresPagina.sombraPanfleto,
             ),
@@ -79,13 +78,15 @@ class AppPreviaPanfleto extends StatelessWidget {
                       panfleto.nomeArquivo,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: tema.textTheme.bodyMedium,
+                      style: tema.textTheme.bodyMedium?.copyWith(
+                        color: cores.texto,
+                      ),
                     ),
                     const SizedBox(height: AppEspacamentos.xs),
                     Text(
                       'Panfleto em PDF de 1 página',
                       style: tema.textTheme.bodySmall?.copyWith(
-                        color: esquema.onSurfaceVariant,
+                        color: cores.textoSuave,
                       ),
                     ),
                   ],
@@ -96,7 +97,7 @@ class AppPreviaPanfleto extends StatelessWidget {
           if (panfleto.vigencia.dataLimite case final limite?)
             DecoratedBox(
               decoration: BoxDecoration(
-                color: esquema.surface,
+                color: cores.fundoCartao,
                 borderRadius: AppRaios.bordaPilula,
               ),
               child: Padding(
@@ -118,7 +119,7 @@ class AppPreviaPanfleto extends StatelessWidget {
               onPressed: aoAbrirPdf,
               style: FilledButton.styleFrom(
                 backgroundColor: cores.primaria,
-                foregroundColor: AppCoresPagina.sobreCor,
+                foregroundColor: cores.sobreCor,
               ),
               child: const Text('Abrir PDF'),
             ),

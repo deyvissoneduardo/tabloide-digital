@@ -20,6 +20,7 @@ void main() {
         const IdentidadeResponse(
           nomeFantasia: 'Mercado Novo',
           corPrimaria: '#00FF00',
+          corSecundaria: '#FFD100',
           urlLogo: 'https://midia.fake/logo/novo.png',
           sePanfleto: true,
         ),

@@ -54,7 +54,7 @@ void main() {
 
         expect(find.text('Descartar as mudanças?'), findsOneWidget);
         expect(
-          find.text('A nova ordem ainda não foi publicada.'),
+          find.text('As mudanças ainda não foram publicadas.'),
           findsOneWidget,
         );
       },

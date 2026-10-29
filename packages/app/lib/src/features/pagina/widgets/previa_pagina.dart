@@ -4,7 +4,8 @@ import 'package:tabloide_app/src/features/home/plataforma/link_service_app.dart'
 import 'package:tabloide_app/src/features/pagina/pagina_controller.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Prévia nativa: espelha a ordem em edição, sem salvar (D10).
+/// Prévia nativa: espelha a ordem e a aparência em edição, sem salvar (D10,
+/// T6).
 class PreviaPagina extends StatelessWidget {
   const PreviaPagina({super.key, required this.dados});
 
@@ -18,13 +19,17 @@ class PreviaPagina extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categorias = context.watch<PaginaController>().emEdicao;
+    final controller = context.watch<PaginaController>();
+    final aparencia = controller.aparenciaEmEdicao;
     final panfleto = dados.panfletoVigente;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppEspacamentos.md),
       child: AppPreviaPagina(
         dados: dados,
-        categorias: categorias,
+        categorias: controller.emEdicao,
+        configuracao: aparencia.configuracao,
+        bytesLogoBanner: aparencia.bytesLogo,
+        bytesFotoBanner: aparencia.bytesFoto,
         aoAbrirPdf: panfleto == null
             ? null
             : () => _abrirPdf(context, panfleto.urlArquivo),

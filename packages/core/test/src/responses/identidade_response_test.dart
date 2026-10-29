@@ -41,7 +41,7 @@ void main() {
       );
     });
 
-    test('Cenário: Dado um pedido sem cor secundária, quando gero o JSON, então envio null para remover a cor', () {
+    test('Cenário: Dado um pedido sem cor secundária, quando gero o JSON, então a chave da cor é omitida (F6, T3)', () {
       const pedido = IdentidadeRequest(
         nomeFantasia: 'Mercado Bom Preço',
         sePanfleto: false,
@@ -51,8 +51,19 @@ void main() {
       expect(pedido.toJson(), {
         'nomeFantasia': 'Mercado Bom Preço',
         'corPrimaria': '#C8102E',
-        'corSecundaria': null,
         'sePanfleto': false,
+      });
+    });
+
+    test('Cenário: Dado um pedido do Perfil sem cores, quando gero o JSON, então nenhuma chave de cor é enviada (U15)', () {
+      const pedido = IdentidadeRequest(
+        nomeFantasia: 'Mercado Bom Preço',
+        sePanfleto: true,
+      );
+
+      expect(pedido.toJson(), {
+        'nomeFantasia': 'Mercado Bom Preço',
+        'sePanfleto': true,
       });
     });
 

@@ -7,7 +7,8 @@ import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 
 /// Cabeçalho da prévia da página, igual ao da página pública: faixa na
-/// primária, logo (ou iniciais) num bloco branco e o nome do lojista.
+/// primária, logo (ou iniciais) num bloco `sobreCor` e o nome do lojista.
+/// Nunca mostra a filial (U9).
 class AppPreviaCabecalho extends StatelessWidget {
   const AppPreviaCabecalho({
     super.key,
@@ -69,8 +70,8 @@ class AppPreviaCabecalho extends StatelessWidget {
                 padding: const EdgeInsets.all(AppEspacamentos.xs),
                 alignment: Alignment.center,
                 clipBehavior: Clip.antiAlias,
-                decoration: const BoxDecoration(
-                  color: AppCoresPagina.sobreCor,
+                decoration: BoxDecoration(
+                  color: cores.sobreCor,
                   borderRadius: AppRaios.bordaLg,
                   boxShadow: AppCoresPagina.sombraLogo,
                 ),
@@ -92,7 +93,7 @@ class AppPreviaCabecalho extends StatelessWidget {
                 child: Text(
                   identidade.nomeFantasia,
                   style: texto.titleLarge?.copyWith(
-                    color: AppCoresPagina.sobreCor,
+                    color: cores.sobreCor,
                     fontWeight: FontWeight.w800,
                   ),
                   maxLines: 2,

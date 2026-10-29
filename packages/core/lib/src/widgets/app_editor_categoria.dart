@@ -23,6 +23,8 @@ class AppEditorCategoria extends StatelessWidget {
     this.aoDescer,
     this.aoProdutoEsquerda,
     this.aoProdutoDireita,
+    this.aoTocarProduto,
+    this.produtoCarregando,
   });
 
   final CategoriaEstruturaResponse categoria;
@@ -43,6 +45,12 @@ class AppEditorCategoria extends StatelessWidget {
 
   final ValueChanged<int>? aoProdutoDireita;
 
+  /// Toque num produto (abre o formulário, U17).
+  final ValueChanged<ProdutoEstruturaResponse>? aoTocarProduto;
+
+  /// Id do produto que está sendo aberto (spinner no cartão).
+  final String? produtoCarregando;
+
   @override
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
@@ -52,6 +60,7 @@ class AppEditorCategoria extends StatelessWidget {
     final aoDescer = this.aoDescer;
     final aoProdutoEsquerda = this.aoProdutoEsquerda;
     final aoProdutoDireita = this.aoProdutoDireita;
+    final aoTocarProduto = this.aoTocarProduto;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppEspacamentos.sm),
@@ -122,6 +131,10 @@ class AppEditorCategoria extends StatelessWidget {
                     produto: produtos[i],
                     indice: i,
                     habilitado: habilitado,
+                    carregando: produtos[i].id == produtoCarregando,
+                    aoTocar: aoTocarProduto == null
+                        ? null
+                        : () => aoTocarProduto(produtos[i]),
                     aoEsquerda: i > 0 && aoProdutoEsquerda != null
                         ? () => aoProdutoEsquerda(i)
                         : null,

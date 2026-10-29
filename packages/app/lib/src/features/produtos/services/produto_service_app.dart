@@ -8,6 +8,11 @@ final class ProdutoServiceApp {
   Future<Either<Falha, List<ProdutoResponse>>> listar(String filialId) =>
       _repository.listar(filialId);
 
+  /// Produto completo para abrir o formulário a partir do editor da página
+  /// (U17).
+  Future<Either<Falha, ProdutoResponse>> obter(String filialId, String id) =>
+      _repository.obter(filialId, id);
+
   Future<Either<Falha, ProdutoResponse>> criar(
     String filialId,
     ProdutoRequest request, {

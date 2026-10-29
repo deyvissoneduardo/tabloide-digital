@@ -141,7 +141,7 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
       case ProdutoFormConcluido(:final produto):
         context.read<ProdutosController>().salvo(produto);
         mostrarAviso(context, _novo ? 'Produto publicado.' : 'Produto salvo.');
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(produto);
       case ProdutoFormComFalha() when controller.temErroNosCampos:
         break;
       case ProdutoFormComFalha(:final falha):

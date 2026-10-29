@@ -8,19 +8,23 @@ import 'package:tabloide_core/src/theme/app_icones.dart';
 import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 
-/// Cartão de produto da prévia: igual ao da página pública (cartão branco
-/// com sombra, selo de desconto, preço em destaque, observação e validade em
+/// Cartão de produto da prévia: igual ao da página pública (cartão
+/// `fundoCartao` com sombra, selo de desconto, preço em destaque, observação e validade em
 /// etiquetas). Agendado não tem selo nem diferença visual (D10).
 class AppPreviaProduto extends StatelessWidget {
   const AppPreviaProduto({
     super.key,
     required this.produto,
     required this.cores,
+    this.largura = AppLayout.larguraCartaoProdutoPrevia,
   });
 
   final ProdutoEstruturaResponse produto;
 
   final AppCoresPagina cores;
+
+  /// Largura do cartão: a do carrossel; `null` ocupa a coluna da grade.
+  final double? largura;
 
   /// Desconto inteiro de "de/por" (RN32), igual à página pública; `null`
   /// quando não há preço original maior.
@@ -34,14 +38,14 @@ class AppPreviaProduto extends StatelessWidget {
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
     final texto = tema.textTheme;
-    final suave = tema.colorScheme.onSurfaceVariant;
+    final suave = cores.textoSuave;
     final urlFoto = produto.urlFoto;
     final desconto = percentualDesconto(
       produto.precoPromocionalCentavos,
       produto.precoOriginalCentavos,
     );
     final semFoto = ColoredBox(
-      color: tema.colorScheme.surfaceContainerHighest,
+      color: cores.neutra,
       child: Center(
         child: Icon(Icons.sell, size: AppIcones.destaque, color: suave),
       ),
@@ -52,10 +56,10 @@ class AppPreviaProduto extends StatelessWidget {
       vertical: AppEspacamentos.xs / 2,
     );
     return Container(
-      width: AppLayout.larguraCartaoProdutoPrevia,
+      width: largura,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: tema.colorScheme.surface,
+        color: cores.fundoCartao,
         borderRadius: AppRaios.bordaLg,
         boxShadow: AppCoresPagina.sombraCartao,
       ),
@@ -91,7 +95,7 @@ class AppPreviaProduto extends StatelessWidget {
                         child: Text(
                           '-$desconto%',
                           style: texto.labelMedium?.copyWith(
-                            color: AppCoresPagina.sobreCor,
+                            color: cores.sobreCor,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -173,16 +177,14 @@ class AppPreviaProduto extends StatelessWidget {
                 if (produto.vigencia.dataLimite case final limite?)
                   DecoratedBox(
                     decoration: BoxDecoration(
-                      color: tema.colorScheme.surfaceContainerHighest,
+                      color: cores.neutra,
                       borderRadius: AppRaios.bordaSm,
                     ),
                     child: Padding(
                       padding: recuoEtiqueta,
                       child: Text(
                         'válido até ${DataDia.curta(limite)}',
-                        style: etiqueta?.copyWith(
-                          color: tema.colorScheme.onSurface,
-                        ),
+                        style: etiqueta?.copyWith(color: cores.texto),
                       ),
                     ),
                   ),

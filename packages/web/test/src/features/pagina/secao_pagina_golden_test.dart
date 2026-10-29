@@ -10,7 +10,7 @@ const _telas = {'desktop': Size(1440, 900), 'celular': Size(390, 844)};
 void main() {
   for (final MapEntry(key: tela, value: tamanho) in _telas.entries) {
     goldenTest(
-      'Cenário: Dado a seção Página na web em $tela, então ${tela == 'desktop' ? 'editor e prévia ficam lado a lado' : 'há abas "Montar" e "Prévia"'} e "Publicar ordem" segue a marca',
+      'Cenário: Dado a seção Página na web em $tela, então ${tela == 'desktop' ? 'abas "Montar"/"Aparência" e prévia ficam lado a lado' : 'há abas "Montar", "Aparência" e "Prévia"'} e "Publicar" segue a marca',
       fileName: 'secao_pagina_web_$tela',
       pumpBeforeTest: (tester) async {
         await precarregarLogo(tester);

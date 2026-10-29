@@ -3,13 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_app/src/features/pagina/pagina_controller.dart';
 import 'package:tabloide_app/src/features/pagina/pagina_estado.dart';
+import 'package:tabloide_app/src/features/pagina/widgets/aparencia_pagina.dart';
 import 'package:tabloide_app/src/features/pagina/widgets/botao_publicar_ordem.dart';
 import 'package:tabloide_app/src/features/pagina/widgets/editor_pagina.dart';
 import 'package:tabloide_app/src/features/pagina/widgets/previa_pagina.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Seção "Página": montar a ordem e ver a prévia. No app, sempre em abas
-/// "Montar" / "Prévia" (D12).
+/// Seção "Página": montar a ordem, configurar a aparência e ver a prévia. No
+/// app, sempre em abas "Montar" / "Aparência" / "Prévia" (D12).
 class SecaoPagina extends StatefulWidget {
   const SecaoPagina({super.key});
 
@@ -31,7 +32,7 @@ class _SecaoPaginaState extends State<SecaoPagina> {
     final descartar = await confirmar(
       context,
       titulo: 'Descartar as mudanças?',
-      mensagem: 'A nova ordem ainda não foi publicada.',
+      mensagem: 'As mudanças ainda não foram publicadas.',
       rotuloConfirmar: 'Descartar',
       rotuloCancelar: 'Continuar editando',
     );
@@ -57,7 +58,7 @@ class _SecaoPaginaState extends State<SecaoPagina> {
         aoTentarDeNovo: () => _carregar(filial.id),
       ),
       PaginaCarregada(:final dados) => DefaultTabController(
-        length: 2,
+        length: 3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -76,7 +77,7 @@ class _SecaoPaginaState extends State<SecaoPagina> {
                         padding: EdgeInsets.all(AppEspacamentos.md),
                         child: AppAviso(
                           tipo: TipoAviso.alerta,
-                          mensagem: 'Conta desativada: a ordem não pode ser alterada.',
+                          mensagem: 'Conta desativada: a página não pode ser alterada.',
                         ),
                       ),
                     ),
@@ -87,6 +88,7 @@ class _SecaoPaginaState extends State<SecaoPagina> {
             const TabBar(
               tabs: [
                 Tab(text: 'Montar'),
+                Tab(text: 'Aparência'),
                 Tab(text: 'Prévia'),
               ],
             ),
@@ -94,6 +96,7 @@ class _SecaoPaginaState extends State<SecaoPagina> {
               child: TabBarView(
                 children: [
                   EditorPagina(exibePanfleto: dados.exibePanfleto),
+                  AparenciaPagina(key: ValueKey(controller.revisaoAparencia)),
                   PreviaPagina(dados: dados),
                 ],
               ),
