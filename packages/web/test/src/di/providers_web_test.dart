@@ -31,6 +31,9 @@ void main() {
               Provider<EstruturaRepository>.value(
                 value: EstruturaRepositoryFake(),
               ),
+              Provider<ConfiguracaoPaginaRepository>.value(
+                value: ConfiguracaoPaginaRepositoryFake(),
+              ),
               Provider<Sessao>.value(value: sessaoDeTeste()),
               ...providersWeb(),
             ],

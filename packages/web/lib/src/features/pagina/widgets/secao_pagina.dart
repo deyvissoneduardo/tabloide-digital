@@ -3,14 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_web/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_web/src/features/pagina/pagina_controller.dart';
 import 'package:tabloide_web/src/features/pagina/pagina_estado.dart';
+import 'package:tabloide_web/src/features/pagina/widgets/aparencia_pagina.dart';
 import 'package:tabloide_web/src/features/pagina/widgets/botao_publicar_ordem.dart';
 import 'package:tabloide_web/src/features/pagina/widgets/editor_pagina.dart';
 import 'package:tabloide_web/src/features/pagina/widgets/previa_pagina.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Seção "Página": montar a ordem e ver a prévia. Na web, lado a lado a
-/// partir de 840 px (expandido); abaixo disso, em abas "Montar" / "Prévia"
-/// (D12).
+/// Seção "Página": montar a ordem, configurar a aparência e ver a prévia. Na
+/// web, a partir de 840 px (expandido), abas "Montar" / "Aparência" com a
+/// prévia sempre visível à direita; abaixo disso, abas "Montar" /
+/// "Aparência" / "Prévia" (D12).
 class SecaoPagina extends StatefulWidget {
   const SecaoPagina({super.key});
 
@@ -32,7 +34,7 @@ class _SecaoPaginaState extends State<SecaoPagina> {
     final descartar = await confirmar(
       context,
       titulo: 'Descartar as mudanças?',
-      mensagem: 'A nova ordem ainda não foi publicada.',
+      mensagem: 'As mudanças ainda não foram publicadas.',
       rotuloConfirmar: 'Descartar',
       rotuloCancelar: 'Continuar editando',
     );
@@ -76,7 +78,7 @@ class _SecaoPaginaState extends State<SecaoPagina> {
                       child: AppAviso(
                         tipo: TipoAviso.alerta,
                         mensagem:
-                            'Conta desativada: a ordem não pode ser alterada.',
+                            'Conta desativada: a página não pode ser alterada.',
                       ),
                     ),
                   ),
@@ -90,7 +92,34 @@ class _SecaoPaginaState extends State<SecaoPagina> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Expanded(
-                        child: EditorPagina(exibePanfleto: dados.exibePanfleto),
+                        child: DefaultTabController(
+                          length: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const TabBar(
+                                tabs: [
+                                  Tab(text: 'Montar'),
+                                  Tab(text: 'Aparência'),
+                                ],
+                              ),
+                              Expanded(
+                                child: TabBarView(
+                                  children: [
+                                    EditorPagina(
+                                      exibePanfleto: dados.exibePanfleto,
+                                    ),
+                                    AparenciaPagina(
+                                      key: ValueKey(
+                                        controller.revisaoAparencia,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       const VerticalDivider(width: 1),
                       SizedBox(
@@ -100,13 +129,14 @@ class _SecaoPaginaState extends State<SecaoPagina> {
                     ],
                   )
                 : DefaultTabController(
-                    length: 2,
+                    length: 3,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const TabBar(
                           tabs: [
                             Tab(text: 'Montar'),
+                            Tab(text: 'Aparência'),
                             Tab(text: 'Prévia'),
                           ],
                         ),
@@ -114,6 +144,9 @@ class _SecaoPaginaState extends State<SecaoPagina> {
                           child: TabBarView(
                             children: [
                               EditorPagina(exibePanfleto: dados.exibePanfleto),
+                              AparenciaPagina(
+                                key: ValueKey(controller.revisaoAparencia),
+                              ),
                               PreviaPagina(dados: dados),
                             ],
                           ),

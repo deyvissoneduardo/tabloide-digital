@@ -10,7 +10,7 @@ Painel do lojista do Tabloide Digital (filiais, panfletos, produtos): um código
 
 ## Como rodar
 - Install: `flutter pub get` (na raiz)
-- Dev: `flutter run -d chrome --dart-define=API_URL=https://tabloide-api.vercel.app/v1` (sem `API_URL`, usa `http://localhost:3000/v1`)
+- Dev: `flutter run -d chrome --web-hostname=localhost --web-port=5173 --dart-define=API_URL=https://tabloide-api.vercel.app/v1` (sem `API_URL`, usa `http://localhost:3000/v1`)
 - Lint: `dart run melos run analyze`
 - Testes: `dart run melos run test` (pacotes) **e** `flutter test` (raiz — o melos não roda o `test/` da raiz)
 - Goldens: `dart run melos run golden:atualizar` · navegador: `dart run melos run test:browser`

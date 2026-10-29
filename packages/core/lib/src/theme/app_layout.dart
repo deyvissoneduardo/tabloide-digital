@@ -41,6 +41,12 @@ abstract final class AppLayout {
   /// Cartão de produto no carrossel da prévia.
   static const larguraCartaoProdutoPrevia = 156.0;
 
+  /// Colunas da grade única da prévia (sem nome da categoria, U10).
+  static const colunasGradePrevia = 2;
+
+  /// Proporção da foto da campanha do banner (U6).
+  static const proporcaoFotoBanner = 16 / 9;
+
   /// Cartão de produto no editor da página.
   static const larguraCartaoProdutoEditor = 140.0;
 

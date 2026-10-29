@@ -1,3 +1,6 @@
+/// `PATCH /painel/lojista/identidade`. As cores saíram do Perfil (U15) e
+/// moram na aparência da página (T3): só vão no JSON quando informadas, para
+/// o Perfil não apagar as cores escolhidas na aba Aparência.
 final class IdentidadeRequest {
   const IdentidadeRequest({
     required this.nomeFantasia,
@@ -16,8 +19,8 @@ final class IdentidadeRequest {
 
   Map<String, Object?> toJson() => {
     'nomeFantasia': nomeFantasia,
-    'corPrimaria': corPrimaria,
-    'corSecundaria': corSecundaria,
+    'corPrimaria': ?corPrimaria,
+    'corSecundaria': ?corSecundaria,
     'sePanfleto': sePanfleto,
   };
 

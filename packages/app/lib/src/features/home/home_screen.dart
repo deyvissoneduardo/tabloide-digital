@@ -12,7 +12,8 @@ import 'package:tabloide_core/tabloide_core.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  /// D11: sair da seção Página com a ordem não publicada pede confirmação.
+  /// D11: sair da seção Página com mudanças não publicadas (ordem ou
+  /// aparência) pede confirmação.
   /// `true` = pode sair (sem mudanças ou descartadas).
   Future<bool> _podeSairDaPagina(BuildContext context) async {
     final home = context.read<HomeController>();
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
     final descartar = await confirmar(
       context,
       titulo: 'Descartar as mudanças?',
-      mensagem: 'A nova ordem ainda não foi publicada.',
+      mensagem: 'As mudanças ainda não foram publicadas.',
       rotuloConfirmar: 'Descartar',
       rotuloCancelar: 'Continuar editando',
     );

@@ -41,8 +41,10 @@ final class IdentidadeRepositoryFake implements IdentidadeRepository {
     return _responder(
       () => identidade = IdentidadeResponse(
         nomeFantasia: request.nomeFantasia,
-        corPrimaria: request.corPrimaria?.toUpperCase(),
-        corSecundaria: request.corSecundaria?.toUpperCase(),
+        corPrimaria:
+            request.corPrimaria?.toUpperCase() ?? identidade.corPrimaria,
+        corSecundaria:
+            request.corSecundaria?.toUpperCase() ?? identidade.corSecundaria,
         urlLogo: identidade.urlLogo,
         sePanfleto: request.sePanfleto,
       ),

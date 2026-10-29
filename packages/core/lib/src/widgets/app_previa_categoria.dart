@@ -4,8 +4,8 @@ import 'package:tabloide_core/src/theme/app_cores_pagina.dart';
 import 'package:tabloide_core/src/theme/app_espacamentos.dart';
 import 'package:tabloide_core/src/widgets/app_previa_produto.dart';
 
-/// Categoria da prévia, igual à da página pública: nome na primária com
-/// barra na secundária, total de ofertas e produtos na horizontal.
+/// Categoria da prévia, igual à da página pública: nome na cor `categoria`
+/// com barra na secundária, total de ofertas e produtos na horizontal.
 class AppPreviaCategoria extends StatelessWidget {
   const AppPreviaCategoria({
     super.key,
@@ -50,7 +50,7 @@ class AppPreviaCategoria extends StatelessWidget {
                       child: Text(
                         categoria.nome,
                         style: tema.textTheme.titleLarge?.copyWith(
-                          color: cores.primaria,
+                          color: cores.categoria,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -61,7 +61,7 @@ class AppPreviaCategoria extends StatelessWidget {
                 Text(
                   total == 1 ? '1 oferta' : '$total ofertas',
                   style: tema.textTheme.bodySmall?.copyWith(
-                    color: tema.colorScheme.onSurfaceVariant,
+                    color: cores.textoSuave,
                   ),
                 ),
               ],

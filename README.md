@@ -39,7 +39,7 @@ Essas dependências são verificadas por teste (`packages/core/test/arquitetura/
 
 ```bash
 flutter pub get
-flutter run -d chrome --dart-define=API_URL=https://tabloide-api.vercel.app/v1
+flutter run -d chrome --web-hostname=localhost --web-port=5173 --dart-define=API_URL=https://tabloide-api.vercel.app/v1
 ```
 
 Para outro dispositivo, troque o `-d` (ou omita para escolher na hora).
@@ -58,6 +58,13 @@ O valor é lido com `String.fromEnvironment` em `lib/main.dart`.
 flutter build web --dart-define=API_URL=https://tabloide-api.vercel.app/v1
 flutter build apk --dart-define=API_URL=https://tabloide-api.vercel.app/v1
 flutter build ios --dart-define=API_URL=https://tabloide-api.vercel.app/v1
+```
+
+Deploy da web na Vercel (projeto `tabloide-web`), com build incluso:
+
+```bash
+scripts/deploy_web.sh          # preview
+scripts/deploy_web.sh --prod   # produção (tabloide-digital.vercel.app)
 ```
 
 ## Testes

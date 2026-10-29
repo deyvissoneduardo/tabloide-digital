@@ -9,6 +9,7 @@ export 'src/features/filiais/repositories/filial_repository_fake.dart';
 export 'src/features/home/repositories/home_repository_fake.dart';
 export 'src/features/identidade/repositories/identidade_repository_fake.dart';
 export 'src/features/lojista/repositories/lojista_repository_fake.dart';
+export 'src/features/pagina/repositories/configuracao_pagina_repository_fake.dart';
 export 'src/features/panfletos/repositories/panfleto_repository_fake.dart';
 export 'src/features/produtos/repositories/produto_repository_fake.dart';
 export 'src/sessao/armazenamento_memoria.dart';

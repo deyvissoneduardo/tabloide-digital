@@ -12,6 +12,8 @@ Widget _editor({
   void Function(int, int)? aoMoverProduto,
   VoidCallback? aoSubir,
   VoidCallback? aoDescer,
+  ValueChanged<ProdutoEstruturaResponse>? aoTocarProduto,
+  String? produtoCarregando,
 }) => montarComMarca(
   SizedBox(
     width: 400,
@@ -28,6 +30,8 @@ Widget _editor({
           aoMoverProduto: aoMoverProduto ?? (_, _) {},
           aoSubir: aoSubir,
           aoDescer: aoDescer,
+          aoTocarProduto: aoTocarProduto,
+          produtoCarregando: produtoCarregando,
         ),
       ],
     ),
@@ -131,6 +135,65 @@ void main() {
 
         expect(find.text('Sem produtos vigentes ou agendados'), findsOneWidget);
         expect(find.text('0 produtos'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado habilitado, quando toco num produto, então aoTocarProduto recebe o produto (U17)',
+      (tester) async {
+        final tocados = <String>[];
+        await tester.pumpWidget(
+          _editor(
+            categoria: hortifruti,
+            aoTocarProduto: (p) => tocados.add(p.nome),
+          ),
+        );
+
+        await tester.tap(find.text('Maçã gala'));
+
+        expect(tocados, ['Maçã gala']);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado desabilitado, quando toco num produto, então nada acontece',
+      (tester) async {
+        final tocados = <String>[];
+        await tester.pumpWidget(
+          _editor(
+            categoria: hortifruti,
+            habilitado: false,
+            aoTocarProduto: (p) => tocados.add(p.nome),
+          ),
+        );
+
+        await tester.tap(find.text('Maçã gala'));
+
+        expect(tocados, isEmpty);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado um produto abrindo, quando desenho, então há spinner no cartão dele e o toque é ignorado',
+      (tester) async {
+        final tocados = <String>[];
+        await tester.pumpWidget(
+          _editor(
+            categoria: hortifruti,
+            produtoCarregando: produtoEstruturaFakeBanana.id,
+            aoTocarProduto: (p) => tocados.add(p.nome),
+          ),
+        );
+
+        expect(
+          find.descendant(
+            of: find.widgetWithText(AppEditorProduto, 'Banana prata'),
+            matching: find.byType(CircularProgressIndicator),
+          ),
+          findsOneWidget,
+        );
+        await tester.tap(find.text('Banana prata'));
+        expect(tocados, isEmpty);
       },
     );
   });

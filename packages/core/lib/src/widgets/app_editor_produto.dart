@@ -14,7 +14,9 @@ const _moverParaEsquerda = CustomSemanticsAction(
 const _moverParaDireita = CustomSemanticsAction(label: 'Mover para a direita');
 
 /// Produto no editor da página: alça de arrastar (dentro de um
-/// `ReorderableListView` horizontal), foto pequena, nome e preço.
+/// `ReorderableListView` horizontal), foto pequena, nome e preço. Tocar no
+/// cartão chama [aoTocar] (abre o formulário do produto, U17), desligado
+/// com `habilitado == false`; [carregando] mostra um spinner no cartão.
 class AppEditorProduto extends StatelessWidget {
   const AppEditorProduto({
     super.key,
@@ -23,6 +25,8 @@ class AppEditorProduto extends StatelessWidget {
     this.habilitado = true,
     this.aoEsquerda,
     this.aoDireita,
+    this.aoTocar,
+    this.carregando = false,
   });
 
   final ProdutoEstruturaResponse produto;
@@ -34,6 +38,10 @@ class AppEditorProduto extends StatelessWidget {
   final VoidCallback? aoEsquerda;
 
   final VoidCallback? aoDireita;
+
+  final VoidCallback? aoTocar;
+
+  final bool carregando;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +55,11 @@ class AppEditorProduto extends StatelessWidget {
     );
     final aoEsquerda = this.aoEsquerda;
     final aoDireita = this.aoDireita;
+    final aoTocar = habilitado && !carregando ? this.aoTocar : null;
     return Semantics(
       container: true,
       label: produto.nome,
+      hint: aoTocar == null ? null : 'Toque para editar o produto',
       customSemanticsActions: habilitado
           ? {_moverParaEsquerda: ?aoEsquerda, _moverParaDireita: ?aoDireita}
           : null,
@@ -57,55 +67,71 @@ class AppEditorProduto extends StatelessWidget {
         width: AppLayout.larguraCartaoProdutoEditor,
         child: Card(
           margin: const EdgeInsets.only(right: AppEspacamentos.sm),
-          child: Padding(
-            padding: const EdgeInsets.all(AppEspacamentos.sm),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: AppRaios.bordaSm,
-                      child: SizedBox.square(
-                        dimension: AppIcones.destaque,
-                        child: urlFoto == null
-                            ? semFoto
-                            : Image.network(
-                                urlFoto,
-                                fit: BoxFit.cover,
-                                excludeFromSemantics: true,
-                                errorBuilder: (_, _, _) => semFoto,
-                              ),
-                      ),
-                    ),
-                    const Spacer(),
-                    if (habilitado)
-                      ReorderableDragStartListener(
-                        index: indice,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: aoTocar,
+            child: Padding(
+              padding: const EdgeInsets.all(AppEspacamentos.sm),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: AppRaios.bordaSm,
                         child: SizedBox.square(
-                          dimension: AppLayout.alvoMinimo,
-                          child: Icon(
-                            Icons.drag_indicator,
-                            color: cores.onSurfaceVariant,
-                            semanticLabel: 'Arrastar ${produto.nome}',
-                          ),
+                          dimension: AppIcones.destaque,
+                          child: urlFoto == null
+                              ? semFoto
+                              : Image.network(
+                                  urlFoto,
+                                  fit: BoxFit.cover,
+                                  excludeFromSemantics: true,
+                                  errorBuilder: (_, _, _) => semFoto,
+                                ),
                         ),
                       ),
-                  ],
-                ),
-                const SizedBox(height: AppEspacamentos.sm),
-                Text(
-                  produto.nome,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: tema.textTheme.bodyMedium,
-                ),
-                const Spacer(),
-                Text(
-                  Centavos.formatar(produto.precoPromocionalCentavos),
-                  style: tema.textTheme.titleSmall,
-                ),
-              ],
+                      const Spacer(),
+                      if (carregando)
+                        const SizedBox.square(
+                          dimension: AppLayout.alvoMinimo,
+                          child: Center(
+                            child: SizedBox.square(
+                              dimension: AppIcones.pequeno,
+                              child: CircularProgressIndicator(
+                                semanticsLabel: 'Abrindo produto',
+                              ),
+                            ),
+                          ),
+                        )
+                      else if (habilitado)
+                        ReorderableDragStartListener(
+                          index: indice,
+                          child: SizedBox.square(
+                            dimension: AppLayout.alvoMinimo,
+                            child: Icon(
+                              Icons.drag_indicator,
+                              color: cores.onSurfaceVariant,
+                              semanticLabel: 'Arrastar ${produto.nome}',
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: AppEspacamentos.sm),
+                  Text(
+                    produto.nome,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: tema.textTheme.bodyMedium,
+                  ),
+                  const Spacer(),
+                  Text(
+                    Centavos.formatar(produto.precoPromocionalCentavos),
+                    style: tema.textTheme.titleSmall,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

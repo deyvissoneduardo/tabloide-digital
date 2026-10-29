@@ -20,6 +20,8 @@ import 'package:tabloide_core/src/features/identidade/repositories/identidade_re
 import 'package:tabloide_core/src/features/identidade/repositories/identidade_repository_api.dart';
 import 'package:tabloide_core/src/features/lojista/repositories/lojista_repository.dart';
 import 'package:tabloide_core/src/features/lojista/repositories/lojista_repository_api.dart';
+import 'package:tabloide_core/src/features/pagina/repositories/configuracao_pagina_repository.dart';
+import 'package:tabloide_core/src/features/pagina/repositories/configuracao_pagina_repository_api.dart';
 import 'package:tabloide_core/src/features/panfletos/repositories/panfleto_repository.dart';
 import 'package:tabloide_core/src/features/panfletos/repositories/panfleto_repository_api.dart';
 import 'package:tabloide_core/src/features/produtos/repositories/produto_repository.dart';
@@ -46,6 +48,7 @@ List<SingleChildWidget> providersCore({
   ProdutoRepository? produtoRepository,
   HomeRepository? homeRepository,
   EstruturaRepository? estruturaRepository,
+  ConfiguracaoPaginaRepository? configuracaoPaginaRepository,
 }) => [
   Provider<Sessao>(
     create: (_) => Sessao(armazenamento ?? ArmazenamentoPreferencias()),
@@ -104,6 +107,11 @@ List<SingleChildWidget> providersCore({
     create: (context) =>
         estruturaRepository ??
         EstruturaRepositoryApi(context.read<RestClient>()),
+  ),
+  Provider<ConfiguracaoPaginaRepository>(
+    create: (context) =>
+        configuracaoPaginaRepository ??
+        ConfiguracaoPaginaRepositoryApi(context.read<RestClient>()),
   ),
   ...servicos,
   ChangeNotifierProvider<HomeController>(

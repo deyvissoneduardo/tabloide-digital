@@ -30,8 +30,6 @@ void main() {
       nomeResponsavel: ' Bia ',
       whatsapp: '(11) 91234-5678',
       cnpj: '11.222.333/0001-81',
-      corPrimaria: '#00ff00',
-      corSecundaria: '',
       sePanfleto: true,
     );
 
@@ -91,11 +89,16 @@ void main() {
       );
       expect(
         identidade.pedidos.single,
-        const IdentidadeRequest(
-          nomeFantasia: 'Mercado Novo',
-          corPrimaria: '#00FF00',
-          sePanfleto: true,
-        ),
+        const IdentidadeRequest(nomeFantasia: 'Mercado Novo', sePanfleto: true),
+      );
+      expect(
+        identidade.pedidos.single.toJson().keys,
+        isNot(contains('corPrimaria')),
+        reason: 'o Perfil não mexe mais nas cores (U15)',
+      );
+      expect(
+        identidade.pedidos.single.toJson().keys,
+        isNot(contains('corSecundaria')),
       );
       final carregado = controller.estado as PerfilCarregado;
       expect(carregado.lojista.nomeFantasia, 'Mercado Novo');
@@ -134,23 +137,20 @@ void main() {
       expect(controller.erroDoCampo('whatsapp'), isNull);
     });
 
-    test('Cenário: Dado uma cor recusada pela API da identidade, quando salvo, então o erro vai para o campo da cor', () async {
+    test('Cenário: Dado um nome recusado pela API da identidade, quando salvo, então o erro vai para o campo', () async {
       await controller.carregar();
       identidade.falhaSimulada = const FalhaApi(
         codigo: 'VALIDACAO_INVALIDA',
         mensagem: 'Dados inválidos.',
         campos: {
-          'corPrimaria': ['Informe a cor no formato #RRGGBB.'],
+          'nomeFantasia': ['Mínimo de 2 caracteres.'],
         },
       );
 
       final resultado = await salvar();
 
       expect(resultado.isFailure, isTrue);
-      expect(
-        controller.erroDoCampo('corPrimaria'),
-        'Informe a cor no formato #RRGGBB.',
-      );
+      expect(controller.erroDoCampo('nomeFantasia'), 'Mínimo de 2 caracteres.');
     });
 
     test('Cenário: Dado uma imagem válida, quando envio o logo, então a identidade passa a ter o novo logo e o lojista continua', () async {
