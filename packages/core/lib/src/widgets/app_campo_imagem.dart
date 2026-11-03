@@ -21,6 +21,7 @@ class AppCampoImagem extends StatelessWidget {
     this.proporcao = 3 / 4,
     this.nomePdf,
     this.aoEscolherPdf,
+    this.aoTirarFoto,
   });
 
   final String rotulo;
@@ -40,6 +41,9 @@ class AppCampoImagem extends StatelessWidget {
 
   /// Com valor, aparece o botão "Escolher PDF".
   final VoidCallback? aoEscolherPdf;
+
+  /// Com valor, aparece o botão "Tirar foto" (abre a câmera).
+  final VoidCallback? aoTirarFoto;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +116,9 @@ class AppCampoImagem extends StatelessWidget {
         Wrap(
           alignment: WrapAlignment.center,
           spacing: AppEspacamentos.sm,
-          runSpacing: aoEscolherPdf == null ? 0 : AppEspacamentos.sm,
+          runSpacing: aoEscolherPdf == null && aoTirarFoto == null
+              ? 0
+              : AppEspacamentos.sm,
           children: [
             OutlinedButton.icon(
               onPressed: carregando ? null : aoEscolher,
@@ -132,6 +138,12 @@ class AppCampoImagem extends StatelessWidget {
                     : 'Escolher imagem',
               ),
             ),
+            if (aoTirarFoto case final aoTirarFoto?)
+              OutlinedButton.icon(
+                onPressed: carregando ? null : aoTirarFoto,
+                icon: const Icon(Icons.photo_camera_outlined),
+                label: const Text('Tirar foto'),
+              ),
             if (aoEscolherPdf case final aoEscolherPdf?)
               OutlinedButton.icon(
                 onPressed: carregando ? null : aoEscolherPdf,

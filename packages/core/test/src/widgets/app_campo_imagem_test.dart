@@ -133,5 +133,65 @@ void main() {
         expect(find.text('Remover imagem'), findsNothing);
       },
     );
+    testWidgets(
+      'Cenário: Dado a ação de tirar foto, quando toco "Tirar foto", então repasso a ação',
+      (tester) async {
+        var fotos = 0;
+        await tester.pumpWidget(
+          montarComMarca(
+            AppCampoImagem(
+              rotulo: 'Foto do produto',
+              descricao: 'Foto do produto',
+              aoEscolher: () {},
+              aoTirarFoto: () => fotos++,
+            ),
+          ),
+        );
+
+        expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
+        await tester.tap(find.text('Tirar foto'));
+
+        expect(fotos, 1);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado sem a ação de tirar foto, então "Tirar foto" não aparece',
+      (tester) async {
+        await tester.pumpWidget(
+          montarComMarca(
+            AppCampoImagem(
+              rotulo: 'Imagem do panfleto',
+              descricao: 'Imagem do panfleto',
+              aoEscolher: () {},
+            ),
+          ),
+        );
+
+        expect(find.text('Tirar foto'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado o envio em andamento, então "Tirar foto" fica desabilitado',
+      (tester) async {
+        var fotos = 0;
+        await tester.pumpWidget(
+          montarComMarca(
+            AppCampoImagem(
+              rotulo: 'Foto do produto',
+              descricao: 'Foto do produto',
+              carregando: true,
+              aoEscolher: () {},
+              aoTirarFoto: () => fotos++,
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Tirar foto'), warnIfMissed: false);
+
+        expect(fotos, 0);
+      },
+    );
   });
 }
