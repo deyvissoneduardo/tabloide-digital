@@ -33,7 +33,8 @@ final class IdentidadeResponse {
 
   final String? urlLogo;
 
-  /// Mostrar só o panfleto na página pública (RN44, por lojista).
+  /// Legado (apps antigos): a chave agora é por filial, em
+  /// `FilialResponse.sePanfleto` (RN44).
   final bool sePanfleto;
 
   @override

@@ -16,15 +16,9 @@ void main() {
     builder: () => GoldenTestGroup(
       columns: 2,
       children: [
-        for (final (nome, identidade) in [
-          ('montar', identidadeFake),
-          (
-            'montar com só panfleto ligado',
-            const IdentidadeResponse(
-              nomeFantasia: 'Mercado Bom Preço',
-              sePanfleto: true,
-            ),
-          ),
+        for (final (nome, sePanfleto) in [
+          ('montar', false),
+          ('montar com só panfleto ligado', true),
         ])
           GoldenTestScenario(
             name: nome,
@@ -32,10 +26,24 @@ void main() {
             child: montarTela(
               const HomeScreen(),
               home: controllerDeTeste()..selecionar(SecaoPainel.pagina),
-              filiais: filiaisControllerDeTeste()..carregar(),
-              pagina: paginaControllerDeTeste(
-                identidade: IdentidadeRepositoryFake(identidade: identidade),
-              ),
+              filiais: filiaisControllerDeTeste(
+                repository: FilialRepositoryFake(
+                  filiais: [
+                    FilialResponse(
+                      id: filialFake.id,
+                      nome: filialFake.nome,
+                      endereco: filialFake.endereco,
+                      fusoHorario: filialFake.fusoHorario,
+                      codigoPublico: filialFake.codigoPublico,
+                      urlPublica: filialFake.urlPublica,
+                      criadaEm: filialFake.criadaEm,
+                      atualizadaEm: filialFake.atualizadaEm,
+                      sePanfleto: sePanfleto,
+                    ),
+                  ],
+                ),
+              )..carregar(),
+              pagina: paginaControllerDeTeste(),
             ),
           ),
       ],

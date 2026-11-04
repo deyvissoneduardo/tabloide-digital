@@ -8,6 +8,23 @@ import '../../../helpers/montar.dart';
 Finder _campo(String rotulo) => find.widgetWithText(TextFormField, rotulo);
 final _salvar = find.widgetWithText(ElevatedButton, 'Salvar filial');
 
+final _chavePanfleto = find.widgetWithText(
+  SwitchListTile,
+  'Mostrar só o panfleto na página',
+);
+
+FilialResponse _comSePanfleto(FilialResponse f) => FilialResponse(
+  id: f.id,
+  nome: f.nome,
+  endereco: f.endereco,
+  fusoHorario: f.fusoHorario,
+  codigoPublico: f.codigoPublico,
+  urlPublica: f.urlPublica,
+  criadaEm: f.criadaEm,
+  atualizadaEm: f.atualizadaEm,
+  sePanfleto: true,
+);
+
 void main() {
   group('Funcionalidade: formulário de filial na web', () {
     late FilialRepositoryFake repository;
@@ -308,6 +325,50 @@ void main() {
 
         expect(repository.filiais.single.id, filialFake.id);
         expect(repository.filiais.single.nome, 'Centro Novo');
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado uma filial nova, quando ligo "só o panfleto" e salvo, então o pedido leva sePanfleto true (RN44)',
+      (tester) async {
+        await abrir(tester);
+        expect(tester.widget<SwitchListTile>(_chavePanfleto).value, isFalse);
+        expect(
+          find.text(
+            'Vale só para esta filial. Sem panfleto vigente, a página mostra os produtos.',
+          ),
+          findsOneWidget,
+        );
+
+        await preencher(tester);
+        await tester.ensureVisible(_chavePanfleto);
+        await tester.tap(_chavePanfleto);
+        await tester.pump();
+        await enviar(tester);
+
+        expect(repository.pedidos.single.sePanfleto, isTrue);
+        expect(repository.filiais.single.sePanfleto, isTrue);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado uma filial com a chave ligada, quando abro, então o switch vem ligado; quando desligo e salvo, então só ela é editada (RN44)',
+      (tester) async {
+        final ligada = _comSePanfleto(filialFake);
+        await abrir(
+          tester,
+          filial: ligada,
+          fake: FilialRepositoryFake(filiais: [ligada, filialFakeBairro]),
+        );
+        expect(tester.widget<SwitchListTile>(_chavePanfleto).value, isTrue);
+
+        await tester.ensureVisible(_chavePanfleto);
+        await tester.tap(_chavePanfleto);
+        await tester.pump();
+        await enviar(tester);
+
+        expect(repository.pedidos.single.sePanfleto, isFalse);
+        expect(repository.filiais.map((f) => f.sePanfleto), [false, false]);
       },
     );
 

@@ -233,6 +233,13 @@ void main() {
         await tester.enterText(_campo('Preço promocional'), '899');
         await tocar(tester, 'Publicar produto');
 
+        verify(
+          () => seletor.pickImage(
+            source: ImageSource.gallery,
+            maxWidth: any(named: 'maxWidth'),
+            maxHeight: any(named: 'maxHeight'),
+          ),
+        ).called(1);
         expect(repository.fotosEnviadas, ['feijao.jpg']);
       },
     );
@@ -249,6 +256,53 @@ void main() {
         expect(
           find.text(
             'Não conseguimos abrir suas imagens. Verifique a permissão e tente de novo.',
+          ),
+          findsOneWidget,
+        );
+      },
+    );
+    testWidgets(
+      'Cenário: Dado uma foto tirada na câmera, quando publico, então abro a câmera e ela vai junto no cadastro',
+      (tester) async {
+        await abrir(tester);
+        escolherFoto(
+          () async => XFile.fromData(
+            Uint8List.fromList([4, 5, 6]),
+            name: 'camera.jpg',
+            path: 'camera.jpg',
+          ),
+        );
+
+        await tester.tap(find.text('Tirar foto'));
+        await tester.pumpAndSettle();
+        await tester.enterText(_campo('Nome do produto'), 'Feijão');
+        await escolherCategoria(tester, 'Mercearia');
+        await tester.enterText(_campo('Preço promocional'), '899');
+        await tocar(tester, 'Publicar produto');
+
+        verify(
+          () => seletor.pickImage(
+            source: ImageSource.camera,
+            maxWidth: any(named: 'maxWidth'),
+            maxHeight: any(named: 'maxHeight'),
+          ),
+        ).called(1);
+        expect(repository.fotosEnviadas, ['camera.jpg']);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado a câmera sem permissão, quando tiro a foto, então aviso o erro da câmera',
+      (tester) async {
+        await abrir(tester);
+        escolherFoto(() async => throw PlatformException(code: 'negado'));
+
+        await tester.tap(find.text('Tirar foto'));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text(
+            'Não conseguimos abrir a câmera. Verifique a permissão e tente de novo.',
           ),
           findsOneWidget,
         );

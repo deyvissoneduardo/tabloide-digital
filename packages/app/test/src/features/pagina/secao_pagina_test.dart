@@ -40,6 +40,22 @@ final _hortifruti = CategoriaResponse(
   atualizadoEm: DateTime.utc(2026, 10, 18),
 );
 
+FilialResponse _filialCom({required bool sePanfleto}) => FilialResponse(
+  id: filialFake.id,
+  nome: filialFake.nome,
+  endereco: filialFake.endereco,
+  fusoHorario: filialFake.fusoHorario,
+  codigoPublico: filialFake.codigoPublico,
+  urlPublica: filialFake.urlPublica,
+  criadaEm: filialFake.criadaEm,
+  atualizadaEm: filialFake.atualizadaEm,
+  sePanfleto: sePanfleto,
+);
+
+final _avisoSoPanfleto = find.textContaining(
+  'A página está mostrando só o panfleto.',
+);
+
 void main() {
   group('Funcionalidade: Seção Página', () {
     late EstruturaRepositoryFake estrutura;
@@ -88,6 +104,42 @@ void main() {
       if (assentar) await tester.pumpAndSettle();
       return controller;
     }
+
+    testWidgets(
+      'Cenário: Dado a filial em uso com a chave e panfleto vigente, quando abro, então o aviso de só o panfleto; quando a filial desliga a chave, então o aviso some (RN44)',
+      (tester) async {
+        final filiais = await abrir(
+          tester,
+          filiais: [_filialCom(sePanfleto: true)],
+        );
+
+        expect(_avisoSoPanfleto, findsOneWidget);
+
+        filiais.salva(_filialCom(sePanfleto: false));
+        await tester.pumpAndSettle();
+
+        expect(_avisoSoPanfleto, findsNothing);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado a identidade com a chave e a filial sem ela, quando abro, então nenhum aviso de só o panfleto (RN44)',
+      (tester) async {
+        pagina = paginaControllerDeTeste(
+          estrutura: estrutura,
+          configuracao: configuracao,
+          identidade: IdentidadeRepositoryFake(
+            identidade: const IdentidadeResponse(
+              nomeFantasia: 'Mercado Bom Preço',
+              sePanfleto: true,
+            ),
+          ),
+        );
+        await abrir(tester);
+
+        expect(_avisoSoPanfleto, findsNothing);
+      },
+    );
 
     testWidgets('Cenário: Dado carregando, quando abro, então EsqueletoLista', (
       tester,

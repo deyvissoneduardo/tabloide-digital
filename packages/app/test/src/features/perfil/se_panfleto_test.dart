@@ -5,107 +5,64 @@ import 'package:tabloide_core/testing.dart';
 
 import '../../../helpers/montar.dart';
 
-const _desativado = FalhaApi(
-  codigo: 'LOJISTA_DESATIVADO',
-  mensagem:
-      'Sua conta está desativada. O painel está disponível só para consulta.',
-);
-
-Finder get _chave =>
-    find.widgetWithText(SwitchListTile, 'Mostrar só o panfleto na página');
-
 void main() {
-  group('Funcionalidade: Chave "mostrar só o panfleto" (RN44)', () {
-    late IdentidadeRepositoryFake identidade;
+  group(
+    'Funcionalidade: Chave "mostrar só o panfleto" fora do Perfil (RN44)',
+    () {
+      late IdentidadeRepositoryFake identidade;
 
-    setUp(() => identidade = IdentidadeRepositoryFake(atraso: Duration.zero));
-
-    Future<void> abrir(WidgetTester tester, {PerfilController? perfil}) async {
-      tester.view.physicalSize = const Size(390, 2400);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(
-        montarTela(
-          const PerfilScreen(),
-          perfil:
-              perfil ??
-              perfilControllerDeTeste(
-                lojista: LojistaRepositoryFake(),
-                identidade: identidade,
-              ),
+      setUp(
+        () => identidade = IdentidadeRepositoryFake(
+          identidade: const IdentidadeResponse(
+            nomeFantasia: 'Mercado Bom Preço',
+            sePanfleto: true,
+          ),
+          atraso: Duration.zero,
         ),
       );
-      await tester.pumpAndSettle();
-    }
 
-    testWidgets(
-      'Cenário: Dado identidade com sePanfleto false, quando abro o perfil, então o switch aparece desligado',
-      (tester) async {
-        await abrir(tester);
-
-        expect(tester.widget<SwitchListTile>(_chave).value, isFalse);
-        expect(
-          find.text(
-            'Vale para todas as filiais. Filial sem panfleto vigente mostra os produtos.',
-          ),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
-      'Cenário: Dado o switch ligado, quando toco em Salvar, então o IdentidadeRequest leva sePanfleto true',
-      (tester) async {
-        await abrir(tester);
-
-        await tester.tap(_chave);
-        await tester.pump();
-        await tester.tap(find.text('Salvar'));
-        await tester.pumpAndSettle();
-
-        expect(identidade.pedidos.single.sePanfleto, isTrue);
-        expect(tester.widget<SwitchListTile>(_chave).value, isTrue);
-      },
-    );
-
-    testWidgets(
-      'Cenário: Dado salvando, quando a tela redesenha, então o switch fica desabilitado',
-      (tester) async {
-        final lento = IdentidadeRepositoryFake(
-          atraso: const Duration(seconds: 1),
-        );
-        await abrir(
-          tester,
-          perfil: perfilControllerDeTeste(
-            lojista: LojistaRepositoryFake(),
-            identidade: lento,
+      Future<void> abrir(WidgetTester tester) async {
+        tester.view.physicalSize = const Size(390, 2400);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(
+          montarTela(
+            const PerfilScreen(),
+            perfil: perfilControllerDeTeste(
+              lojista: LojistaRepositoryFake(),
+              identidade: identidade,
+            ),
           ),
         );
-        await tester.pump(const Duration(seconds: 1));
         await tester.pumpAndSettle();
+      }
 
-        await tester.tap(find.text('Salvar'));
-        await tester.pump();
+      testWidgets(
+        'Cenário: Dado o Perfil aberto, quando procuro a chave, então ela não existe (agora fica na filial)',
+        (tester) async {
+          await abrir(tester);
 
-        expect(tester.widget<SwitchListTile>(_chave).onChanged, isNull);
-        await tester.pumpAndSettle(const Duration(seconds: 2));
-      },
-    );
+          expect(find.byType(SwitchListTile), findsNothing);
+          expect(find.text('Mostrar só o panfleto na página'), findsNothing);
+        },
+      );
 
-    testWidgets(
-      'Cenário: Dado falha no PATCH da identidade, quando salvo, então o switch mantém o valor escolhido e aparece o aviso de erro',
-      (tester) async {
-        await abrir(tester);
-        identidade.falhaSimulada = _desativado;
+      testWidgets(
+        'Cenário: Dado a identidade com a chave ligada, quando salvo o Perfil, então o pedido não leva sePanfleto e não mexe nas filiais',
+        (tester) async {
+          await abrir(tester);
 
-        await tester.tap(_chave);
-        await tester.pump();
-        await tester.tap(find.text('Salvar'));
-        await tester.pumpAndSettle();
+          await tester.tap(find.text('Salvar'));
+          await tester.pumpAndSettle();
 
-        expect(tester.widget<SwitchListTile>(_chave).value, isTrue);
-        expect(find.text(_desativado.mensagem), findsOneWidget);
-      },
-    );
-  });
+          expect(identidade.pedidos.single.sePanfleto, isNull);
+          expect(
+            identidade.pedidos.single.toJson().keys,
+            isNot(contains('sePanfleto')),
+          );
+          expect(identidade.identidade.sePanfleto, isTrue);
+        },
+      );
+    },
+  );
 }

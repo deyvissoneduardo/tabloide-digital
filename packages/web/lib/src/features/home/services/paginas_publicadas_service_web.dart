@@ -28,7 +28,6 @@ final class PaginasPublicadasServiceWeb {
       (Success(valor: final identidade), Success(valor: final lojista)) =>
         Success(
           ContextoPaginas(
-            sePanfleto: identidade.sePanfleto,
             contaAtiva: lojista.status == 'ATIVO',
             nomeFantasia: identidade.nomeFantasia,
           ),
