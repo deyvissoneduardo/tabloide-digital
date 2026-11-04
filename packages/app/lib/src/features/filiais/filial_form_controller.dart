@@ -60,6 +60,7 @@ class FilialFormController extends ChangeNotifier {
     required String bairro,
     required String cidade,
     required String uf,
+    bool sePanfleto = false,
   }) async {
     if (_estado is FilialFormEnviando) return;
     _estado = const FilialFormEnviando();
@@ -80,6 +81,7 @@ class FilialFormController extends ChangeNotifier {
         uf: uf,
       ),
       fusoHorario: (Uf.daSigla(uf)?.fuso ?? FusoHorario.saoPaulo).id,
+      sePanfleto: sePanfleto,
     );
     final resultado = id == null
         ? await _service.criar(request)

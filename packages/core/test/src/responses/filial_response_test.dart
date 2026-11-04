@@ -2,7 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_core/testing.dart';
 
-Map<String, Object?> corpoFilial({Object? complemento = 'Loja 2'}) => {
+Map<String, Object?> corpoFilial({
+  Object? complemento = 'Loja 2',
+  bool sePanfleto = false,
+}) => {
   'id': '0192f0b4-7d3f-7c21-8e4b-2d3e4f5a6b02',
   'nome': 'Centro',
   'endereco': {
@@ -19,6 +22,7 @@ Map<String, Object?> corpoFilial({Object? complemento = 'Loja 2'}) => {
   'urlPublica': 'https://tabloide.app/f/k7Qm2xPa',
   'criadaEm': '2026-10-18T13:05:00.000Z',
   'atualizadaEm': '2026-10-18T13:05:00.000Z',
+  'sePanfleto': sePanfleto,
 };
 
 void main() {
@@ -79,7 +83,45 @@ void main() {
           'uf': 'SP',
         },
         'fusoHorario': 'America/Sao_Paulo',
+        'sePanfleto': false,
       });
+    });
+
+    test('Cenário: Dado sePanfleto true no corpo, quando leio, então a filial liga a chave (RN44)', () {
+      expect(
+        FilialResponse.fromJson(corpoFilial(sePanfleto: true)).sePanfleto,
+        isTrue,
+      );
+    });
+
+    for (final (caso, valor) in [('ausente', null), ('texto', 'sim')]) {
+      test(
+        'Cenário: Dado sePanfleto $caso, quando leio, então lança FormatException',
+        () {
+          final corpo = {...corpoFilial()}..remove('sePanfleto');
+          if (valor != null) corpo['sePanfleto'] = valor;
+
+          expect(() => FilialResponse.fromJson(corpo), throwsFormatException);
+        },
+      );
+    }
+
+    test('Cenário: Dado o pedido com a chave ligada, quando converto, então envio sePanfleto true (RN44)', () {
+      const pedido = FilialRequest(
+        nome: 'Centro',
+        endereco: Endereco(
+          cep: '13010111',
+          logradouro: 'Rua das Flores',
+          numero: '120',
+          bairro: 'Centro',
+          cidade: 'Campinas',
+          uf: 'SP',
+        ),
+        fusoHorario: 'America/Sao_Paulo',
+        sePanfleto: true,
+      );
+
+      expect(pedido.toJson()['sePanfleto'], isTrue);
     });
 
     test('Cenário: Dado os fusos do Brasil, quando busco pelo id, então acho o fuso ou nulo', () {

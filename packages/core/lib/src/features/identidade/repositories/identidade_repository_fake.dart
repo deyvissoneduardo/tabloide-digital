@@ -46,7 +46,7 @@ final class IdentidadeRepositoryFake implements IdentidadeRepository {
         corSecundaria:
             request.corSecundaria?.toUpperCase() ?? identidade.corSecundaria,
         urlLogo: identidade.urlLogo,
-        sePanfleto: request.sePanfleto,
+        sePanfleto: request.sePanfleto ?? identidade.sePanfleto,
       ),
     );
   }

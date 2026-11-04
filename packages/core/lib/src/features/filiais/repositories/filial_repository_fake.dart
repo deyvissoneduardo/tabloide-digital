@@ -148,6 +148,7 @@ final class FilialRepositoryFake implements FilialRepository {
     urlPublica: 'https://tabloide.app/f/codigo-$id',
     criadaEm: filialFake.criadaEm,
     atualizadaEm: filialFake.atualizadaEm,
+    sePanfleto: request.sePanfleto,
   );
 }
 

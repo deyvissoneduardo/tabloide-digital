@@ -10,6 +10,7 @@ final class FilialResponse {
     required this.urlPublica,
     required this.criadaEm,
     required this.atualizadaEm,
+    this.sePanfleto = false,
   });
 
   factory FilialResponse.fromJson(Object? json) => switch (json) {
@@ -22,6 +23,7 @@ final class FilialResponse {
       'urlPublica': final String urlPublica,
       'criadaEm': final String criadaEm,
       'atualizadaEm': final String atualizadaEm,
+      'sePanfleto': final bool sePanfleto,
     } =>
       FilialResponse(
         id: id,
@@ -32,6 +34,7 @@ final class FilialResponse {
         urlPublica: urlPublica,
         criadaEm: DateTime.parse(criadaEm),
         atualizadaEm: DateTime.parse(atualizadaEm),
+        sePanfleto: sePanfleto,
       ),
     _ => throw const FormatException('Filial fora do formato esperado'),
   };
@@ -52,6 +55,9 @@ final class FilialResponse {
 
   final DateTime atualizadaEm;
 
+  /// RN44: a página pública desta filial mostra só o panfleto vigente.
+  final bool sePanfleto;
+
   @override
   bool operator ==(Object other) =>
       other is FilialResponse &&
@@ -62,7 +68,8 @@ final class FilialResponse {
       other.codigoPublico == codigoPublico &&
       other.urlPublica == urlPublica &&
       other.criadaEm == criadaEm &&
-      other.atualizadaEm == atualizadaEm;
+      other.atualizadaEm == atualizadaEm &&
+      other.sePanfleto == sePanfleto;
 
   @override
   int get hashCode => Object.hash(
@@ -74,8 +81,10 @@ final class FilialResponse {
     urlPublica,
     criadaEm,
     atualizadaEm,
+    sePanfleto,
   );
 
   @override
-  String toString() => 'FilialResponse(id: $id, nome: $nome)';
+  String toString() =>
+      'FilialResponse(id: $id, nome: $nome, sePanfleto: $sePanfleto)';
 }

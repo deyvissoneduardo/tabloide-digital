@@ -48,12 +48,12 @@ class PaginasPublicadasController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Regra §4.8 aplicada às contagens da filial.
-  SituacaoPaginaFilial situacaoDe(ResumoFilial? resumo) {
-    final sePanfleto = switch (_estado) {
-      PaginasCarregadas(:final contexto) => contexto.sePanfleto,
-      _ => false,
-    };
+  /// Regra §4.8 aplicada às contagens da filial, com a chave da própria
+  /// filial (RN44).
+  SituacaoPaginaFilial situacaoDe(
+    ResumoFilial? resumo, {
+    required bool sePanfleto,
+  }) {
     return switch (resumo) {
       ResumoFilial(:final panfletosVigentes)
           when sePanfleto && panfletosVigentes > 0 =>

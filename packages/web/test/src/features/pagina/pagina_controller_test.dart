@@ -195,7 +195,7 @@ void main() {
       expect(_ids(outro.salvo), ['Hortifrúti', 'Mercearia']);
     });
 
-    test('Cenário: Dado identidade com sePanfleto e panfleto vigente, quando carrego, então dados.exibePanfleto é true', () async {
+    test('Cenário: Dado identidade com sePanfleto e panfleto vigente, quando carrego, então a chave da identidade não vale e dados.exibePanfleto é false (RN44 por filial)', () async {
       final outro = paginaControllerDeTeste(
         identidade: IdentidadeRepositoryFake(
           identidade: const IdentidadeResponse(
@@ -212,7 +212,7 @@ void main() {
 
       final dados = (outro.estado as PaginaCarregada).dados;
       expect(dados.panfletoVigente, panfletoFake);
-      expect(dados.exibePanfleto, isTrue);
+      expect(dados.exibePanfleto, isFalse);
     });
   });
   _mainAparencia();

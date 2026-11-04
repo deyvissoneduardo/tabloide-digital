@@ -9,11 +9,6 @@ import '../../helpers/montar.dart';
 
 const _identidade = IdentidadeResponse(nomeFantasia: 'Mercado Bom Preço');
 
-const _identidadePanfleto = IdentidadeResponse(
-  nomeFantasia: 'Mercado Bom Preço',
-  sePanfleto: true,
-);
-
 /// Cores do lojista usadas exatamente (U13): a secundária #FFD100 não é mais
 /// escurecida.
 const _coresLojista = ConfiguracaoPaginaResponse(
@@ -266,7 +261,8 @@ void main() {
           'Panfleto imagem (banner ligado)',
           _Previa(
             DadosPagina(
-              identidade: _identidadePanfleto,
+              identidade: _identidade,
+              sePanfleto: true,
               estrutura: estruturaFake,
               panfletoVigente: panfletoFake,
               configuracao: _coresLojista.copiar(banner: _bannerCompleto),
@@ -277,7 +273,8 @@ void main() {
           'Panfleto PDF',
           _Previa(
             DadosPagina(
-              identidade: _identidadePanfleto,
+              identidade: _identidade,
+              sePanfleto: true,
               estrutura: estruturaFake,
               panfletoVigente: panfletoFakePdf,
               configuracao: _coresLojista,

@@ -49,6 +49,7 @@ class _FilialFormScreenState extends State<FilialFormScreen> {
     text: widget.filial?.endereco.cidade,
   );
   late final _uf = TextEditingController(text: widget.filial?.endereco.uf);
+  late bool _sePanfleto = widget.filial?.sePanfleto ?? false;
   String? _cepBuscado;
 
   late final FilialFormController _controller;
@@ -144,6 +145,7 @@ class _FilialFormScreenState extends State<FilialFormScreen> {
       complemento: _complemento.text,
       bairro: _bairro.text,
       cidade: _cidade.text,
+      sePanfleto: _sePanfleto,
       uf: _uf.text,
     );
     if (!mounted) return;
@@ -300,6 +302,18 @@ class _FilialFormScreenState extends State<FilialFormScreen> {
               sufixo: const Icon(Icons.arrow_drop_down),
               erro: controller.erroDoCampo('uf'),
               validador: Validatorless.required('Escolha a UF.'),
+            ),
+            const SizedBox(height: AppEspacamentos.md),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Mostrar só o panfleto na página'),
+              subtitle: const Text(
+                'Vale só para esta filial. Sem panfleto vigente, a página mostra os produtos.',
+              ),
+              value: _sePanfleto,
+              onChanged: enviando
+                  ? null
+                  : (valor) => setState(() => _sePanfleto = valor),
             ),
             const SizedBox(height: AppEspacamentos.lg),
             AppBotaoPrincipal(

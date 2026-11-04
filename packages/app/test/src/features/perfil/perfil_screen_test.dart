@@ -112,10 +112,7 @@ void main() {
         );
         expect(
           identidade.pedidos.single,
-          const IdentidadeRequest(
-            nomeFantasia: 'Mercado Novo',
-            sePanfleto: false,
-          ),
+          const IdentidadeRequest(nomeFantasia: 'Mercado Novo'),
         );
         expect(find.text('Perfil salvo.'), findsOneWidget);
       },
