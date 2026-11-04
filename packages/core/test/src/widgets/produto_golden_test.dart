@@ -24,6 +24,7 @@ class _ComponentesProduto extends StatelessWidget {
         url: 'https://midia.fake/produto/arroz.webp',
         proporcao: 1,
         aoEscolher: () {},
+        aoTirarFoto: () {},
         aoRemover: () {},
         ajuda: 'JPEG, PNG ou WebP de até 10 MB.',
       ),

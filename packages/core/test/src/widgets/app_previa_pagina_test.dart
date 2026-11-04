@@ -18,12 +18,10 @@ DadosPagina _dados({
   String? corPrimaria = '#C8102E',
   ConfiguracaoPaginaResponse? configuracao,
 }) => DadosPagina(
-  identidade: IdentidadeResponse(
-    nomeFantasia: 'Mercado Bom Preço',
-    sePanfleto: sePanfleto,
-  ),
+  identidade: const IdentidadeResponse(nomeFantasia: 'Mercado Bom Preço'),
   estrutura: estruturaFake,
   panfletoVigente: panfleto,
+  sePanfleto: sePanfleto,
   configuracao:
       configuracao ??
       ConfiguracaoPaginaResponse(

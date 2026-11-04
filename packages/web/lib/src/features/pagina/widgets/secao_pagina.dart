@@ -51,7 +51,14 @@ class _SecaoPaginaState extends State<SecaoPagina> {
         if (mounted) _carregar(filial.id);
       });
     }
-    final conteudo = switch (controller.estado) {
+    // RN44: a chave é da filial em uso; editar a filial já reflete na prévia
+    final estado = switch (controller.estado) {
+      PaginaCarregada(:final dados) when filial != null => PaginaCarregada(
+        dados.copiar(sePanfleto: filial.sePanfleto),
+      ),
+      final outro => outro,
+    };
+    final conteudo = switch (estado) {
       _ when filial == null || controller.filialId != filial.id =>
         const EsqueletoLista(),
       PaginaCarregando() => const EsqueletoLista(),

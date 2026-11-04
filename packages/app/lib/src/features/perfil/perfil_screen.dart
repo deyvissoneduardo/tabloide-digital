@@ -43,8 +43,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
   late final PerfilController _controller;
 
-  bool _sePanfleto = false;
-
   @override
   void initState() {
     super.initState();
@@ -67,10 +65,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
   }
 
   void _preencher() {
-    if (_controller.estado case PerfilCarregado(
-      :final lojista,
-      :final identidade,
-    )) {
+    if (_controller.estado case PerfilCarregado(:final lojista)) {
       _email.text = lojista.email;
       _nome.text = lojista.nomeFantasia;
       _responsavel.text = lojista.nomeResponsavel;
@@ -79,7 +74,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
         CelularInputFormatter(),
       );
       _cnpj.text = _mascarar(lojista.cnpj, CnpjAlfanumericoInputFormatter());
-      setState(() => _sePanfleto = identidade.sePanfleto);
     }
   }
 
@@ -121,7 +115,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
       nomeResponsavel: _responsavel.text,
       whatsapp: _whatsapp.text,
       cnpj: _cnpj.text,
-      sePanfleto: _sePanfleto,
     );
     if (!mounted) return;
     switch (resultado) {
@@ -278,18 +271,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
               style: tema.textTheme.bodySmall?.copyWith(
                 color: tema.colorScheme.onSurfaceVariant,
               ),
-            ),
-            const SizedBox(height: AppEspacamentos.md),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Mostrar só o panfleto na página'),
-              subtitle: const Text(
-                'Vale para todas as filiais. Filial sem panfleto vigente mostra os produtos.',
-              ),
-              value: _sePanfleto,
-              onChanged: ocupado
-                  ? null
-                  : (valor) => setState(() => _sePanfleto = valor),
             ),
             const SizedBox(height: AppEspacamentos.lg),
             AppBotaoPrincipal(

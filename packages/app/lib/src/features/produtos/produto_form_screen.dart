@@ -94,11 +94,11 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
     _ => null,
   };
 
-  Future<void> _escolherFoto() async {
+  Future<void> _escolherFoto(ImageSource origem) async {
     final XFile? arquivo;
     try {
       arquivo = await context.read<ImagePicker>().pickImage(
-        source: ImageSource.gallery,
+        source: origem,
         maxWidth: _ladoMaximoFoto,
         maxHeight: _ladoMaximoFoto,
       );
@@ -106,7 +106,9 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
       if (!mounted) return;
       mostrarAviso(
         context,
-        'Não conseguimos abrir suas imagens. Verifique a permissão e tente de novo.',
+        origem == ImageSource.camera
+            ? 'Não conseguimos abrir a câmera. Verifique a permissão e tente de novo.'
+            : 'Não conseguimos abrir suas imagens. Verifique a permissão e tente de novo.',
         tipo: TipoAviso.erro,
       );
       return;
@@ -266,7 +268,12 @@ class _ProdutoFormScreenState extends State<ProdutoFormScreen> {
             bytes: controller.foto?.bytes,
             url: urlFoto,
             proporcao: 1,
-            aoEscolher: enviando ? null : _escolherFoto,
+            aoEscolher: enviando
+                ? null
+                : () => _escolherFoto(ImageSource.gallery),
+            aoTirarFoto: enviando
+                ? null
+                : () => _escolherFoto(ImageSource.camera),
             aoRemover: enviando || !temFoto ? null : controller.removerFoto,
             erro: controller.erroDoCampo('foto'),
             ajuda: 'JPEG, PNG ou WebP de até 10 MB.',

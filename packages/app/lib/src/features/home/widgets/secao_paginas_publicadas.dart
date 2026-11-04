@@ -108,7 +108,10 @@ class _SecaoPaginasPublicadasState extends State<SecaoPaginasPublicadas> {
                   key: ValueKey(filial.id),
                   nomeFilial: filial.nome,
                   urlPublica: url,
-                  situacao: controller.situacaoDe(resumo),
+                  situacao: controller.situacaoDe(
+                    resumo,
+                    sePanfleto: filial.sePanfleto,
+                  ),
                   produtosNoAr: resumo?.produtosVigentes ?? 0,
                   contaAtiva: contexto.contaAtiva,
                   qrCode: controller.qrCodes[filial.id],

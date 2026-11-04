@@ -71,7 +71,7 @@ class _EditorPaginaState extends State<EditorPagina> {
                 padding: EdgeInsets.all(AppEspacamentos.md),
                 child: AppAviso(
                   tipo: TipoAviso.info,
-                  mensagem: 'A página está mostrando só o panfleto. A ordem vale quando não houver panfleto vigente ou quando a chave estiver desligada no Perfil.',
+                  mensagem: 'A página está mostrando só o panfleto. A ordem vale quando não houver panfleto vigente ou quando a chave estiver desligada no cadastro da filial.',
                 ),
               ),
             )

@@ -61,7 +61,6 @@ class PerfilController extends ChangeNotifier {
     required String nomeResponsavel,
     required String whatsapp,
     required String cnpj,
-    required bool sePanfleto,
   }) async {
     _salvando = true;
     _errosDosCampos = const {};
@@ -78,7 +77,7 @@ class PerfilController extends ChangeNotifier {
     final resultado = switch (lojista) {
       Failure(:final falha) => Failure<Falha, PerfilCarregado>(falha),
       Success(valor: final l) => (await _service.editarIdentidade(
-        IdentidadeRequest(nomeFantasia: nome, sePanfleto: sePanfleto),
+        IdentidadeRequest(nomeFantasia: nome),
       )).map((i) => PerfilCarregado(lojista: l, identidade: i)),
     };
     _salvando = false;

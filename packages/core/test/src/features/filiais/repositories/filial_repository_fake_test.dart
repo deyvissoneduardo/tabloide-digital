@@ -29,6 +29,24 @@ void main() {
       expect(await fake.obter('nada'), isA<Failure<Falha, FilialResponse>>());
     });
 
+    test('Cenário: Dado um pedido com sePanfleto, quando edito, então a filial guarda a chave (RN44)', () async {
+      final fake = FilialRepositoryFake(filiais: [filialFake]);
+
+      await fake.editar(
+        filialFake.id,
+        FilialRequest(
+          nome: 'Centro',
+          endereco: filialFake.endereco,
+          fusoHorario: 'America/Sao_Paulo',
+          sePanfleto: true,
+        ),
+      );
+
+      final filial = (await fake.obter(filialFake.id))
+          .fold((_) => null, (f) => f)!;
+      expect(filial.sePanfleto, isTrue);
+    });
+
     test('Cenário: Dado uma falha simulada, quando chamo qualquer operação, então recebo a falha', () async {
       final fake = FilialRepositoryFake(falhaSimulada: const FalhaSemConexao());
 

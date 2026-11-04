@@ -30,7 +30,6 @@ void main() {
       nomeResponsavel: ' Bia ',
       whatsapp: '(11) 91234-5678',
       cnpj: '11.222.333/0001-81',
-      sePanfleto: true,
     );
 
     test('Cenário: Dado as duas APIs respondendo, quando carrego, então tenho lojista e identidade', () async {
@@ -89,7 +88,7 @@ void main() {
       );
       expect(
         identidade.pedidos.single,
-        const IdentidadeRequest(nomeFantasia: 'Mercado Novo', sePanfleto: true),
+        const IdentidadeRequest(nomeFantasia: 'Mercado Novo'),
       );
       expect(
         identidade.pedidos.single.toJson().keys,
@@ -99,6 +98,11 @@ void main() {
       expect(
         identidade.pedidos.single.toJson().keys,
         isNot(contains('corSecundaria')),
+      );
+      expect(
+        identidade.pedidos.single.toJson().keys,
+        isNot(contains('sePanfleto')),
+        reason: 'a chave é por filial: o Perfil não a envia (RN44)',
       );
       final carregado = controller.estado as PerfilCarregado;
       expect(carregado.lojista.nomeFantasia, 'Mercado Novo');

@@ -5,6 +5,7 @@ final class FilialRequest {
     required this.nome,
     required this.endereco,
     required this.fusoHorario,
+    this.sePanfleto = false,
   });
 
   final String nome;
@@ -13,10 +14,14 @@ final class FilialRequest {
 
   final String fusoHorario;
 
+  /// RN44: mostrar só o panfleto vigente na página pública desta filial.
+  final bool sePanfleto;
+
   Map<String, Object?> toJson() => {
     'nome': nome,
     'endereco': endereco.toJson(),
     'fusoHorario': fusoHorario,
+    'sePanfleto': sePanfleto,
   };
 
   @override
@@ -24,11 +29,13 @@ final class FilialRequest {
       other is FilialRequest &&
       other.nome == nome &&
       other.endereco == endereco &&
-      other.fusoHorario == fusoHorario;
+      other.fusoHorario == fusoHorario &&
+      other.sePanfleto == sePanfleto;
 
   @override
-  int get hashCode => Object.hash(nome, endereco, fusoHorario);
+  int get hashCode => Object.hash(nome, endereco, fusoHorario, sePanfleto);
 
   @override
-  String toString() => 'FilialRequest(nome: $nome, endereco: $endereco)';
+  String toString() =>
+      'FilialRequest(nome: $nome, endereco: $endereco, sePanfleto: $sePanfleto)';
 }
