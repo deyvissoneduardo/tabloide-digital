@@ -124,7 +124,6 @@ PaginasPublicadasController paginasPublicadasControllerDeTeste({
   ),
 );
 
-/// LinkService sem plugins: registra o que foi aberto, copiado e compartilhado.
 class LinkServiceDeTeste extends LinkServiceApp {
   LinkServiceDeTeste({this.abre = true})
     : super(
@@ -156,7 +155,6 @@ class LinkServiceDeTeste extends LinkServiceApp {
   }
 }
 
-/// Seletor de PDF que devolve o arquivo configurado (null = cancelado).
 class SeletorPdfDeTeste extends SeletorPdf {
   const SeletorPdfDeTeste([this.arquivo]);
 

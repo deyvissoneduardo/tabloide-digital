@@ -16,7 +16,6 @@ final class PaginasPublicadasServiceApp {
 
   final FilialRepository _filiais;
 
-  /// Identidade e lojista em paralelo; a primeira falha vence.
   Future<Either<Falha, ContextoPaginas>> carregar() async {
     final (identidade, lojista) = await (
       _identidade.obter(),

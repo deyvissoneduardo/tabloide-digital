@@ -16,8 +16,6 @@ final class PaginaServiceApp {
 
   final ConfiguracaoPaginaRepository _configuracao;
 
-  /// Estrutura, identidade, panfletos e aparência em paralelo; o vigente é o
-  /// panfleto com situação VIGENTE. A primeira falha vence.
   Future<Either<Falha, DadosPagina>> carregar(String filialId) async {
     final (estrutura, identidade, panfletos, configuracao) = await (
       _estrutura.obter(filialId),

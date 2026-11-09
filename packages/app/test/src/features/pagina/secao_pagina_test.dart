@@ -14,7 +14,6 @@ Finder get _publicar => find.widgetWithText(ElevatedButton, 'Publicar');
 
 Finder _campo(String rotulo) => find.widgetWithText(TextFormField, rotulo);
 
-/// Produto completo da banana, na categoria Hortifrúti da estrutura fake.
 final _banana = ProdutoResponse(
   id: produtoEstruturaFakeBanana.id,
   filialId: 'f1',

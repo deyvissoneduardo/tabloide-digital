@@ -5,7 +5,6 @@ import 'package:tabloide_core/src/features/pagina/repositories/configuracao_pagi
 import 'package:tabloide_core/src/requests/configuracao_pagina_request.dart';
 import 'package:tabloide_core/src/responses/configuracao_pagina_response.dart';
 
-/// Exemplo do plano.md §4.2: banner ligado com nome, logo e foto.
 const configuracaoPaginaFake = ConfiguracaoPaginaResponse(
   banner: BannerResponse(
     exibir: true,
@@ -17,7 +16,6 @@ const configuracaoPaginaFake = ConfiguracaoPaginaResponse(
   cores: CoresPaginaResponse(primaria: '#C8102E', fundoBanner: '#0B3D91'),
 );
 
-/// Simula a API em memória, aplicando as regras do plano.md §4.3.
 final class ConfiguracaoPaginaRepositoryFake
     implements ConfiguracaoPaginaRepository {
   ConfiguracaoPaginaRepositoryFake({
@@ -30,13 +28,10 @@ final class ConfiguracaoPaginaRepositoryFake
 
   ConfiguracaoPaginaResponse configuracao;
 
-  /// Falha de todas as chamadas.
   Falha? falha;
 
-  /// Falha só do PATCH.
   Falha? falhaAoEditar;
 
-  /// Falha só dos uploads e remoções do banner.
   Falha? falhaAoEnviar;
 
   Duration atraso;
@@ -45,8 +40,6 @@ final class ConfiguracaoPaginaRepositoryFake
 
   final pedidos = <ConfiguracaoPaginaRequest>[];
 
-  /// Ordem das chamadas de escrita: `PATCH`, `PUT logo`, `DELETE logo`,
-  /// `PUT foto` e `DELETE foto`.
   final chamadas = <String>[];
 
   @override

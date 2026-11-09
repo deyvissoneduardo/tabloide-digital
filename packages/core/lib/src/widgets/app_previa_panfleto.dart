@@ -7,9 +7,6 @@ import 'package:tabloide_core/src/theme/app_espacamentos.dart';
 import 'package:tabloide_core/src/theme/app_icones.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 
-/// Panfleto na prévia, igual ao da página pública: cartão `fundoCartao` com
-/// sombra, validade em etiqueta e "Abrir PDF" na primária. O Flutter não
-/// desenha o PDF: mostra o arquivo no cartão (D13).
 class AppPreviaPanfleto extends StatelessWidget {
   const AppPreviaPanfleto({
     super.key,

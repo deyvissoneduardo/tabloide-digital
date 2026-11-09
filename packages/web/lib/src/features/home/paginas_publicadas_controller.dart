@@ -3,7 +3,6 @@ import 'package:tabloide_web/src/features/home/paginas_publicadas_estado.dart';
 import 'package:tabloide_web/src/features/home/services/paginas_publicadas_service_web.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Cards "Suas páginas" da home: contexto do lojista e QR Code por filial.
 class PaginasPublicadasController extends ChangeNotifier {
   PaginasPublicadasController(this._service);
 
@@ -30,8 +29,6 @@ class PaginasPublicadasController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Uma vez por filial (o PNG fica em memória; a falha também, para não
-  /// repetir a chamada a cada redesenho).
   Future<void> carregarQrCode(String filialId) async {
     if (_qrCodes.containsKey(filialId) || _qrCodesComFalha.contains(filialId)) {
       return;
@@ -48,8 +45,6 @@ class PaginasPublicadasController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Regra §4.8 aplicada às contagens da filial, com a chave da própria
-  /// filial (RN44).
   SituacaoPaginaFilial situacaoDe(
     ResumoFilial? resumo, {
     required bool sePanfleto,

@@ -6,7 +6,6 @@ Map<String, Object?> _cores([Map<String, Object?> valores = const {}]) => {
   for (final cor in CorPagina.values) cor.name: valores[cor.name],
 };
 
-/// Exemplo do plano.md §4.2.
 Map<String, Object?> corpoConfiguracaoPagina() => {
   'banner': {
     'exibir': true,

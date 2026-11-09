@@ -45,7 +45,6 @@ final produtoEstruturaFakeArroz = ProdutoEstruturaResponse(
   ),
 );
 
-/// 2 categorias, 3 produtos (1 agendado).
 final estruturaFake = EstruturaResponse(
   categorias: [
     CategoriaEstruturaResponse(

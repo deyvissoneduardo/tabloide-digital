@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 enum ResultadoCompartilhar { compartilhado, copiado }
 
-/// Abrir, copiar e compartilhar o link da página pública (D16).
 class LinkServiceApp {
   LinkServiceApp({
     Future<bool> Function(Uri url)? abrirUrl,
@@ -29,7 +28,6 @@ class LinkServiceApp {
   Future<void> copiar(String url) =>
       Clipboard.setData(ClipboardData(text: url));
 
-  /// App: a folha de compartilhar do sistema com o texto (que leva o link).
   Future<ResultadoCompartilhar> compartilhar(String texto, String url) async {
     await _compartilhar(ShareParams(text: texto));
     return ResultadoCompartilhar.compartilhado;

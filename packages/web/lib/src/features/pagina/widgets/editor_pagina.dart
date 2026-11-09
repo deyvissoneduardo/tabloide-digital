@@ -6,9 +6,6 @@ import 'package:tabloide_web/src/features/produtos/produto_form_screen.dart';
 import 'package:tabloide_web/src/features/produtos/services/produto_service_web.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Lista vertical de categorias, cada uma com os produtos na horizontal.
-/// Tocar num produto abre o formulário de produto; salvar grava só o produto
-/// (U17).
 class EditorPagina extends StatefulWidget {
   const EditorPagina({super.key, required this.exibePanfleto});
 

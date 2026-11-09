@@ -6,9 +6,6 @@ import 'package:tabloide_core/src/theme/app_icones.dart';
 import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 
-/// Cabeçalho da prévia da página, igual ao da página pública: faixa na
-/// primária, logo (ou iniciais) num bloco `sobreCor` e o nome do lojista.
-/// Nunca mostra a filial (U9).
 class AppPreviaCabecalho extends StatelessWidget {
   const AppPreviaCabecalho({
     super.key,
@@ -20,7 +17,6 @@ class AppPreviaCabecalho extends StatelessWidget {
 
   final AppCoresPagina cores;
 
-  /// Até 2 letras: primeira e última palavra do nome (igual à página pública).
   static String iniciais(String nome) {
     final palavras = nome.trim().split(RegExp(r'\s+'))
       ..removeWhere((p) => p.isEmpty);

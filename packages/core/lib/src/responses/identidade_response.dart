@@ -33,8 +33,6 @@ final class IdentidadeResponse {
 
   final String? urlLogo;
 
-  /// Legado (apps antigos): a chave agora é por filial, em
-  /// `FilialResponse.sePanfleto` (RN44).
   final bool sePanfleto;
 
   @override

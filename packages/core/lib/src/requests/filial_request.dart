@@ -14,7 +14,6 @@ final class FilialRequest {
 
   final String fusoHorario;
 
-  /// RN44: mostrar só o panfleto vigente na página pública desta filial.
   final bool sePanfleto;
 
   Map<String, Object?> toJson() => {

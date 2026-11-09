@@ -1,7 +1,5 @@
 import 'package:tabloide_core/src/features/pagina/models/cor_pagina.dart';
 
-/// Aparência da página pública do lojista (plano.md §4.2): banner, nome da
-/// categoria e as 10 cores (`null` = padrão, resolvido por `AppCoresPagina`).
 final class ConfiguracaoPaginaResponse {
   const ConfiguracaoPaginaResponse({
     this.banner = const BannerResponse(),
@@ -25,8 +23,6 @@ final class ConfiguracaoPaginaResponse {
     ),
   };
 
-  /// Sem nada configurado: banner desligado, nome da categoria visível e
-  /// todas as cores no padrão (U14).
   static const padrao = ConfiguracaoPaginaResponse();
 
   final BannerResponse banner;
@@ -87,13 +83,10 @@ final class BannerResponse {
 
   final bool exibir;
 
-  /// Nome próprio do banner (até 120); ausente = não mostra (U4).
   final String? nome;
 
-  /// Logo próprio do banner; ausente = não mostra (U4).
   final String? urlLogo;
 
-  /// Foto 16:9 ou descrição; `null` = sem campanha (U5).
   final CampanhaResponse? campanha;
 
   @override
@@ -156,7 +149,6 @@ final class CampanhaDescricao extends CampanhaResponse {
   String toString() => 'CampanhaDescricao($descricao)';
 }
 
-/// As 10 cores em `#RRGGBB` ou `null` (= padrão, plano.md §4.4).
 final class CoresPaginaResponse {
   const CoresPaginaResponse({
     this.primaria,
@@ -234,7 +226,6 @@ final class CoresPaginaResponse {
     CorPagina.categoria => categoria,
   };
 
-  /// Cópia com [cor] trocada por [valor] (`null` = padrão).
   CoresPaginaResponse com(CorPagina cor, String? valor) {
     String? v(CorPagina c) => c == cor ? valor : this[c];
     return CoresPaginaResponse(

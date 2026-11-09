@@ -32,7 +32,6 @@ final class HomeRepositoryFake implements HomeRepository {
     }
     return tentar(() async {
       await Future<void>.delayed(atraso);
-      // Sem porFilial definido: a 1ª filial leva os totais.
       if (resumo.porFilial.isNotEmpty) return resumo;
       return ResumoPainel(
         panfletosVigentes: resumo.panfletosVigentes,

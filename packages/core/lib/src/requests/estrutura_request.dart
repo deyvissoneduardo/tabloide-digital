@@ -23,11 +23,9 @@ final class CategoriaOrdenada {
   String toString() => 'CategoriaOrdenada($id, $produtos)';
 }
 
-/// Corpo do `PUT /painel/filiais/:id/estrutura` (plano §4.2).
 final class EstruturaRequest {
   const EstruturaRequest(this.categorias);
 
-  /// Monta a partir da ordem em edição: categorias e produtos na ordem exibida.
   factory EstruturaRequest.daEstrutura(
     List<CategoriaEstruturaResponse> categorias,
   ) => EstruturaRequest([

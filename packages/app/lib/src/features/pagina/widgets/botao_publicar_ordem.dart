@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/pagina/pagina_controller.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// "Publicar": ação principal da seção Página. Envia aparência e ordem (T7).
 class BotaoPublicarOrdem extends StatelessWidget {
   const BotaoPublicarOrdem({super.key});
 

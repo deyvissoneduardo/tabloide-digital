@@ -21,7 +21,6 @@ List<String> _ids(List<CategoriaEstruturaResponse> categorias) => [
   for (final c in categorias) c.nome,
 ];
 
-/// 3 categorias: Hortifrúti, Mercearia e Bebidas (vazia).
 final _tres = EstruturaResponse(
   categorias: [
     ...estruturaFake.categorias,
@@ -33,7 +32,6 @@ final _tres = EstruturaResponse(
   ],
 );
 
-/// Estrutura que só responde quando o teste manda.
 final class _EstruturaControlada implements EstruturaRepository {
   final pedidos = <String, Completer<Either<Falha, EstruturaResponse>>>{};
 

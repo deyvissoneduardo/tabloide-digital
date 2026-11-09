@@ -1,8 +1,3 @@
-/// `PATCH /painel/lojista/identidade`. As cores saíram do Perfil (U15) e
-/// moram na aparência da página (T3): só vão no JSON quando informadas, para
-/// o Perfil não apagar as cores escolhidas na aba Aparência. O mesmo vale para
-/// `sePanfleto`: a chave agora é por filial (RN44) e a API grava a da
-/// identidade em todas as filiais.
 final class IdentidadeRequest {
   const IdentidadeRequest({
     required this.nomeFantasia,

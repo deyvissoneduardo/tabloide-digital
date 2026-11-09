@@ -55,7 +55,6 @@ final class FilialResponse {
 
   final DateTime atualizadaEm;
 
-  /// RN44: a página pública desta filial mostra só o panfleto vigente.
   final bool sePanfleto;
 
   @override

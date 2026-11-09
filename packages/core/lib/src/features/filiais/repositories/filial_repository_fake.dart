@@ -46,7 +46,6 @@ final filialFakeBairro = FilialResponse(
   atualizadaEm: DateTime.utc(2026, 10, 19, 9),
 );
 
-/// PNG 1×1 usado como QR Code nos testes.
 final pngQrCodeFake = base64Decode(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGNgAAAAAgABSK+kcQ'
   'AAAABJRU5ErkJggg==',
@@ -71,7 +70,6 @@ final class FilialRepositoryFake implements FilialRepository {
 
   final qrCodesPedidos = <String>[];
 
-  /// Filiais cujo QR Code falha (o resto responde normalmente).
   final qrCodesComFalha = <String>{};
 
   @override
