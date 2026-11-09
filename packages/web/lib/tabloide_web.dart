@@ -63,4 +63,5 @@ export 'src/features/produtos/produtos_controller.dart';
 export 'src/features/produtos/produtos_estado.dart';
 export 'src/features/produtos/services/produto_service_web.dart';
 export 'src/features/produtos/widgets/secao_produtos.dart';
+export 'src/features/suporte/suporte_screen.dart';
 export 'src/painel_web.dart';

@@ -7,14 +7,12 @@ import 'package:tabloide_app/src/features/pagina/widgets/secao_pagina.dart';
 import 'package:tabloide_app/src/features/panfletos/widgets/secao_panfletos.dart';
 import 'package:tabloide_app/src/features/perfil/perfil_screen.dart';
 import 'package:tabloide_app/src/features/produtos/widgets/secao_produtos.dart';
+import 'package:tabloide_app/src/features/suporte/suporte_screen.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  /// D11: sair da seção Página com mudanças não publicadas (ordem ou
-  /// aparência) pede confirmação.
-  /// `true` = pode sair (sem mudanças ou descartadas).
   Future<bool> _podeSairDaPagina(BuildContext context) async {
     final home = context.read<HomeController>();
     final pagina = context.read<PaginaController>();
@@ -46,6 +44,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _abrirSuporte(BuildContext context) =>
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const SuporteScreen()),
+      );
+
   @override
   Widget build(BuildContext context) {
     final secao = context.watch<HomeController>().secao;
@@ -54,6 +57,11 @@ class HomeScreen extends StatelessWidget {
         titleSpacing: AppEspacamentos.md,
         title: const AppMarcaCabecalho(),
         actions: [
+          IconButton(
+            tooltip: 'Suporte',
+            icon: const Icon(Icons.help_outline),
+            onPressed: () => _abrirSuporte(context),
+          ),
           IconButton(
             tooltip: 'Perfil',
             icon: const Icon(Icons.person_outline),

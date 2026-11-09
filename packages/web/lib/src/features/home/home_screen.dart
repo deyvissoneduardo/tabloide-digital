@@ -8,13 +8,11 @@ import 'package:tabloide_web/src/features/pagina/widgets/secao_pagina.dart';
 import 'package:tabloide_web/src/features/panfletos/widgets/secao_panfletos.dart';
 import 'package:tabloide_web/src/features/perfil/perfil_screen.dart';
 import 'package:tabloide_web/src/features/produtos/widgets/secao_produtos.dart';
+import 'package:tabloide_web/src/features/suporte/suporte_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  /// D11: sair da seção Página com mudanças não publicadas (ordem ou
-  /// aparência) pede confirmação.
-  /// `true` = pode sair (sem mudanças ou descartadas).
   Future<bool> _podeSairDaPagina(BuildContext context) async {
     final home = context.read<HomeController>();
     final pagina = context.read<PaginaController>();
@@ -38,6 +36,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _abrirSuporte(BuildContext context) =>
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const SuporteScreen()),
+      );
+
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<HomeController>();
@@ -55,6 +58,11 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: const AppMarcaCabecalho(),
           actions: [
+            IconButton(
+              tooltip: 'Suporte',
+              icon: const Icon(Icons.help_outline),
+              onPressed: () => _abrirSuporte(context),
+            ),
             IconButton(
               tooltip: 'Perfil',
               icon: const Icon(Icons.person_outline),
@@ -99,17 +107,34 @@ class HomeScreen extends StatelessWidget {
             trailingAtBottom: true,
             trailing: Padding(
               padding: const EdgeInsets.only(bottom: AppEspacamentos.md),
-              child: expandido
-                  ? TextButton.icon(
-                      onPressed: () => _abrirPerfil(context),
-                      icon: const Icon(Icons.person_outline),
-                      label: const Text('Perfil'),
-                    )
-                  : IconButton(
-                      tooltip: 'Perfil',
-                      icon: const Icon(Icons.person_outline),
-                      onPressed: () => _abrirPerfil(context),
-                    ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: expandido
+                    ? [
+                        TextButton.icon(
+                          onPressed: () => _abrirSuporte(context),
+                          icon: const Icon(Icons.help_outline),
+                          label: const Text('Suporte'),
+                        ),
+                        TextButton.icon(
+                          onPressed: () => _abrirPerfil(context),
+                          icon: const Icon(Icons.person_outline),
+                          label: const Text('Perfil'),
+                        ),
+                      ]
+                    : [
+                        IconButton(
+                          tooltip: 'Suporte',
+                          icon: const Icon(Icons.help_outline),
+                          onPressed: () => _abrirSuporte(context),
+                        ),
+                        IconButton(
+                          tooltip: 'Perfil',
+                          icon: const Icon(Icons.person_outline),
+                          onPressed: () => _abrirPerfil(context),
+                        ),
+                      ],
+              ),
             ),
             selectedIndex: controller.secao.index,
             onDestinationSelected: _selecionar(context),
