@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:tabloide_core/src/features/vigencia/models/vigencia.dart';
 
-/// Ordem da página de uma filial (plano §4.2): todas as categorias e, em cada
-/// uma, os produtos vigentes e agendados, já na ordem de exibição.
 final class EstruturaResponse {
   const EstruturaResponse({required this.categorias});
 

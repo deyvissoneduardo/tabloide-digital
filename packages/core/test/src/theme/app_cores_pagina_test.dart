@@ -17,7 +17,6 @@ Map<CorPagina, String> _resolvidas(AppCoresPagina cores) => {
   CorPagina.categoria: _hex(cores.categoria),
 };
 
-/// Tabela de padrões do plano.md §4.4 (a mesma da API e do React).
 const _padroes = {
   CorPagina.primaria: '#1565C0',
   CorPagina.secundaria: '#996B00',
@@ -31,7 +30,6 @@ const _padroes = {
   CorPagina.categoria: '#1565C0',
 };
 
-/// 10 cores distintas, todas escolhidas.
 const _distintas = CoresPaginaResponse(
   primaria: '#C8102E',
   secundaria: '#FFD100',

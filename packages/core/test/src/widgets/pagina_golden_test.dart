@@ -9,13 +9,10 @@ import '../../helpers/montar.dart';
 
 const _identidade = IdentidadeResponse(nomeFantasia: 'Mercado Bom Preço');
 
-/// Cores do lojista usadas exatamente (U13): a secundária #FFD100 não é mais
-/// escurecida.
 const _coresLojista = ConfiguracaoPaginaResponse(
   cores: CoresPaginaResponse(primaria: '#C8102E', secundaria: '#FFD100'),
 );
 
-/// 10 cores distintas (E8).
 const _coresDistintas = CoresPaginaResponse(
   primaria: '#C8102E',
   secundaria: '#7B1FA2',
@@ -127,8 +124,6 @@ class _Editor extends StatelessWidget {
   }
 }
 
-/// Decodifica só as imagens locais (logo e foto do banner ainda não
-/// publicados); as de rede caem no `errorBuilder`, como antes.
 Future<void> _precarregarMemoria(WidgetTester tester) async {
   await tester.runAsync(
     () => Future.wait([

@@ -51,11 +51,8 @@ final class PanfletoResponse {
 
   final TipoArquivoPanfleto tipo;
 
-  /// Imagem ou PDF original (a API ainda manda `urlImagem` com o mesmo valor,
-  /// só para apps antigos; o painel ignora).
   final String urlArquivo;
 
-  /// Último segmento de [urlArquivo] (ex.: `0192f0c0.pdf`).
   String get nomeArquivo {
     final caminho = Uri.tryParse(urlArquivo)?.pathSegments ?? const [];
     return caminho.isEmpty ? urlArquivo : caminho.last;

@@ -20,6 +20,5 @@ abstract interface class FilialRepository {
 
   Future<Either<Falha, Nada>> excluir(String id);
 
-  /// PNG do QR Code da página pública da filial (512 px).
   Future<Either<Falha, Uint8List>> qrCode(String id);
 }

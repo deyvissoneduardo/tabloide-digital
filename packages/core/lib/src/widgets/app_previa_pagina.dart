@@ -14,11 +14,6 @@ import 'package:tabloide_core/src/widgets/app_previa_categoria.dart';
 import 'package:tabloide_core/src/widgets/app_previa_grade_produtos.dart';
 import 'package:tabloide_core/src/widgets/app_previa_panfleto.dart';
 
-/// Prévia nativa da página pública (plano.md §4.4 e §4.6), referência visual
-/// da página React. Mostra a ordem recebida em [categorias] e a aparência em
-/// [configuracao] (as duas em edição) e esconde categorias sem produtos
-/// (RN41). Topo: banner se ligado e sem panfleto em exibição (U8), senão o
-/// cabeçalho.
 class AppPreviaPagina extends StatelessWidget {
   const AppPreviaPagina({
     super.key,
@@ -34,13 +29,10 @@ class AppPreviaPagina extends StatelessWidget {
 
   final List<CategoriaEstruturaResponse> categorias;
 
-  /// Aparência em edição; `null` usa a salva em [dados].
   final ConfiguracaoPaginaResponse? configuracao;
 
-  /// Logo do banner escolhido e ainda não publicado (T6).
   final Uint8List? bytesLogoBanner;
 
-  /// Foto da campanha escolhida e ainda não publicada (T6).
   final Uint8List? bytesFotoBanner;
 
   final VoidCallback? aoAbrirPdf;

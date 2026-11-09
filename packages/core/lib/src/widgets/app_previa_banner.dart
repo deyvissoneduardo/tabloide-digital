@@ -8,11 +8,6 @@ import 'package:tabloide_core/src/theme/app_icones.dart';
 import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 
-/// Banner da prévia (RN46, plano.md §4.6): substitui o cabeçalho. Mesmo
-/// container do cabeçalho com fundo `fundoBanner`; linha [logo] [nome] (cada
-/// um só se houver) e, abaixo, a foto 16:9 **ou** a descrição. Sem nada, é só
-/// a faixa de cor. [bytesLogo]/[bytesFoto] são imagens escolhidas e ainda não
-/// publicadas (T6) e vencem as URLs.
 class AppPreviaBanner extends StatelessWidget {
   const AppPreviaBanner({
     super.key,

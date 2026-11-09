@@ -9,8 +9,6 @@ import 'package:tabloide_app/src/features/pagina/widgets/editor_pagina.dart';
 import 'package:tabloide_app/src/features/pagina/widgets/previa_pagina.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Seção "Página": montar a ordem, configurar a aparência e ver a prévia. No
-/// app, sempre em abas "Montar" / "Aparência" / "Prévia" (D12).
 class SecaoPagina extends StatefulWidget {
   const SecaoPagina({super.key});
 
@@ -49,7 +47,6 @@ class _SecaoPaginaState extends State<SecaoPagina> {
         if (mounted) _carregar(filial.id);
       });
     }
-    // RN44: a chave é da filial em uso; editar a filial já reflete na prévia
     final estado = switch (controller.estado) {
       PaginaCarregada(:final dados) when filial != null => PaginaCarregada(
         dados.copiar(sePanfleto: filial.sePanfleto),

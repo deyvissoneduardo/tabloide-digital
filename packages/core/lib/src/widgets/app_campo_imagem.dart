@@ -35,14 +35,10 @@ class AppCampoImagem extends StatelessWidget {
   final String? ajuda;
   final double proporcao;
 
-  /// PDF escolhido (ainda não enviado) ou já salvo: mostra o estado "PDF" no
-  /// lugar da prévia. Vence `bytes`/`url`.
   final String? nomePdf;
 
-  /// Com valor, aparece o botão "Escolher PDF".
   final VoidCallback? aoEscolherPdf;
 
-  /// Com valor, aparece o botão "Tirar foto" (abre a câmera).
   final VoidCallback? aoTirarFoto;
 
   @override

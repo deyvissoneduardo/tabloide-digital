@@ -8,11 +8,8 @@ import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/widgets/app_aviso.dart';
 import 'package:tabloide_core/src/widgets/esqueleto.dart';
 
-/// O que a página pública da filial mostra agora (plano §4.8).
 enum SituacaoPaginaFilial { panfleto, produtos, vazia }
 
-/// Card da home com a página pública de uma filial: o que está no ar, link,
-/// QR Code e ações (abrir, copiar, compartilhar). Aviso RN35 sem conta ativa.
 class AppCartaoPaginaFilial extends StatelessWidget {
   const AppCartaoPaginaFilial({
     super.key,
@@ -38,7 +35,6 @@ class AppCartaoPaginaFilial extends StatelessWidget {
 
   final bool contaAtiva;
 
-  /// PNG do QR Code; `null` = carregando.
   final Uint8List? qrCode;
 
   final bool qrCodeFalhou;

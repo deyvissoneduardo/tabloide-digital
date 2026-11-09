@@ -5,7 +5,6 @@ import 'package:tabloide_core/tabloide_core.dart';
 
 const maxBytesImagemPanfleto = 10 * 1024 * 1024;
 
-/// Limite do PDF do panfleto (plano D4).
 const maxBytesPdfPanfleto = 2 * 1024 * 1024;
 
 typedef ArquivoEscolhido = ({Uint8List bytes, String nome});
@@ -26,7 +25,6 @@ class PanfletoFormController extends ChangeNotifier {
 
   ArquivoEscolhido? get imagem => _imagem;
 
-  /// O arquivo escolhido (ou, sem escolha, o do panfleto em edição) é PDF.
   bool arquivoEhPdf([PanfletoResponse? emEdicao]) => switch (_imagem) {
     (:final nome, bytes: _) => _ehPdf(nome),
     null => emEdicao?.tipo == TipoArquivoPanfleto.pdf,
@@ -47,7 +45,6 @@ class PanfletoFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Imagem ou PDF (pelo nome). O tamanho é conferido antes do envio (RNF05).
   void escolherArquivo(Uint8List bytes, String nome) {
     final pdf = _ehPdf(nome);
     if (bytes.length > (pdf ? maxBytesPdfPanfleto : maxBytesImagemPanfleto)) {

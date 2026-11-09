@@ -44,8 +44,6 @@ ProdutoEstruturaResponse _daEstrutura(ProdutoResponse produto) =>
       vigencia: produto.vigencia,
     );
 
-/// T9: troca o produto no lugar; se mudou de categoria, sai da antiga e vai
-/// para o fim da nova.
 List<CategoriaEstruturaResponse> _comProduto(
   List<CategoriaEstruturaResponse> categorias,
   ProdutoResponse editado,
@@ -77,10 +75,6 @@ List<CategoriaEstruturaResponse> _comProduto(
   ]);
 }
 
-/// Página da filial em uso: ordem (RN45) e aparência (RN46–RN48). `emEdicao`
-/// e `aparenciaEmEdicao` são o que a tela e a prévia mostram; `salvo` e
-/// `aparenciaSalva` são o que a API tem (D10). Um único "Publicar" envia as
-/// duas (T7).
 class PaginaController extends ChangeNotifier {
   PaginaController(this._service);
 
@@ -111,8 +105,6 @@ class PaginaController extends ChangeNotifier {
 
   EdicaoAparencia get aparenciaEmEdicao => _aparenciaEmEdicao;
 
-  /// Muda quando a aparência em edição é trocada por inteiro (carregar ou
-  /// descartar): os campos da aba Aparência se preenchem de novo.
   int get revisaoAparencia => _revisaoAparencia;
 
   bool get ordemMudou => !_mesmaOrdem(_salvo, _emEdicao);
@@ -123,7 +115,6 @@ class PaginaController extends ChangeNotifier {
 
   bool get publicando => _publicando;
 
-  /// `true` depois de um 403 `LOJISTA_DESATIVADO`: desliga a edição.
   bool get bloqueado => _bloqueado;
 
   Future<void> carregar(String filialId) async {
@@ -145,8 +136,6 @@ class PaginaController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Índices do `onReorderItem` do `ReorderableListView` (`para` já é a
-  /// posição final).
   void moverCategoria(int de, int para) {
     if (_bloqueado || _publicando) return;
     final nova = _mover(_emEdicao, de, para);
@@ -179,15 +168,12 @@ class PaginaController extends ChangeNotifier {
   void direita(String categoriaId, int indice) =>
       moverProduto(categoriaId, indice, indice + 1);
 
-  /// Troca a aparência em edição (sem salvar): a prévia acompanha ao vivo.
   void editarAparencia(EdicaoAparencia Function(EdicaoAparencia atual) editar) {
     if (_bloqueado || _publicando) return;
     _aparenciaEmEdicao = editar(_aparenciaEmEdicao);
     notifyListeners();
   }
 
-  /// Produto salvo pelo formulário aberto no editor (U17, T9): atualiza o
-  /// item em `emEdicao` e em `salvo` sem publicar nada.
   void produtoEditado(ProdutoResponse produto) {
     _salvo = _comProduto(_salvo, produto);
     _emEdicao = _comProduto(_emEdicao, produto);
@@ -207,9 +193,6 @@ class PaginaController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// T7: uploads/remoções do banner → `PATCH` da aparência → `PUT` da ordem,
-  /// parando na primeira falha. O que gravou vira salvo; o resto continua
-  /// pendente.
   Future<Either<Falha, Nada>> publicar() async {
     final filialId = _filialId;
     if (filialId == null || _publicando) {

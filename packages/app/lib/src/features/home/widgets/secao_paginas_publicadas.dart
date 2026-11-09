@@ -6,7 +6,6 @@ import 'package:tabloide_app/src/features/home/paginas_publicadas_estado.dart';
 import 'package:tabloide_app/src/features/home/plataforma/link_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// "Suas páginas": um card por filial, na ordem da lista de filiais (D14).
 class SecaoPaginasPublicadas extends StatefulWidget {
   const SecaoPaginasPublicadas({super.key, required this.resumo});
 

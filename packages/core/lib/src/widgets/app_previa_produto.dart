@@ -8,9 +8,6 @@ import 'package:tabloide_core/src/theme/app_icones.dart';
 import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/theme/app_raios.dart';
 
-/// Cartão de produto da prévia: igual ao da página pública (cartão
-/// `fundoCartao` com sombra, selo de desconto, preço em destaque, observação e validade em
-/// etiquetas). Agendado não tem selo nem diferença visual (D10).
 class AppPreviaProduto extends StatelessWidget {
   const AppPreviaProduto({
     super.key,
@@ -23,11 +20,8 @@ class AppPreviaProduto extends StatelessWidget {
 
   final AppCoresPagina cores;
 
-  /// Largura do cartão: a do carrossel; `null` ocupa a coluna da grade.
   final double? largura;
 
-  /// Desconto inteiro de "de/por" (RN32), igual à página pública; `null`
-  /// quando não há preço original maior.
   static int? percentualDesconto(int promocional, int? original) {
     if (original == null || original <= promocional) return null;
     final percentual = ((1 - promocional / original) * 100).round();
