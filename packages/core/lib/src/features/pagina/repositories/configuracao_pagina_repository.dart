@@ -3,8 +3,6 @@ import 'package:tabloide_core/src/either/falha.dart';
 import 'package:tabloide_core/src/requests/configuracao_pagina_request.dart';
 import 'package:tabloide_core/src/responses/configuracao_pagina_response.dart';
 
-/// Aparência da página pública do lojista (plano.md §4.2 e §4.3). Toda rota
-/// devolve a configuração inteira.
 abstract interface class ConfiguracaoPaginaRepository {
   Future<Either<Falha, ConfiguracaoPaginaResponse>> obter();
 

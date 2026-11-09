@@ -28,7 +28,6 @@ class AppSeletorCor extends StatelessWidget {
   final bool habilitado;
   final ValueChanged<String>? aoMudar;
 
-  /// Texto de apoio abaixo do campo (ex.: a cor padrão).
   final String? ajuda;
 
   Future<void> _escolher(BuildContext context) async {

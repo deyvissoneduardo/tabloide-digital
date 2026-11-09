@@ -12,7 +12,6 @@ final class ResumoPainel {
 
   final int produtosVigentes;
 
-  /// Contagens de cada filial, na ordem pedida.
   final List<ResumoFilial> porFilial;
 
   ResumoFilial? daFilial(String filialId) =>

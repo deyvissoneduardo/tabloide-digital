@@ -9,10 +9,6 @@ import 'package:tabloide_web/src/features/pagina/widgets/editor_pagina.dart';
 import 'package:tabloide_web/src/features/pagina/widgets/previa_pagina.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Seção "Página": montar a ordem, configurar a aparência e ver a prévia. Na
-/// web, a partir de 840 px (expandido), abas "Montar" / "Aparência" com a
-/// prévia sempre visível à direita; abaixo disso, abas "Montar" /
-/// "Aparência" / "Prévia" (D12).
 class SecaoPagina extends StatefulWidget {
   const SecaoPagina({super.key});
 
@@ -51,7 +47,6 @@ class _SecaoPaginaState extends State<SecaoPagina> {
         if (mounted) _carregar(filial.id);
       });
     }
-    // RN44: a chave é da filial em uso; editar a filial já reflete na prévia
     final estado = switch (controller.estado) {
       PaginaCarregada(:final dados) when filial != null => PaginaCarregada(
         dados.copiar(sePanfleto: filial.sePanfleto),

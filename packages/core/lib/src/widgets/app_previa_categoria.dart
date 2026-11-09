@@ -4,8 +4,6 @@ import 'package:tabloide_core/src/theme/app_cores_pagina.dart';
 import 'package:tabloide_core/src/theme/app_espacamentos.dart';
 import 'package:tabloide_core/src/widgets/app_previa_produto.dart';
 
-/// Categoria da prévia, igual à da página pública: nome na cor `categoria`
-/// com barra na secundária, total de ofertas e produtos na horizontal.
 class AppPreviaCategoria extends StatelessWidget {
   const AppPreviaCategoria({
     super.key,

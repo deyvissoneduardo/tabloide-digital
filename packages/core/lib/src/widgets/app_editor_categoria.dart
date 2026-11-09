@@ -9,9 +9,6 @@ const _moverParaCima = CustomSemanticsAction(label: 'Mover para cima');
 
 const _moverParaBaixo = CustomSemanticsAction(label: 'Mover para baixo');
 
-/// Categoria no editor da página: alça para arrastar na lista vertical (fica
-/// dentro de um `ReorderableListView`) e produtos numa faixa horizontal
-/// reordenável. Ações semânticas permitem reordenar sem arrastar (RNF10).
 class AppEditorCategoria extends StatelessWidget {
   const AppEditorCategoria({
     super.key,
@@ -33,8 +30,6 @@ class AppEditorCategoria extends StatelessWidget {
 
   final bool habilitado;
 
-  /// Índices como o `onReorderItem` do `ReorderableListView` entrega
-  /// (`para` já é a posição final).
   final void Function(int de, int para) aoMoverProduto;
 
   final VoidCallback? aoSubir;
@@ -45,10 +40,8 @@ class AppEditorCategoria extends StatelessWidget {
 
   final ValueChanged<int>? aoProdutoDireita;
 
-  /// Toque num produto (abre o formulário, U17).
   final ValueChanged<ProdutoEstruturaResponse>? aoTocarProduto;
 
-  /// Id do produto que está sendo aberto (spinner no cartão).
   final String? produtoCarregando;
 
   @override

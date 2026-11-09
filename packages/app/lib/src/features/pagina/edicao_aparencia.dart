@@ -9,7 +9,6 @@ String? _textoOuNulo(String texto) {
   return limpo.isEmpty ? null : limpo;
 }
 
-/// Imagem escolhida para o banner e ainda não enviada (T6).
 final class ImagemPendente {
   const ImagemPendente({required this.bytes, required this.nomeArquivo});
 
@@ -18,8 +17,6 @@ final class ImagemPendente {
   final String nomeArquivo;
 }
 
-/// Aparência da página em edição (aba "Aparência"): o que a prévia mostra e o
-/// que "Publicar" envia (T6, T7). Imutável; cada `com*` devolve uma cópia.
 final class EdicaoAparencia {
   const EdicaoAparencia({
     required this.exibirBanner,
@@ -62,29 +59,22 @@ final class EdicaoAparencia {
 
   final String? nomeBanner;
 
-  /// Logo do banner já salvo (`null` = sem logo ou removido).
   final String? urlLogo;
 
-  /// Logo escolhido e ainda não enviado.
   final ImagemPendente? logo;
 
   final TipoCampanha tipoCampanha;
 
-  /// Foto da campanha já salva (`null` = sem foto ou removida).
   final String? urlFoto;
 
-  /// Foto escolhida e ainda não enviada.
   final ImagemPendente? foto;
 
-  /// Descrição digitada; mantida ao trocar de tipo.
   final String? descricao;
 
   final bool exibirNomeCategoria;
 
   final CoresPaginaResponse cores;
 
-  /// Configuração para a prévia e para o `PATCH`: campanha só com o que o
-  /// tipo escolhido tem de fato.
   ConfiguracaoPaginaResponse get configuracao => ConfiguracaoPaginaResponse(
     banner: BannerResponse(
       exibir: exibirBanner,
@@ -100,7 +90,6 @@ final class EdicaoAparencia {
     cores: cores,
   );
 
-  /// Foto pendente que a prévia deve mostrar (só com o tipo Foto).
   Uint8List? get bytesFoto =>
       tipoCampanha == TipoCampanha.foto ? foto?.bytes : null;
 
@@ -113,8 +102,6 @@ final class EdicaoAparencia {
 
   bool get enviaFoto => tipoCampanha == TipoCampanha.foto && foto != null;
 
-  /// A foto salva sai quando a campanha fica sem nada. Trocar para descrição
-  /// já substitui a foto pelo `PATCH` (plano.md §4.3).
   bool removeFoto(ConfiguracaoPaginaResponse salva) =>
       salva.banner.campanha is CampanhaFoto &&
       !enviaFoto &&
@@ -156,7 +143,6 @@ final class EdicaoAparencia {
 
   EdicaoAparencia comExibirBanner(bool exibir) => _copiar(exibirBanner: exibir);
 
-  /// Espaços normalizados como na API; vazio = sem nome.
   EdicaoAparencia comNomeBanner(String nome) =>
       _copiar(nomeBanner: () => _textoOuNulo(nome.replaceAll(_espacos, ' ')));
 
@@ -164,7 +150,6 @@ final class EdicaoAparencia {
 
   EdicaoAparencia semLogo() => _copiar(logo: () => null, urlLogo: () => null);
 
-  /// Sair de Foto descarta a foto escolhida e ainda não enviada.
   EdicaoAparencia comTipoCampanha(TipoCampanha tipo) => _copiar(
     tipoCampanha: tipo,
     foto: tipo == TipoCampanha.foto ? null : () => null,
@@ -181,15 +166,12 @@ final class EdicaoAparencia {
   EdicaoAparencia comExibirNomeCategoria(bool exibir) =>
       _copiar(exibirNomeCategoria: exibir);
 
-  /// [hex] `#RRGGBB` (maiúsculo) ou `null` = padrão.
   EdicaoAparencia comCor(CorPagina cor, String? hex) =>
       _copiar(cores: cores.com(cor, hex?.toUpperCase()));
 
-  /// Depois do envio do logo: a URL nova vira a salva.
   EdicaoAparencia comLogoEnviado(String? url) =>
       _copiar(logo: () => null, urlLogo: () => url);
 
-  /// Depois do envio da foto: a URL nova vira a salva.
   EdicaoAparencia comFotoEnviada(String? url) =>
       _copiar(foto: () => null, urlFoto: () => url);
 }

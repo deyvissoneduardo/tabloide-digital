@@ -4,8 +4,6 @@ import 'package:tabloide_web/src/features/home/plataforma/link_service_web.dart'
 import 'package:tabloide_web/src/features/pagina/pagina_controller.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 
-/// Prévia nativa: espelha a ordem e a aparência em edição, sem salvar (D10,
-/// T6).
 class PreviaPagina extends StatelessWidget {
   const PreviaPagina({super.key, required this.dados});
 

@@ -13,10 +13,6 @@ const _moverParaEsquerda = CustomSemanticsAction(
 
 const _moverParaDireita = CustomSemanticsAction(label: 'Mover para a direita');
 
-/// Produto no editor da página: alça de arrastar (dentro de um
-/// `ReorderableListView` horizontal), foto pequena, nome e preço. Tocar no
-/// cartão chama [aoTocar] (abre o formulário do produto, U17), desligado
-/// com `habilitado == false`; [carregando] mostra um spinner no cartão.
 class AppEditorProduto extends StatelessWidget {
   const AppEditorProduto({
     super.key,

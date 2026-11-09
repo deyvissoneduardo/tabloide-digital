@@ -6,12 +6,8 @@ import 'package:tabloide_core/src/theme/app_espacamentos.dart';
 import 'package:tabloide_core/src/theme/app_layout.dart';
 import 'package:tabloide_core/src/widgets/app_campo_imagem.dart';
 
-/// Máximo de caracteres da descrição da campanha (U6).
 const maxDescricaoCampanha = 280;
 
-/// Campanha do banner (U5): segmentado **Foto | Descrição | Nenhuma** e, abaixo,
-/// o campo de imagem 16:9 ou o texto multilinha com contador. Quem escolhe a
-/// imagem é a tela; a validação da descrição vem por [validadorDescricao].
 class AppCampoCampanha extends StatelessWidget {
   const AppCampoCampanha({
     super.key,

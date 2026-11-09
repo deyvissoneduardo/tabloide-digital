@@ -21,8 +21,6 @@ String? _validarCor(String? valor) =>
     ? null
     : 'Informe a cor no formato #RRGGBB.';
 
-/// Seletores da seção "Cores", na ordem da tela (fundoBanner e categoria
-/// ficam nas seções Banner e Categorias).
 const _coresGerais = [
   (CorPagina.primaria, 'Cor primária'),
   (CorPagina.secundaria, 'Cor secundária'),
@@ -34,7 +32,6 @@ const _coresGerais = [
   (CorPagina.sobreCor, 'Texto sobre cor'),
 ];
 
-/// Padrão de cada cor (plano.md §4.4), mostrado como dica.
 String _ajudaDa(CorPagina cor) => switch (cor) {
   CorPagina.fundoBanner || CorPagina.categoria => 'Vazio usa a cor primária.',
   _ =>
@@ -50,9 +47,6 @@ String _ajudaDa(CorPagina cor) => switch (cor) {
     })}.',
 };
 
-/// Aba "Aparência" da seção Página (RN46–RN48): banner, nome da categoria e
-/// as 10 cores. Cada mudança vai para `PaginaController.aparenciaEmEdicao`
-/// (prévia ao vivo); nada é salvo antes de "Publicar" (U16).
 class AparenciaPagina extends StatefulWidget {
   const AparenciaPagina({super.key});
 

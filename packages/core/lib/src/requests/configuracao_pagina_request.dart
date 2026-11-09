@@ -6,10 +6,6 @@ String? _descricao(CampanhaResponse? campanha) => switch (campanha) {
   _ => null,
 };
 
-/// `PATCH /painel/lojista/pagina` (plano.md §4.3): só as chaves que mudaram
-/// entre o salvo e o em edição. Logo e foto do banner vão pelas rotas de
-/// upload; aqui só entra a descrição (texto = campanha DESCRICAO; `null`
-/// apaga a descrição).
 final class ConfiguracaoPaginaRequest {
   const ConfiguracaoPaginaRequest._(this._campos);
 

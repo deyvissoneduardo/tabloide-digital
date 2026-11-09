@@ -65,7 +65,6 @@ Color? _corDoTexto(WidgetTester tester, String texto) =>
 
 String _hex(Color? cor) => AppCoresPagina.paraHex(cor!);
 
-/// Cor da primeira caixa decorada acima de [alvo].
 Color? _fundoDe(WidgetTester tester, Finder alvo) {
   for (final elemento
       in find
@@ -85,7 +84,6 @@ Color? _fundoDe(WidgetTester tester, Finder alvo) {
   return null;
 }
 
-/// 10 cores distintas, todas escolhidas (E8).
 const _distintas = CoresPaginaResponse(
   primaria: '#C8102E',
   secundaria: '#7B1FA2',

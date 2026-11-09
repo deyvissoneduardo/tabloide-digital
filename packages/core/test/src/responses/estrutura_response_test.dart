@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:tabloide_core/testing.dart';
 
-/// JSON do plano §4.2 (com categoria sem produtos e produto sem opcionais).
 Map<String, Object?> corpoEstrutura() => {
   'categorias': [
     {
