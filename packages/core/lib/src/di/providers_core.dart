@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:tabloide_core/src/features/acessos/repositories/acessos_repository.dart';
+import 'package:tabloide_core/src/features/acessos/repositories/acessos_repository_api.dart';
 import 'package:tabloide_core/src/features/auth/repositories/auth_repository.dart';
 import 'package:tabloide_core/src/features/auth/repositories/auth_repository_api.dart';
 import 'package:tabloide_core/src/features/cadastro/repositories/cadastro_repository.dart';
@@ -49,6 +51,7 @@ List<SingleChildWidget> providersCore({
   HomeRepository? homeRepository,
   EstruturaRepository? estruturaRepository,
   ConfiguracaoPaginaRepository? configuracaoPaginaRepository,
+  AcessosRepository? acessosRepository,
 }) => [
   Provider<Sessao>(
     create: (_) => Sessao(armazenamento ?? ArmazenamentoPreferencias()),
@@ -112,6 +115,10 @@ List<SingleChildWidget> providersCore({
     create: (context) =>
         configuracaoPaginaRepository ??
         ConfiguracaoPaginaRepositoryApi(context.read<RestClient>()),
+  ),
+  Provider<AcessosRepository>(
+    create: (context) =>
+        acessosRepository ?? AcessosRepositoryApi(context.read<RestClient>()),
   ),
   ...servicos,
   ChangeNotifierProvider<HomeController>(

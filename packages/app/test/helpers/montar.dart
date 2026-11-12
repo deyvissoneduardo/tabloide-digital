@@ -12,6 +12,9 @@ HomeController controllerDeTeste({
   HomeRepository repository = const HomeRepositoryFake(atraso: Duration.zero),
 }) => HomeController(HomeServiceApp(repository));
 
+AcessosController acessosControllerDeTeste({AcessosRepository? repository}) =>
+    AcessosController(AcessosServiceApp(repository ?? AcessosRepositoryFake()));
+
 LoginController loginControllerDeTeste({
   AuthRepository? repository,
   Sessao? sessao,
@@ -195,6 +198,7 @@ Widget montarTela(
   SeletorPdf? seletorPdf,
   PaginaController? pagina,
   PaginasPublicadasController? paginasPublicadas,
+  AcessosController? acessos,
   LinkServiceApp? linkService,
 }) {
   final sessaoDaTela = sessao ?? sessaoDeTeste();
@@ -257,6 +261,7 @@ Widget montarTela(
         value: ProdutoServiceApp(produtosDaTela),
       ),
       _notificador(pagina, paginaControllerDeTeste),
+      _notificador(acessos, acessosControllerDeTeste),
       _notificador(
         paginasPublicadas,
         () => paginasPublicadasControllerDeTeste(filiais: repository),
