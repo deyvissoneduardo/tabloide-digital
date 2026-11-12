@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tabloide_app/src/features/acessos/acessos_controller.dart';
+import 'package:tabloide_app/src/features/acessos/widgets/secao_acessos.dart';
 import 'package:tabloide_app/src/features/filiais/filiais_controller.dart';
 import 'package:tabloide_app/src/features/filiais/filiais_estado.dart';
 import 'package:tabloide_app/src/features/home/widgets/secao_paginas_publicadas.dart';
@@ -28,7 +30,9 @@ class _ResumoInicioState extends State<ResumoInicio> {
     if (!listEquals(_pedido, ids)) {
       _pedido = ids;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _carregar(ids);
+        if (!mounted) return;
+        _carregar(ids);
+        context.read<AcessosController>().filiaisMudaram(ids);
       });
     }
     return switch (controller.resumo) {
@@ -56,6 +60,7 @@ class _ResumoInicioState extends State<ResumoInicio> {
             rotulo: 'Produtos no ar',
             valor: resumo.produtosVigentes,
           ),
+          const SecaoAcessos(),
           SecaoPaginasPublicadas(resumo: resumo),
         ],
       ),
