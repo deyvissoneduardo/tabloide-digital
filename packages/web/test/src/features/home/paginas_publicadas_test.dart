@@ -49,6 +49,7 @@ void main() {
         matching: find.text(botao),
       );
       await tester.ensureVisible(alvo);
+      await tester.pumpAndSettle();
       await tester.tap(alvo);
       await tester.pumpAndSettle();
     }
@@ -91,13 +92,13 @@ void main() {
     );
 
     testWidgets(
-      'Cenário: Dado "Abrir página", quando toco, então LinkService.abrir recebe a urlPublica',
+      'Cenário: Dado "Abrir página", quando toco, então LinkService.abrir recebe a urlPublica com ?origem=painel (RN50: o acesso do lojista não conta)',
       (tester) async {
         await abrir(tester);
 
         await tocar(tester, 'Bairro Alto', 'Abrir página');
 
-        expect(link.abertos, [filialFakeBairro.urlPublica]);
+        expect(link.abertos, ['${filialFakeBairro.urlPublica}?origem=painel']);
       },
     );
 

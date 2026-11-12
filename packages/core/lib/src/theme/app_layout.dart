@@ -47,4 +47,8 @@ abstract final class AppLayout {
   static const alturaCarrosselEditor = 168.0;
 
   static const ladoQrCode = 160.0;
+
+  static const alturaGrafico = 200.0;
+
+  static const alturaGraficoBarras = 140.0;
 }

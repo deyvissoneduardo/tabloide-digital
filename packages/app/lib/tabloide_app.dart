@@ -3,6 +3,13 @@ library;
 export 'package:tabloide_core/tabloide_core.dart';
 
 export 'src/di/providers_app.dart';
+export 'src/features/acessos/acessos_controller.dart';
+export 'src/features/acessos/acessos_estado.dart';
+export 'src/features/acessos/services/acessos_service_app.dart';
+export 'src/features/acessos/widgets/bloco_acessos_panfletos.dart';
+export 'src/features/acessos/widgets/bloco_pico.dart';
+export 'src/features/acessos/widgets/filtros_acessos.dart';
+export 'src/features/acessos/widgets/secao_acessos.dart';
 export 'src/features/cadastro/cadastro_controller.dart';
 export 'src/features/cadastro/cadastro_estado.dart';
 export 'src/features/cadastro/cadastro_screen.dart';

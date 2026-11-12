@@ -2,6 +2,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:tabloide_core/tabloide_core.dart';
+import 'package:tabloide_web/src/features/acessos/acessos_controller.dart';
+import 'package:tabloide_web/src/features/acessos/services/acessos_service_web.dart';
 import 'package:tabloide_web/src/features/cadastro/cadastro_controller.dart';
 import 'package:tabloide_web/src/features/cadastro/services/cadastro_service_web.dart';
 import 'package:tabloide_web/src/features/categorias/categoria_form_controller.dart';
@@ -127,5 +129,11 @@ List<SingleChildWidget> providersWeb() => [
   Provider<ImagePicker>(create: (_) => ImagePicker()),
   Provider<HomeService>(
     create: (context) => HomeServiceWeb(context.read<HomeRepository>()),
+  ),
+  Provider<AcessosServiceWeb>(
+    create: (context) => AcessosServiceWeb(context.read<AcessosRepository>()),
+  ),
+  ChangeNotifierProvider<AcessosController>(
+    create: (context) => AcessosController(context.read<AcessosServiceWeb>()),
   ),
 ];

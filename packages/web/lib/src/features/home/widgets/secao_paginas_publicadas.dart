@@ -129,7 +129,7 @@ class _SecaoPaginasPublicadasState extends State<SecaoPaginasPublicadas> {
                             qrCodeFalhou: controller.qrCodesComFalha.contains(
                               filial.id,
                             ),
-                            aoAbrir: () => _abrir(url),
+                            aoAbrir: () => _abrir(urlAbertaPeloPainel(url)),
                             aoCopiar: () => _copiar(url),
                             aoCompartilhar: () => _compartilhar(
                               'Confira as ofertas de ${contexto.nomeFantasia} - '
