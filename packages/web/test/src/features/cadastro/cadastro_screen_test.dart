@@ -15,7 +15,11 @@ void main() {
   group('Funcionalidade: tela de cadastro na web', () {
     late CadastroRepositoryFake repository;
 
-    Future<void> abrir(WidgetTester tester, {CadastroRepositoryFake? fake}) {
+    Future<void> abrir(
+      WidgetTester tester, {
+      CadastroRepositoryFake? fake,
+      LinkServiceDeTeste? linkService,
+    }) {
       repository = fake ?? CadastroRepositoryFake();
       final sessao = sessaoDeTeste();
       return tester.pumpWidget(
@@ -25,6 +29,7 @@ void main() {
             repository: repository,
             sessao: sessao,
           ),
+          linkService: linkService,
         ),
       );
     }
@@ -38,6 +43,7 @@ void main() {
       String cnpj = '11222333000181',
       String senha = 'Teste1234',
       String? confirmarSenha,
+      bool aceitar = true,
     }) async {
       await tester.enterText(_campo('Nome fantasia'), nomeFantasia);
       await tester.enterText(_campo('Nome do responsável'), nomeResponsavel);
@@ -49,6 +55,10 @@ void main() {
         _campo('Confirmar senha'),
         confirmarSenha ?? senha,
       );
+      if (aceitar) {
+        await tester.ensureVisible(find.byType(Checkbox));
+        await tester.tap(find.byType(Checkbox));
+      }
     }
 
     Future<void> enviar(WidgetTester tester) async {
@@ -99,10 +109,57 @@ void main() {
           'Informe o CNPJ.',
           'Informe a senha.',
           'Confirme a senha.',
+          'Aceite os Termos de Uso e a Política de Privacidade.',
         ]) {
           expect(find.text(mensagem), findsOneWidget, reason: mensagem);
         }
         expect(repository.pedidos, isEmpty);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado tudo preenchido sem aceitar os termos, quando toco em "Cadastrar", então pede o aceite e nada é enviado',
+      (tester) async {
+        await abrir(tester);
+
+        await preencher(tester, aceitar: false);
+        await enviar(tester);
+
+        expect(
+          find.text('Aceite os Termos de Uso e a Política de Privacidade.'),
+          findsOneWidget,
+        );
+        expect(repository.pedidos, isEmpty);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado a tela, quando toco nos links do aceite, então abre os Termos de Uso e a Política de Privacidade',
+      (tester) async {
+        final links = LinkServiceDeTeste();
+        await abrir(tester, linkService: links);
+
+        await tester.ensureVisible(find.byType(AppAceiteTermos));
+        await tester.tapOnText(find.textRange.ofSubstring('Termos de Uso'));
+        await tester.tapOnText(
+          find.textRange.ofSubstring('Política de Privacidade'),
+        );
+        await tester.pump();
+
+        expect(links.abertos, [LinksLegais.termos, LinksLegais.privacidade]);
+      },
+    );
+
+    testWidgets(
+      'Cenário: Dado que o link não abre, quando toco nos Termos de Uso, então avisa o erro',
+      (tester) async {
+        await abrir(tester, linkService: LinkServiceDeTeste(abre: false));
+
+        await tester.ensureVisible(find.byType(AppAceiteTermos));
+        await tester.tapOnText(find.textRange.ofSubstring('Termos de Uso'));
+        await tester.pump();
+
+        expect(find.text('Não foi possível abrir o link.'), findsOneWidget);
       },
     );
 
@@ -288,6 +345,7 @@ void main() {
             senha: 'Teste1234',
             whatsapp: '11987654321',
             cnpj: '11222333000181',
+            aceiteTermos: true,
           ),
         ]);
         expect(find.byType(HomeScreen), findsOneWidget);

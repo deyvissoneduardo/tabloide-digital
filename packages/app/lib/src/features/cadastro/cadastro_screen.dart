@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tabloide_app/src/features/cadastro/cadastro_controller.dart';
 import 'package:tabloide_app/src/features/cadastro/cadastro_estado.dart';
 import 'package:tabloide_app/src/features/filiais/inicio_sessao_screen.dart';
+import 'package:tabloide_app/src/features/home/plataforma/link_service_app.dart';
 import 'package:tabloide_core/tabloide_core.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -27,6 +28,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
   final _cnpj = TextEditingController();
   final _senha = TextEditingController();
   final _confirmarSenha = TextEditingController();
+  var _aceiteTermos = false;
 
   late final CadastroController _controller;
 
@@ -63,6 +65,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
       senha: _senha.text,
       whatsapp: _whatsapp.text,
       cnpj: _cnpj.text,
+      aceiteTermos: _aceiteTermos,
     );
     if (!mounted) return;
     switch (controller.estado) {
@@ -75,6 +78,17 @@ class _CadastroScreenState extends State<CadastroScreen> {
         mostrarAviso(context, falha.mensagem, tipo: TipoAviso.erro);
       case CadastroOcioso() || CadastroEnviando():
         break;
+    }
+  }
+
+  Future<void> _abrir(String url) async {
+    final abriu = await context.read<LinkServiceApp>().abrir(url);
+    if (!abriu && mounted) {
+      mostrarAviso(
+        context,
+        'Não foi possível abrir o link.',
+        tipo: TipoAviso.erro,
+      );
     }
   }
 
@@ -191,6 +205,20 @@ class _CadastroScreenState extends State<CadastroScreen> {
               Validatorless.required('Confirme a senha.'),
               Validatorless.compare(_senha, 'As senhas não conferem.'),
             ]),
+          ),
+          const SizedBox(height: AppEspacamentos.md),
+          AppAceiteTermos(
+            habilitado: !enviando,
+            erro: controller.erroDoCampo('aceiteTermos'),
+            aoMudar: (marcado) {
+              _aceiteTermos = marcado;
+              controller.limparErroDoCampo('aceiteTermos');
+            },
+            aoAbrirTermos: () => _abrir(LinksLegais.termos),
+            aoAbrirPrivacidade: () => _abrir(LinksLegais.privacidade),
+            validador: (marcado) => marcado ?? false
+                ? null
+                : 'Aceite os Termos de Uso e a Política de Privacidade.',
           ),
           const SizedBox(height: AppEspacamentos.lg),
           AppBotaoPrincipal(

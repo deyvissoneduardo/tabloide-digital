@@ -18,6 +18,7 @@ Future<void> _cadastrar(CadastroController controller) => controller.cadastrar(
   senha: ' Teste1234 ',
   whatsapp: '11987654321 ',
   cnpj: ' 11222333000181',
+  aceiteTermos: true,
 );
 
 void main() {
@@ -52,6 +53,7 @@ void main() {
           senha: 'Teste1234',
           whatsapp: '11987654321',
           cnpj: '11222333000181',
+          aceiteTermos: true,
         ),
       ]);
     });
@@ -180,6 +182,7 @@ void main() {
         senha: 'Teste1234',
         whatsapp: '(11) 98765-4321',
         cnpj: '12.ABC.345/01DE-35',
+        aceiteTermos: true,
       );
 
       expect(repository.pedidos.single.whatsapp, '11987654321');
