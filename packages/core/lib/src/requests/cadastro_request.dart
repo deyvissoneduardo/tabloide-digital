@@ -6,6 +6,7 @@ final class CadastroRequest {
     required this.senha,
     required this.whatsapp,
     required this.cnpj,
+    required this.aceiteTermos,
   });
 
   final String nomeFantasia;
@@ -20,6 +21,9 @@ final class CadastroRequest {
 
   final String cnpj;
 
+  /// LGPD: aceite dos Termos de Uso e da Política de Privacidade; a API recusa se não for `true`.
+  final bool aceiteTermos;
+
   Map<String, Object?> toJson() => {
     'nomeFantasia': nomeFantasia,
     'nomeResponsavel': nomeResponsavel,
@@ -27,6 +31,7 @@ final class CadastroRequest {
     'senha': senha,
     'whatsapp': whatsapp,
     'cnpj': cnpj,
+    'aceiteTermos': aceiteTermos,
   };
 
   @override
@@ -37,11 +42,19 @@ final class CadastroRequest {
       other.email == email &&
       other.senha == senha &&
       other.whatsapp == whatsapp &&
-      other.cnpj == cnpj;
+      other.cnpj == cnpj &&
+      other.aceiteTermos == aceiteTermos;
 
   @override
-  int get hashCode =>
-      Object.hash(nomeFantasia, nomeResponsavel, email, senha, whatsapp, cnpj);
+  int get hashCode => Object.hash(
+    nomeFantasia,
+    nomeResponsavel,
+    email,
+    senha,
+    whatsapp,
+    cnpj,
+    aceiteTermos,
+  );
 
   @override
   String toString() =>

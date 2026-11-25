@@ -41,6 +41,7 @@ class CadastroController extends ChangeNotifier {
     required String senha,
     required String whatsapp,
     required String cnpj,
+    required bool aceiteTermos,
   }) async {
     if (_estado is CadastroEnviando) return;
     _estado = const CadastroEnviando();
@@ -54,6 +55,7 @@ class CadastroController extends ChangeNotifier {
         senha: senha.trim(),
         whatsapp: whatsapp.replaceAll(_mascara, ''),
         cnpj: cnpj.replaceAll(_mascara, ''),
+        aceiteTermos: aceiteTermos,
       ),
     );
     switch (resultado) {

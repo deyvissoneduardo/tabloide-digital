@@ -27,6 +27,7 @@ CadastroController _comErrosDaApi() =>
       senha: 'curta',
       whatsapp: '123',
       cnpj: '11222333000181',
+      aceiteTermos: true,
     );
 
 void main() {

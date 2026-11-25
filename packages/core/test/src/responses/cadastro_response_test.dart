@@ -40,6 +40,7 @@ void main() {
       senha: 'Teste1234',
       whatsapp: '11987654321',
       cnpj: '11222333000181',
+      aceiteTermos: true,
     );
 
     test('Cenário: Dado os dados do lojista, quando gero o JSON, então uso os nomes da API', () {
@@ -50,6 +51,7 @@ void main() {
         'senha': 'Teste1234',
         'whatsapp': '11987654321',
         'cnpj': '11222333000181',
+        'aceiteTermos': true,
       });
     });
 

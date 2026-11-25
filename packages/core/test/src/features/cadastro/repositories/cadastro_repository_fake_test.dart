@@ -9,6 +9,7 @@ const _pedido = CadastroRequest(
   senha: 'Teste1234',
   whatsapp: '11987654321',
   cnpj: '11222333000181',
+  aceiteTermos: true,
 );
 
 void main() {

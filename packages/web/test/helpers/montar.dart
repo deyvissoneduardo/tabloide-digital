@@ -294,11 +294,13 @@ Widget montarCadastro({
   CadastroController? controller,
   Sessao? sessao,
   FilialRepository? filialRepository,
+  LinkServiceWeb? linkService,
 }) => montarTela(
   const CadastroScreen(),
   cadastro: controller,
   sessao: sessao,
   filialRepository: filialRepository,
+  linkService: linkService,
 );
 
 Widget montarLogin({
